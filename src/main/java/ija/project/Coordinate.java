@@ -1,40 +1,54 @@
 package ija.project;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.util.Objects;
 
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Coordinate {
 
-    private double X;
-    private double Y;
+    private String name;
+    private double x;
+    private double y;
 
-    public Coordinate (double X, double Y) {
+    private Coordinate(){}
 
-        this.X = X < 0 ? 0 : X;
-        this.Y = Y < 0 ? 0 : Y;
+    public Coordinate (double x, double y) {
+
+        this.x = x < 0 ? 0 : x;
+        this.y = y < 0 ? 0 : y;
     }
 
-    public static Coordinate create (double X, double Y) {
+    public static Coordinate create (double x, double y) {
 
-        if (X < 0 || Y < 0) return null;
-        return new Coordinate(X, Y);
+        if (x < 0 || y < 0) return null;
+        return new Coordinate(x, y);
     }
 
     public double diffX(Coordinate c) {
 
-        return this.X - c.X;
+        return this.x - c.x;
     }
 
     public double diffY(Coordinate c) {
 
-        return this.Y - c.Y;
+        return this.y - c.y;
     }
 
     public double getX() {
-        return X;
+
+        return x;
     }
 
     public double getY() {
-        return Y;
+
+        return y;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -42,20 +56,20 @@ public class Coordinate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate that = (Coordinate) o;
-        return Double.compare(that.X, X) == 0 &&
-                Double.compare(that.Y, Y) == 0;
+        return Double.compare(that.x, x) == 0 &&
+                Double.compare(that.y, y) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(X, Y);
+        return Objects.hash(x, y);
     }
 
     @Override
     public String toString() {
         return "Coordinate{" +
-                "X=" + X +
-                ", Y=" + Y +
+                "x=" + x +
+                ", y=" + y +
                 '}';
     }
 }
