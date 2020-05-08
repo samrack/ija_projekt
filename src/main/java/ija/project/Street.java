@@ -22,9 +22,8 @@ public class Street implements Drawable {
     private Street () {
     }
 
-    public Street (String streetName, List<Stop> stops, Coordinate ... coordinates) {
-        //TODO name zmazat z konstruktora pred deserializaciou
-//        this.streetName = streetName;
+    public Street (List<Stop> stops, Coordinate ... coordinates) {
+
         this.stops.addAll(stops);
         this.coordinates.addAll(Arrays.asList(coordinates));
     }

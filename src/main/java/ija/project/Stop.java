@@ -23,10 +23,8 @@ public class Stop implements Drawable {
     public Stop () {
     }
 
-    public Stop(String stopId, Coordinate coordinate) {
+    public Stop(Coordinate coordinate) {
 
-        //TODO zmazat pri deserializacii, pripadne dat setID a mozno to pojde
-//        this.stopId = stopId;
         this.coordinate = coordinate;
         setGui();
     }
