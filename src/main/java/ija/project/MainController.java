@@ -76,4 +76,7 @@ public class MainController {
 
     }
 
+    public Timer getTimer() {
+        return timer;
+    }
 }

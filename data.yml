@@ -8,10 +8,67 @@ coordinates:
 - &3 name: null
   x: 1000.0
   y: 600.0
-vehicle:
+- &4 name: null
+  x: 300.0
+  y: 350.0
+- &5 name: null
+  x: 750.0
+  y: 550.0
+- *5
+vehicles:
+- &linka-41 lineID: "linka-41"
   position: *1
   speed: 20.0
   path:
     path:
     - *1
     - *2
+- &linka-42 lineID: "linka-42"
+  position: *2
+  speed: 20.0
+  path:
+    path:
+    - *2
+    - *1
+- &linka-43 lineID: "linka-43"
+  position: *2
+  speed: 20.0
+  path:
+    path:
+    - *2
+    - *3
+stops:
+- &stop1 stopId: "stop1"
+  coordinate: *1
+- &stop2 stopId: "stop2"
+  coordinate: *2
+- &stop3 stopId: "stop3"
+  coordinate: *3
+streets:
+- &street1 streetName: "street1"
+  stops:
+  - *stop1
+  - &stop12 stopId: "stop12"
+    coordinate: *4
+  coordinates:
+  - *1
+  - *2
+- &street2 streetName: "street2"
+  stops:
+  - *stop2
+  - &stop23 stopId: "stop23"
+    coordinate: *5
+  coordinates:
+  - *2
+  - *3
+- &street3 streetName: "street3"
+  stops:
+  - *stop2
+  - &stop13 stopId: "stop13"
+    coordinate:
+      &6 name: null
+      x: 550.0
+      y: 400.0
+  coordinates:
+  - *1
+  - *3

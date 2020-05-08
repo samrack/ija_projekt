@@ -1,6 +1,8 @@
 package ija.project;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import javafx.scene.paint.Color;
@@ -11,9 +13,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "lineID", scope = Vehicle.class)
 @JsonDeserialize(converter = Vehicle.CallConstructor.class)
 public class Vehicle implements Drawable, TimeUpdate {
+    private String lineID;
     private Coordinate position;
     private double speed = 2;
     private double distance = 0;
@@ -21,15 +24,15 @@ public class Vehicle implements Drawable, TimeUpdate {
     @JsonIgnore
     private List<Shape> gui;
 
-    private Vehicle(){}
+    private Vehicle(){
+    }
 
-    public Vehicle(Coordinate position, double speed, Path path) {
+    public Vehicle(String id, Coordinate position, double speed, Path path) {
+        lineID = id;
         this.position = position;
         this.speed = speed;
         this.path = path;
         setGui();
-//        gui = new ArrayList<Shape>();
-//        gui.add(new Circle(position.getX(), position.getY(), 8, Color.BLUE));
     }
 
     /**
@@ -57,13 +60,17 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     private void setGui() {
         this.gui = new ArrayList<Shape>();
-        this.gui.add(new Circle(position.getX(), position.getY(), 8, Color.BLUE));
+        this.gui.add(new Circle(position.getX(), position.getY(), 10, Color.BLUE));
     }
 
     @JsonIgnore
     @Override
     public List<Shape> getGUI() {
         return gui;
+    }
+
+    public String getLineID() {
+        return lineID;
     }
 
     public Coordinate getPosition() {
@@ -90,9 +97,10 @@ public class Vehicle implements Drawable, TimeUpdate {
     @Override
     public String toString() {
         return "Vehicle{" +
-                "position=" + position +
+                "lineID='" + lineID + '\'' +
+                ", position=" + position +
                 ", speed=" + speed +
-//                ", path=" + path +
+                ", path=" + path +
                 '}';
     }
 }

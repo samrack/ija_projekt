@@ -1,5 +1,8 @@
 package ija.project;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -9,31 +12,32 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Street implements Drawable {
 
-//    private String Id;
-    private String name;
-//    private List<Stop> stops = new ArrayList<>();
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "streetName", scope = Street.class)
+public class Street implements Drawable {
+    private String streetName;
+    private List<Stop> stops = new ArrayList<>();
     private List<Coordinate> coordinates = new ArrayList<>();
 
-    public Street (String name, Coordinate ... coordinates) {
-
-//        this.Id = Id;
-        this.name = name;
-        this.coordinates.addAll(Arrays.asList(coordinates));
-
+    private Street () {
     }
 
-//    public String getId() {
-//        return Id;
-//    }
+    public Street (String streetName, List<Stop> stops, Coordinate ... coordinates) {
+        //TODO name zmazat z konstruktora pred deserializaciou
+        this.streetName = streetName;
+        this.stops.addAll(stops);
+        this.coordinates.addAll(Arrays.asList(coordinates));
+    }
 
-    public String getName() {
-        return name;
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public List<Stop> getStops () {
+        return Collections.unmodifiableList(stops);
     }
 
     public List<Coordinate> getCoordinates() {
-
         return Collections.unmodifiableList(coordinates);
     }
 
@@ -44,12 +48,22 @@ public class Street implements Drawable {
     public Coordinate end() { return coordinates.get(coordinates.size() - 1);
     }
 
+    @JsonIgnore
     @Override
     public List<Shape> getGUI() {
         return Arrays.asList(
                 new Text(this.begin().getX() + Math.abs(this.begin().diffX(this.end())) / 2,
-                         this.begin().getY() + Math.abs(this.begin().diffY(this.end())) / 2, name),
+                         this.begin().getY() + Math.abs(this.begin().diffY(this.end())) / 2, streetName),
                 new Line(this.begin().getX(), this.begin().getY(), this.end().getX(), this.end().getY())
         );
+    }
+
+    @Override
+    public String toString() {
+        return "Street{" +
+                "streetName='" + streetName + '\'' +
+                ", stops=" + stops +
+                ", coordinates=" + coordinates +
+                '}';
     }
 }
