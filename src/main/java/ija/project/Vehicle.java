@@ -27,8 +27,8 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Vehicle(){
     }
 
-    public Vehicle(String id, Coordinate position, double speed, Path path) {
-        lineID = id;
+    public Vehicle(Coordinate position, double speed, Path path) {
+//        lineID = id;
         this.position = position;
         this.speed = speed;
         this.path = path;

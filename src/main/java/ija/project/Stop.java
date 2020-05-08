@@ -26,7 +26,7 @@ public class Stop implements Drawable {
     public Stop(String stopId, Coordinate coordinate) {
 
         //TODO zmazat pri deserializacii, pripadne dat setID a mozno to pojde
-        this.stopId = stopId;
+//        this.stopId = stopId;
         this.coordinate = coordinate;
         setGui();
     }
