@@ -12,6 +12,20 @@
             <include name="*.jar" />
         </fileset>
     </path>
+
+    <path id="build-classpath-fxml">
+        <fileset dir="${src.dir}/res">
+            <include name="*.fxml" />
+        </fileset>
+    </path>
+
+    <!-- <path id="build-classpath-yml">
+        <fileset dir="${basedir}/">
+            <include name="*.yml" />
+        </fileset>
+    </path> -->
+
+
     <!-- Deletes the existing build, docs and dist directory-->
     <target name="clean">
         <delete dir="${build.dir}" />
@@ -26,19 +40,30 @@
     </target>
     <!-- Compiles the java code (including the usage of library for JUnit -->
     <target name="compile" depends="clean, makedir">
-        <javac srcdir="${src.dir}" destdir="${build.dir}">
+        <javac srcdir="${src.dir}" includeantruntime='true' destdir="${build.dir}">
             <classpath refid="build-classpath" />
         </javac>
     </target>
 
+  
+
+
     <!--Creates the deployable jar file  -->
-    <target name="jar" depends="compile">
+    <target name="jar" depends="">
         <jar destfile="${dist.dir}\IJA.jar" basedir="${build.dir}">
             <zipgroupfileset dir="${libs.dir}" includes="**/*.jar" />
             <manifest>
                 <attribute name="Main-Class" value="ija.project.Main" />
                 <attribute name="Build-Path" value="${build-classpath}" />
             </manifest>
+            <fileset dir="${src.dir}/res" includes="**/*.fxml" />
+            <manifest>
+                <attribute name="Created-By" value="${build-classpath-fxml}" />
+            </manifest>
+            <!-- <fileset dir="${basedir}" includes="**/*.yml" />
+            <manifest>
+                <attribute name="Data_file" value="${build-classpath-yml}" />
+            </manifest> -->
         </jar>
     </target>
     <target name="run" depends="jar">
