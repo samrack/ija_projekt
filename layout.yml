@@ -1,4 +1,58 @@
 coordinates:
+- &10 name: null
+  x: 50.0
+  y: 50.0
+- &11 name: null
+  x: 100.0
+  y: 50.0
+- &12 name: null
+  x: 150.0
+  y: 50.0
+- &13 name: null
+  x: 200.0
+  y: 50.0
+- &14 name: null
+  x: 250.0
+  y: 50.0
+- &15 name: null
+  x: 300.0
+  y: 50.0
+- &16 name: null
+  x: 350.0
+  y: 50.0
+- &17 name: null
+  x: 400.0
+  y: 50.0
+- &18 name: null
+  x: 450.0
+  y: 50.0
+- &19 name: null
+  x: 500.0
+  y: 50.0
+- &110 name: null
+  x: 750.0
+  y: 550.0
+- &111 name: null
+  x: 100.0
+  y: 100.0
+- &112 name: null
+  x: 100.0
+  y: 200.0
+- &113 name: null
+  x: 500.0
+  y: 500.0
+- &114 name: null
+  x: 1000.0
+  y: 600.0
+- &115 name: null
+  x: 300.0
+  y: 350.0
+- &116 name: null
+  x: 750.0
+  y: 550.0
+- &117 name: null
+  x: 100.0
+  y: 100.0
 - &1 name: null
   x: 100.0
   y: 200.0
@@ -14,10 +68,10 @@ coordinates:
 - &5 name: null
   x: 750.0
   y: 550.0
-- &7 name: null
-  x: 50.0
-  y: 50.0
-- *5
+- &6 name: null
+  x: 100.0
+  y: 100.0
+
 vehicles:
 - &linka-40 lineID: null
   position: *1
@@ -55,7 +109,7 @@ stops:
 - &stop3 stopId: null
   coordinate: *3
 - &stop4 stopId: null
-  coordinate: *7
+  coordinate: *6
 streets:
 - &street1 streetName: null
   stops:

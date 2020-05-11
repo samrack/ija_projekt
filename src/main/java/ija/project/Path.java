@@ -52,7 +52,7 @@ public class Path {
     }
 
     /**
-     * @return total length of the path
+     * @return complete length of the path
      * **/
     @JsonIgnore
     public double getPathLength () {

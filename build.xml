@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="nwmus" default="compile" basedir="../ija_projekt">
+    <!-- Sets variables which can later be used. -->
+    <!-- The value of a property is accessed via ${} -->
+    <property name="src.dir" location="src" />
+    <property name="build.dir" location="bin" />
+    <property name="libs.dir" location="lib" />
+    <property name="dist.dir" location="build/jar" />
+
+    <path id="build-classpath">
+        <fileset dir="${libs.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <path id="build-classpath-fxml">
+        <fileset dir="${src.dir}/main/resources">
+            <include name="*.fxml" />
+        </fileset>
+    </path>
+
+    <!-- <path id="build-classpath-yml">
+        <fileset dir="${basedir}/">
+            <include name="*.yml" />
+        </fileset>
+    </path> -->
+
+
+    <!-- Deletes the existing build, docs and dist directory-->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    
+        <delete dir="${dist.dir}" />
+    </target>
+    <!-- Creates the  build, docs and dist directory-->
+    <target name="makedir">
+        <mkdir dir="${build.dir}" />
+    
+        <mkdir dir="${dist.dir}" />
+    </target>
+    <!-- Compiles the java code (including the usage of library for JUnit -->
+    <target name="compile" depends="clean, makedir">
+        <javac srcdir="${src.dir}" includeantruntime='true' destdir="${build.dir}">
+            <classpath refid="build-classpath" />
+        </javac>
+    </target>
+
+  
+
+
+    <!--Creates the deployable jar file  -->
+    <target name="jar" depends="">
+        <jar destfile="${dist.dir}\IJA.jar" basedir="${build.dir}">
+            <zipgroupfileset dir="${libs.dir}" includes="**/*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="ija.project.Main" />
+                <attribute name="Build-Path" value="${build-classpath}" />
+            </manifest>
+            <fileset dir="${src.dir}/res" includes="**/*.fxml" />
+            <manifest>
+                <attribute name="Created-By" value="${build-classpath-fxml}" />
+            </manifest>
+            <!-- <fileset dir="${basedir}" includes="**/*.yml" />
+            <manifest>
+                <attribute name="Data_file" value="${build-classpath-yml}" />
+            </manifest> -->
+        </jar>
+    </target>
+    <target name="run" depends="jar">
+        <description>Main target</description>
+        <java jar="${dist.dir}/IJA.jar" fork="true"/>
+    </target>
+</project>
