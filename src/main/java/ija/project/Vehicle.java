@@ -20,14 +20,21 @@ import java.util.TimerTask;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "lineID", scope = Vehicle.class)
 @JsonDeserialize(converter = Vehicle.CallConstructor.class)
 public class Vehicle implements Drawable, TimeUpdate {
-    private String lineID;
+    private Line line;
     private Coordinate position;
-    private double speed = 2;
+    private double speed;
     private double distance = 0;
+
+    private Schedule schedule;
+    
+
+    private LocalTime startTime;
+    private Coordinate startPosition;
     private Path path;
 
 
-    private boolean inBetweenRounds;
+
+    private boolean inBetweenRounds = true;
     private int timeBetweenRounds = 10; // 10 seconds
     private int secondsPassed;
 
@@ -37,11 +44,12 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Vehicle(){
     }
 
-    public Vehicle(Coordinate position, double speed, Path path) {
-//        lineID = id;
-        this.position = position;
+    public Vehicle(Line line, double speed) {
+        this.line = line;
         this.speed = speed;
-        this.path = path;
+        this.path = line.getPath();
+        this.schedule = new Schedule(this);
+        fillSchedule();
         setGui();
     }
 
@@ -100,8 +108,64 @@ public class Vehicle implements Drawable, TimeUpdate {
     private void startRound(){
         inBetweenRounds = false;
         distance = 0; 
-        
+    
     }
+    // TODO  :  add if it is on break or not, based on time as well 
+    // computes position of vehicle based on time of day 
+    private void computePositionByTime(LocalTime time){
+        long diffInSeconds = java.time.Duration.between(time, startTime).getSeconds();
+        int distance = 0;
+        for(int i = 0;i < diffInSeconds;i++){
+            try{
+                Street currentStreet = line.getStreetByCoord(startPosition);
+                int curSpeed = currentStreet.getStreetSpeed();
+                distance += curSpeed;
+                position = path.getNextPosition(distance); 
+                
+            }
+            catch(Exception e){
+                System.out.println(e);
+            }
+       }
+    }
+
+    // go through entire path and calculate arrive time for every stop
+    private void fillSchedule(){
+        int distance = 0;
+        long timeCount = 0;
+        while(distance < path.getPathLength()){
+            try{
+                Street currentStreet = line.getStreetByCoord(startPosition);
+                
+                int curSpeed = currentStreet.getStreetSpeed();
+                int tmpDistance = distance;
+                for (int i = 0;i<curSpeed;i++){
+                    position = path.getNextPosition(tmpDistance);
+                    Stop currentStop = line.getStopFromCoords(position);
+                    LocalTime time = startTime;
+                    time.plusSeconds(timeCount);
+                    if ( currentStop != null){
+                        schedule.updateStopsList(currentStop);
+                        schedule.updateTimesList(time);
+                    }
+
+                }
+                distance += curSpeed;
+                position = path.getNextPosition(distance); 
+                timeCount++;
+                
+            }
+            catch(Exception e){
+                System.out.println(e);
+                break;
+            }
+       }
+    }
+
+
+
+
+
 
     @JsonIgnore
     @Override
@@ -109,8 +173,8 @@ public class Vehicle implements Drawable, TimeUpdate {
         return gui;
     }
 
-    public String getLineID() {
-        return lineID;
+    public Line getLine() {
+        return line;
     }
 
     public Coordinate getPosition() {
@@ -126,6 +190,9 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
 
+    
+
+
     static class CallConstructor extends StdConverter<Vehicle, Vehicle> {
 
         @Override
@@ -138,7 +205,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     @Override
     public String toString() {
         return "Vehicle{" +
-                "lineID='" + lineID + '\'' +
+                "line='" + line + '\'' +
                 ", position=" + position +
                 ", speed=" + speed +
                 ", path=" + path +

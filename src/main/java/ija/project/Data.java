@@ -7,6 +7,7 @@ public class Data {
     private List<Vehicle> vehicles;
     private List<Stop> stops;
     private List<Street> streets;
+    private List<Line> lines;
 
     private Data(){
     }
@@ -18,11 +19,12 @@ public class Data {
 //        this.streets = streets;
 //    }
 
-    public Data(List<Coordinate> coordinates, List<Vehicle> vehicles, List<Stop> stops, List<Street> streets) {
+    public Data(List<Coordinate> coordinates, List<Vehicle> vehicles, List<Stop> stops, List<Street> streets,List<Line> lines) {
         this.coordinates = coordinates;
         this.vehicles = vehicles;
         this.stops = stops;
         this.streets = streets;
+        this.lines = lines;
     }
 
     public List<Coordinate> getCoordinates() {
@@ -41,6 +43,10 @@ public class Data {
         return stops;
     }
 
+    public List<Line> getLines() {
+        return lines;
+    }
+
     @Override
     public String toString() {
         return "Data{" +
@@ -48,6 +54,7 @@ public class Data {
                 ", vehicles=" + vehicles +
                 ", stops=" + stops +
                 ", streets" + streets +
+                ", lines" + lines +
                 '}';
     }
 }

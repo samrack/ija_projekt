@@ -60,11 +60,17 @@ public class MainController {
             int hours = Integer.parseInt(timeSetHours.getText());
             int minutes = Integer.parseInt(timeSetMinutes.getText());
             int seconds = Integer.parseInt(timeSetSeconds.getText());
+            timer.cancel();
             time = LocalTime.of(hours, minutes, seconds);
+            startTimer(1);
         } catch (DateTimeParseException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time value");
             alert.showAndWait();
         }
+        finally{
+            // somehow redraw everything
+        }
+
     }
 
     @FXML

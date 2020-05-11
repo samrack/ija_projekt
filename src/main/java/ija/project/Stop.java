@@ -15,6 +15,7 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "stopId", scope = Stop.class)
 @JsonDeserialize(converter = Stop.CallConstructor.class)
 public class Stop implements Drawable {
+    //private Line line;
     private String stopId;
     private Coordinate coordinate;
     @JsonIgnore
