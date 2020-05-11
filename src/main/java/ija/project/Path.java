@@ -63,4 +63,9 @@ public class Path {
         }
         return length;
     }
+
+    /*Returns last coordinate of path a.k.a last Stop */
+    public Coordinate getlastCoordinateOfPath(){
+        return path.get(path.size() - 1);
+    }
 }

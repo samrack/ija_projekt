@@ -9,9 +9,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "lineID", scope = Vehicle.class)
 @JsonDeserialize(converter = Vehicle.CallConstructor.class)
@@ -21,6 +25,12 @@ public class Vehicle implements Drawable, TimeUpdate {
     private double speed = 2;
     private double distance = 0;
     private Path path;
+
+
+    private boolean inBetweenRounds;
+    private int timeBetweenRounds = 10; // 10 seconds
+    private int secondsPassed;
+
     @JsonIgnore
     private List<Shape> gui;
 
@@ -42,13 +52,31 @@ public class Vehicle implements Drawable, TimeUpdate {
      * **/
     @Override
     public void update(LocalTime time) {
-        distance += speed;
-        System.out.println(String.format("path len: %f, distance: %f", path.getPathLength(), distance));
-        if(distance > path.getPathLength())
-            return;
-        Coordinate coordinates = path.getNextPosition(distance);
-        moveGui(coordinates);
-        position = coordinates;
+        if (!inBetweenRounds){
+            distance += speed;
+            System.out.println(String.format("path len: %f, distance: %f, time %s", path.getPathLength(), distance,time));
+            if(distance > path.getPathLength()){
+                // stop at last Stop 
+                Coordinate coordinates = path.getlastCoordinateOfPath();
+                moveGui(coordinates);
+                position = coordinates;
+                //wait for couple minutes
+                endRound();
+                System.out.println("IM ON THE END");
+                return;
+            }
+            Coordinate coordinates = path.getNextPosition(distance);
+            moveGui(coordinates);
+            position = coordinates;
+        }
+        else{
+            System.out.println("IM WAITING because im finished");
+            secondsPassed++;
+            if(secondsPassed >= timeBetweenRounds ){
+                startRound();
+            }
+            
+        }
     }
 
     private void moveGui(Coordinate coordinate) {
@@ -61,6 +89,18 @@ public class Vehicle implements Drawable, TimeUpdate {
     private void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, Color.BLUE));
+    }
+
+
+    private void endRound(){
+        inBetweenRounds = true;
+        secondsPassed = 0;
+    }
+
+    private void startRound(){
+        inBetweenRounds = false;
+        distance = 0; 
+        
     }
 
     @JsonIgnore
@@ -84,6 +124,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     public Path getPath() {
         return path;
     }
+
 
     static class CallConstructor extends StdConverter<Vehicle, Vehicle> {
 

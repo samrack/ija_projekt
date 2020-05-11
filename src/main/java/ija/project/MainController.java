@@ -7,6 +7,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -19,6 +20,12 @@ public class MainController {
 
     @FXML
     private TextField timeScale;
+    @FXML
+    private TextField timeSetHours;
+    @FXML
+    private TextField timeSetMinutes;
+    @FXML
+    private TextField timeSetSeconds;
 
     private Timer timer;
     private LocalTime time = LocalTime.now();
@@ -29,6 +36,7 @@ public class MainController {
     @FXML
     private void onTimeScaleChange() {
         try {
+            System.out.println("VOLAL SOM ontimescalechange");
             float scale = Float.parseFloat(timeScale.getText());
             if(scale <= 0) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time scale value");
@@ -37,8 +45,24 @@ public class MainController {
             }
             timer.cancel();
             startTimer(scale);
+            //System.out.println("TIMER STARTED");
         } catch (NumberFormatException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time scale value");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void onNewTimeSet() {
+        // treba tri okna na text plus jeden button na potvdenie 
+        try {
+            System.out.println("VOLAL SOM ONNEWSETTIME");
+            int hours = Integer.parseInt(timeSetHours.getText());
+            int minutes = Integer.parseInt(timeSetMinutes.getText());
+            int seconds = Integer.parseInt(timeSetSeconds.getText());
+            time = LocalTime.of(hours, minutes, seconds);
+        } catch (DateTimeParseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time value");
             alert.showAndWait();
         }
     }
@@ -79,4 +103,5 @@ public class MainController {
     public Timer getTimer() {
         return timer;
     }
+
 }
