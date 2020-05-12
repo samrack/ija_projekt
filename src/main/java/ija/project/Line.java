@@ -5,9 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.AbstractMap.SimpleImmutableEntry;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.util.StdConverter;
 
 
+
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "yamlId", scope = Line.class)
+//@JsonDeserialize(converter = Line.CallConstructor.class)
 public class Line {
+    private String yamlId;
     private String id;
     private Path path;
     private List<Stop> stopsList;
@@ -15,13 +25,18 @@ public class Line {
 // maybe nanic 
     private List<Street> streetsList;
 
+    private Line(){}
 
-    public Line(String id,Path path, List<Stop> stopsList) {
+    public Line(String yamlId, String id,Path path, List<Stop> stopsList) {
+        this.yamlId = yamlId;
         this.id = id;
         this.path = path;
         this.stopsList = stopsList;
     }
 
+    public String getYamlId(){
+        return yamlId;
+    }
 
     public String getId(){
         return id;

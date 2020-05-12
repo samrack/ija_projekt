@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml" fx:controller="ija.project.MainController">
    <center>
@@ -26,13 +25,6 @@
          <children>
             <TextField fx:id="timeScale" layoutX="41.0" layoutY="22.0" prefHeight="26.0" prefWidth="118.0" />
             <Button layoutX="41.0" layoutY="64.0" mnemonicParsing="false" onAction="#onTimeScaleChange" text="Change time speed" />
-            <TextField fx:id="timeSetHours" layoutX="14.0" layoutY="118.0" prefHeight="26.0" prefWidth="40.0" />
-            <TextField fx:id="timeSetMinutes" layoutX="80.0" layoutY="118.0" prefHeight="26.0" prefWidth="40.0" />
-            <TextField fx:id="timeSetSecinds" layoutX="139.0" layoutY="118.0" prefHeight="26.0" prefWidth="40.0" />
-            <Button layoutX="70.0" layoutY="163.0" mnemonicParsing="false" onAction="#onNewTimeSet" text="Set time" />
-            <Text layoutX="59.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="h" />
-            <Text layoutX="123.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="m" wrappingWidth="14.26483154296875" />
-            <Text layoutX="183.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="s" />
          </children></AnchorPane>
    </right>
 </BorderPane>

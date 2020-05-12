@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.util.Converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -17,25 +18,32 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "lineID", scope = Vehicle.class)
-@JsonDeserialize(converter = Vehicle.CallConstructor.class)
+ @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "busId", scope = Vehicle.class)
+ @JsonDeserialize(converter = Vehicle.CallConstructor.class)
 public class Vehicle implements Drawable, TimeUpdate {
+    private String busId;
     private Line line;
+    @JsonIgnore
     private Coordinate position;
-    private double speed;
+    //private double speed;
+    @JsonIgnore
     private double distance = 0;
-
+    @JsonIgnore
     private Schedule schedule;
     
-
+    @JsonIgnore
     private LocalTime startTime;
+    @JsonIgnore
     private Coordinate startPosition;
+    @JsonIgnore
     private Path path;
 
 
-
+    @JsonIgnore
     private boolean inBetweenRounds = true;
+    @JsonIgnore
     private int timeBetweenRounds = 10; // 10 seconds
+    @JsonIgnore
     private int secondsPassed;
 
     @JsonIgnore
@@ -44,13 +52,23 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Vehicle(){
     }
 
-    public Vehicle(Line line, double speed) {
+    public Vehicle(String busId,Line line) {
+        this.busId = busId;
         this.line = line;
-        this.speed = speed;
+        //this.speed = speed;
         this.path = line.getPath();
+        //this.schedule = new Schedule(this);
+       // System.out.println(this);
+        //fillSchedule();
+        //setGui();
+    
+    }
+
+    /**
+     * @param schedule the schedule to set
+     */
+    public void setSchedule() {
         this.schedule = new Schedule(this);
-        fillSchedule();
-        setGui();
     }
 
     /**
@@ -60,8 +78,10 @@ public class Vehicle implements Drawable, TimeUpdate {
      * **/
     @Override
     public void update(LocalTime time) {
+        double speed = 2;
         if (!inBetweenRounds){
-            distance += speed;
+            // TODO: should be changed to update based on speed on current street 
+            distance += speed; // 2 is speed , will ba changed to speed from street 
             System.out.println(String.format("path len: %f, distance: %f, time %s", path.getPathLength(), distance,time));
             if(distance > path.getPathLength()){
                 // stop at last Stop 
@@ -94,7 +114,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         }
     }
 
-    private void setGui() {
+    public void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, Color.BLUE));
     }
@@ -130,7 +150,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
     // go through entire path and calculate arrive time for every stop
-    private void fillSchedule(){
+    public void fillSchedule(){
         int distance = 0;
         long timeCount = 0;
         while(distance < path.getPathLength()){
@@ -156,14 +176,11 @@ public class Vehicle implements Drawable, TimeUpdate {
                 
             }
             catch(Exception e){
-                System.out.println(e);
+                System.out.println(e + " FILLSCHEDULE Error");
                 break;
             }
        }
     }
-
-
-
 
 
 
@@ -176,19 +193,55 @@ public class Vehicle implements Drawable, TimeUpdate {
     public Line getLine() {
         return line;
     }
-
+    @JsonIgnore
     public Coordinate getPosition() {
         return position;
     }
 
-    public double getSpeed() {
-        return speed;
-    }
-
+    // public double getSpeed() {
+    //     return speed;
+    // }
+    @JsonIgnore
     public Path getPath() {
         return path;
     }
 
+    public String getBusId() {
+        return busId;
+    }
+   
+    @JsonIgnore
+    public double getDistance(){
+        return distance;
+    }
+    @JsonIgnore
+    public Schedule getSchedule(){
+        return schedule;
+    }
+    
+    @JsonIgnore
+    public LocalTime getStartTime(){
+        return startTime;
+    }
+    @JsonIgnore
+    public Coordinate getStartPosition(){
+        return startPosition;
+    }
+  
+
+
+    @JsonIgnore
+    public boolean getInBetweenRounds(){
+        return inBetweenRounds;
+    }
+    @JsonIgnore
+    public int getTmeBetweenRounds(){
+        return timeBetweenRounds;
+    } 
+    @JsonIgnore
+    public int getSecondsPassed(){
+        return secondsPassed;
+    }
 
     
 
@@ -206,9 +259,9 @@ public class Vehicle implements Drawable, TimeUpdate {
     public String toString() {
         return "Vehicle{" +
                 "line='" + line + '\'' +
-                ", position=" + position +
-                ", speed=" + speed +
-                ", path=" + path +
+                //", position=" + position +
+                //", speed=" + speed +
+               // ", path=" + path +
                 '}';
     }
 }

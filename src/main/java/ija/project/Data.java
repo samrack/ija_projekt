@@ -19,7 +19,7 @@ public class Data {
 //        this.streets = streets;
 //    }
 
-    public Data(List<Coordinate> coordinates, List<Vehicle> vehicles, List<Stop> stops, List<Street> streets,List<Line> lines) {
+    public Data(List<Coordinate> coordinates,List<Vehicle> vehicles, List<Stop> stops, List<Street> streets, List<Line> lines) {
         this.coordinates = coordinates;
         this.vehicles = vehicles;
         this.stops = stops;

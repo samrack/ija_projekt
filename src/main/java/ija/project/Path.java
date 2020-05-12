@@ -10,7 +10,7 @@ public class Path {
 
     private Path(){}
 
-    public Path(List<Coordinate> path) {
+    public Path(List<Coordinate> path) { 
         this.path = path;
     }
 

@@ -2,7 +2,10 @@ package ija.project;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -17,6 +20,7 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "streetName", scope = Street.class)
 public class Street implements Drawable {
     private String streetName;
+    
     private Coordinate begin;
     private Coordinate end;
     private List<Stop> stops = new ArrayList<>();
@@ -34,27 +38,27 @@ public class Street implements Drawable {
         this.stops.addAll(stops);
         //this.coordinates.addAll(Arrays.asList(coordinates));
     }
-
+    
     public String getStreetName() {
         return streetName;
     }
 
-    public List<Stop> getStops () {
+    public List<Stop> getStops() {
         return Collections.unmodifiableList(stops);
     }
 
     // public List<Coordinate> getCoordinates() {
     //     return Collections.unmodifiableList(coordinates);
     // }
-
-    public Coordinate begin() {
+    
+    public Coordinate getBegin() {
         return begin;
     }
-
-    public Coordinate end() { 
+    
+    public Coordinate getEnd() { 
         return end;
     }
-
+    @JsonIgnore
     public int getStreetSpeed() { 
         return speed;
     }
@@ -84,9 +88,9 @@ public class Street implements Drawable {
     @Override
     public List<Shape> getGUI() {
         return Arrays.asList(
-                new Text(this.begin().getX() + Math.abs(this.begin().diffX(this.end())) / 2,
-                         this.begin().getY() + Math.abs(this.begin().diffY(this.end())) / 2, streetName),
-                new Line(this.begin().getX(), this.begin().getY(), this.end().getX(), this.end().getY())
+                new Text(this.getBegin().getX() + Math.abs(this.getBegin().diffX(this.getEnd())) / 2,
+                         this.getBegin().getY() + Math.abs(this.getBegin().diffY(this.getEnd())) / 2, streetName),
+                new Line(this.getBegin().getX(), this.getBegin().getY(), this.getEnd().getX(), this.getEnd().getY())
         );
     }
 
@@ -97,4 +101,5 @@ public class Street implements Drawable {
                 ", stops=" + stops +
                 '}';
     }
+    
 }

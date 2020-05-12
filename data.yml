@@ -1,49 +1,31 @@
 coordinates:
 - &1 name: null
   x: 100.0
-  y: 200.0
+  y: 100.0
 - &2 name: null
   x: 500.0
-  y: 500.0
+  y: 100.0
 - &3 name: null
   x: 1000.0
-  y: 600.0
+  y: 100.0
 - &4 name: null
-  x: 300.0
-  y: 350.0
+  x: 100.0
+  y: 500.0
 - &5 name: null
-  x: 750.0
-  y: 550.0
-- *5
-vehicles:
-- &linka-40 lineID: null
-  position: *1
-  speed: 20.0
-  path:
-    path:
-    - *1
-    - *2
-- &linka-41 lineID: null
-  position: *1
-  speed: 20.0
-  path:
-    path:
-    - *1
-    - *3
-- &linka-42 lineID: null
-  position: *2
-  speed: 20.0
-  path:
-    path:
-    - *2
-    - *1
-- &linka-43 lineID: null
-  position: *2
-  speed: 20.0
-  path:
-    path:
-    - *2
-    - *3
+  x: 500.0
+  y: 500.0
+- &6 name: null
+  x: 1000.0
+  y: 500.0
+- &7 name: null
+  x: 100.0
+  y: 1000.0
+- &8 name: null
+  x: 500.0
+  y: 1000.0
+- &9 name: null
+  x: 1000.0
+  y: 1000.0
 stops:
 - &stop1 stopId: null
   coordinate: *1
@@ -51,31 +33,141 @@ stops:
   coordinate: *2
 - &stop3 stopId: null
   coordinate: *3
+- &stop4 stopId: null
+  coordinate: *4
+- &stop5 stopId: null
+  coordinate: *5
+- &stop6 stopId: null
+  coordinate: *6
+- &stop7 stopId: null
+  coordinate: *7
+- &stop8 stopId: null
+  coordinate: *8
+- &stop9 stopId: null
+  coordinate: *9
 streets:
-- &street1 streetName: null
+- &street12 streetName: null
   stops:
   - *stop1
-  - &stop12 stopId: null
-    coordinate: *4
-  coordinates:
-  - *1
-  - *2
-- &street2 streetName: null
+  - *stop2
+  begin: *1
+  end: *2
+- &street23 streetName: null
   stops:
   - *stop2
-  - &stop23 stopId: null
-    coordinate: *5
-  coordinates:
-  - *2
-  - *3
-- &street3 streetName: null
+  - *stop3
+  begin: *2
+  end:  *3
+- &street14 streetName: null
+  stops:
+  - *stop1
+  - *stop4
+  begin:  *1
+  end: *4
+- &street25 streetName: null
   stops:
   - *stop2
-  - &stop13 stopId: null
-    coordinate:
-      &6 name: null
-      x: 550.0
-      y: 400.0
-  coordinates:
-  - *1
-  - *3
+  - *stop5
+  begin: *2
+  end: *5
+- &street36 streetName: null
+  stops:
+  - *stop3
+  - *stop6
+  begin: *3
+  end: *6
+- &street45 streetName: null
+  stops:
+  - *stop4
+  - *stop5
+  begin:  *4
+  end:  *5
+- &street56 streetName: null
+  stops:
+  - *stop4
+  - *stop6
+  begin: *5
+  end: *6
+- &street47 streetName: null
+  stops:
+  - *stop4
+  - *stop7
+  begin: *4
+  end: *7
+- &street58 streetName: null
+  stops:
+  - *stop5
+  - *stop8
+  begin: *5
+  end: *8
+- &street69 streetName: null
+  stops:
+  - *stop6
+  - *stop9
+  begin: *6
+  end: *9
+- &street78 streetName: null
+  stops:
+  - *stop7
+  - *stop8
+  begin: *7
+  end: *8
+- &street89 streetName: null
+  stops:
+  - *stop8
+  - *stop9
+  begin: *8
+  end: *9
+lines:
+- &l-1 yamlId: null
+  id: "line-1"
+  path:
+    path:
+    - *1
+    - *4
+    - *7
+  stopsList:
+  - *stop1
+  - *stop4
+  - *stop7
+- &l-2 yamlId: null
+  id: "line-2"
+  path:
+    path:
+    - *7
+    - *8
+    - *5
+    - *2
+    - *3
+  stopsList:
+  - *stop7
+  - *stop8
+  - *stop5
+  - *stop2
+  - *stop3
+- &l-3 yamlId: null
+  id: "line-3"
+  path:
+    path:
+    - *3
+    - *6
+    - *9
+    - *8
+    - *7
+    - *4
+  stopsList:
+  - *stop3
+  - *stop6
+  - *stop9
+  - *stop8
+  - *stop7
+  - *stop4
+
+vehicles:
+  - &bus1 busId: "B1"
+    line: *l-1
+  - &bus2 busId: "B2"
+    line: *l-2
+  - &bus3 busId: "B3"
+    line: *l-3
+  
