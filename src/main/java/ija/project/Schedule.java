@@ -12,14 +12,6 @@ public class Schedule {
         this.bus = bus;
     }
 
-    // public void updateStopsList(Stop stop){
-    //     stopsList.add(stop);
-    // }
-
-    // public void updateTimesList(LocalTime time){
-    //     timesList.add(time);
-    // }
-
     public List<Stop> getStopsList(Stop stop){
         return stopsList;
     }
@@ -36,5 +28,13 @@ public class Schedule {
         this.timesList = timeList;
     }
 
+   public void printOutSchedule(){
+       int numberOfStops = stopsList.size();
+       System.out.println(numberOfStops);
+       for(int i = 0; i < numberOfStops; i++){
+           System.out.println("BUS " + bus.getBusId() + " will be on stop " + stopsList.get(i).getStopId() + " at time : " + String.format("%s",timesList.get(i)));
+       }
+   }
+    
     
 }

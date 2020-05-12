@@ -42,10 +42,13 @@ public class Vehicle implements Drawable, TimeUpdate {
     @JsonIgnore
     private boolean inBetweenRounds = false;
     @JsonIgnore
-    private int timeBetweenRounds = 60 * 5; // 2 minutes
+    private int timeBetweenRounds = 60 * 5; // 5 minutes
     @JsonIgnore
     private int secondsPassed;
+    @JsonIgnore
+    private long oneRideLength; // in seconds
 
+  
     @JsonIgnore
     private List<Shape> gui;
 
@@ -59,7 +62,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.schedule = new Schedule(this);
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
-        //fillSchedule();
+        fillSchedule(LocalTime.now());
         setGui();
     
     }
@@ -79,16 +82,16 @@ public class Vehicle implements Drawable, TimeUpdate {
     @Override
     public void update(LocalTime time) {
         
-        if (timeCounter % 30 == 0){
-            System.out.println(String.format("TIME = %s ",time));
-        }
+        // if (timeCounter % 30 == 0){
+        //     System.out.println(String.format("TIME = %s ",time));
+        // }
        // System.out.println(timeCounter);
         timeCounter++;
         double speed = 2;
         if (!inBetweenRounds){
             // TODO: should be changed to update based on speed on current street 
             distance += speed; // 2 is speed , will ba changed to speed from street 
-            //System.out.println(String.format("path len: %f, distance: %f, time %s", path.getPathLength(), distance,time));
+            //System.out.println(String.format("path len: %f, distance: %f, time %s positon %s", path.getPathLength(), distance,time, position));
             if(distance > path.getPathLength()){
                 // stop at last Stop 
                 Coordinate coordinates = path.getlastCoordinateOfPath();
@@ -96,34 +99,49 @@ public class Vehicle implements Drawable, TimeUpdate {
                 position = coordinates;
                 //wait for couple minutes
                 endRound();
-                System.out.println("bus"+busId+ " ON THE END");
+                //System.out.println("bus " + busId + " ON THE END at time " + time);
                 return;
             }
             Coordinate coordinates = path.getNextPosition(distance);
+            //System.out.println(coordinates);
             moveGui(coordinates);
             position = coordinates;
         }
         else{
-           // System.out.println("IM WAITING because im finished");
+            System.out.println("IM WAITING because im finished");
             secondsPassed++;
             if(secondsPassed >= timeBetweenRounds ){
-                System.out.println("bus"+busId+ " starting again");
-                startRound();
+                System.out.println("bus"+busId+ " starting again at time " + time );
+                startRound(time);
+                
             }
             
         }
+    }
+
+    private void resetGui(Coordinate coordinate) {
+        for (Shape shape : gui) {
+            shape.setTranslateX((coordinate.getX() - position.getX()));
+            shape.setTranslateY((coordinate.getY() - position.getY()));
+            
+        }
+    
     }
 
     private void moveGui(Coordinate coordinate) {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()) + shape.getTranslateX());
             shape.setTranslateY((coordinate.getY() - position.getY()) + shape.getTranslateY());
+           
         }
     }
 
     public void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, Color.BLUE));
+      
+        
+
     }
 
 
@@ -132,9 +150,15 @@ public class Vehicle implements Drawable, TimeUpdate {
         secondsPassed = 0;
     }
 
-    private void startRound(){
+    private void startRound(LocalTime time){
+        fillSchedule(time);
+        distance = 0;
+        resetGui(startPosition);
+        position = startPosition;
+        
         inBetweenRounds = false;
-        distance = 0; 
+        
+        schedule.printOutSchedule();
     
     }
     // TODO  :  add if it is on break or not, based on time as well 
@@ -157,15 +181,16 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
     // go through entire path and calculate arrive time for every stop
-    public void fillSchedule(){
+    public void fillSchedule(LocalTime begTime){
         int distance = 0;
         long timeCount = 0;
-        startTime = LocalTime.now();
+        //startTime = LocalTime.now().plusMinutes(5+7).plusSeconds(30);
+        startTime = begTime;
         List<Stop> stoplist = new ArrayList<>();
         List<LocalTime> timeslist = new ArrayList<>();
         System.out.println("Streetslist lenghts " + line.getStreetsList().size()+ ". LIne id is " + line.getId());
         System.out.println("path legnth: " + path.getPathLength());
-        while(distance < path.getPathLength()){
+        while(distance <= path.getPathLength()){
             try{
                 //Street currentStreet = line.getStreetByCoord(startPosition);
                 
@@ -174,17 +199,20 @@ public class Vehicle implements Drawable, TimeUpdate {
                 int tmpDistance = distance;
                 
                 for (int i = 0; i < curSpeed; i++){
-                    position = path.getNextPosition(tmpDistance);
+                    position = path.getNextPosition(tmpDistance + i);
                     Stop currentStop = line.getStopFromCoords(position);
                     
                     LocalTime time = startTime;
-                    
-                    time.plusSeconds(timeCount);
+                    //System.out.println(timeCount);                    
+                    time = time.plusSeconds(timeCount);
+                    //System.out.println(time);
                     
                     if ( currentStop != null){
                         stoplist.add(currentStop);
                         timeslist.add(time);
+                        //System.out.println("ADDING STOP ");
                     }
+                    
                 }
                 
                 distance += curSpeed;
@@ -196,13 +224,21 @@ public class Vehicle implements Drawable, TimeUpdate {
                 System.out.println(e + " FILLSCHEDULE Error");
                 break;
             }
-       }
-       System.out.println("FILL SHCEDULE WHILE LOOP DONE");
-       position = startPosition;
+        }
+        System.out.println("FILL SHCEDULE WHILE LOOP DONE");
+        
         schedule.setStopList(stoplist);
         schedule.setTimesList(timeslist);
-    }
+        oneRideLength = calculateOneRide(timeslist);
+        System.out.println("one ride by "+ busId+" takes "+ oneRideLength/60 + " minutes");
+        
 
+    }
+    
+    private long calculateOneRide(List<LocalTime> timesList){
+         long duration =  java.time.Duration.between(timesList.get(timesList.size()-1),timesList.get(0)).getSeconds();
+         return Math.abs(duration);
+    }
 
 
     @JsonIgnore
@@ -260,7 +296,10 @@ public class Vehicle implements Drawable, TimeUpdate {
     public int getSecondsPassed(){
         return secondsPassed;
     }
-
+    @JsonIgnore
+    public long getOneRideLength(){
+        return oneRideLength;
+    } // in seconds
     
 
 

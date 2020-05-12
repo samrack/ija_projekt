@@ -1,5 +1,6 @@
 package ija.project;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -99,11 +100,18 @@ public class MainController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                time = time.plusSeconds(1);
-                for(TimeUpdate update : updates) {
-                    update.update(time);
+                Platform.runLater(new Runnable(){
+                @Override
+                public void run() {
+                    
+                    time = time.plusSeconds(1);
+                    for(TimeUpdate update : updates) {
+                        update.update(time);
+                    }
                 }
+                });
             }
+        
         }, 0, (long) (1000 / scale));
 
     }

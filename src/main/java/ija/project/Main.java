@@ -12,11 +12,14 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Main extends Application {
+
+        final byte VEHICLES_PER_LINE = 10;
 
         public static void main(String[] args) {
                 launch(args);
@@ -69,16 +72,17 @@ public class Main extends Application {
          //System.out.println(linesList.size());
          //System.out.println(linesList.get(0).getId() + String.valueOf(0));
          //list of vehicles
-
+        LocalTime time = LocalTime.now();
          List<Vehicle> vList = new ArrayList<>();
          System.out.println(String.format(" LIST SIZE SHOULD BE 0 - %d",vList.size()));
-         for(int i = 0; i < 3;i++){
-                 for(int j = 0; j < 1;j++){
+         for(int i = 0; i < linesList.size();i++){
+                 for(int j = 0; j < VEHICLES_PER_LINE;j++){
                          try {
                                  //System.out.println(linesList.get(i).getPath());
                                  Vehicle v = new Vehicle("bus" + linesList.get(i).getId() + "_" + String.valueOf(j)  , linesList.get(i));
 //                                 v.setSchedule();
-                                 v.fillSchedule();
+                                 //v.fillSchedule(time);
+                                 
                                  vList.add(v);
                          }
                          catch(Exception e){
@@ -89,6 +93,10 @@ public class Main extends Application {
                  }
          }
 
+        // for (Vehicle v : vList) {
+        //         System.out.println(v);
+        //         v.getSchedule().printOutSchedule();
+        // }
 
 
         
@@ -103,7 +111,7 @@ public class Main extends Application {
                           System.out.println("ISNULL yes");
                   }
           }
-         System.out.println("prvy prvok z vlist : " + vList.get(0));
+         //System.out.println("prvy prvok z vlist : " + vList.get(0));
 
         // TODO : upravit vehicles posititons
          //System.out.println(String.format("%s",data1.getVehicles()));
