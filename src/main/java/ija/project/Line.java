@@ -15,23 +15,21 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "yamlId", scope = Line.class)
-//@JsonDeserialize(converter = Line.CallConstructor.class)
 public class Line {
     private String yamlId;
     private String id;
     private Path path;
     private List<Stop> stopsList;
-
-// maybe nanic 
     private List<Street> streetsList;
 
     private Line(){}
 
-    public Line(String yamlId, String id,Path path, List<Stop> stopsList) {
-        this.yamlId = yamlId;
+    public Line(String id,Path path, List<Stop> stopsList, List<Street> streetList) {
         this.id = id;
         this.path = path;
         this.stopsList = stopsList;
+        this.streetsList = streetList;
+
     }
 
     public String getYamlId(){
@@ -50,6 +48,9 @@ public class Line {
         return stopsList;
     }
 
+    public List<Street> getStreetsList() {
+        return streetsList;
+    }
 
     public Street getStreetByCoord(Coordinate coord) throws Exception {
         for (Street street : streetsList) {

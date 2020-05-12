@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
- @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "busId", scope = Vehicle.class)
- @JsonDeserialize(converter = Vehicle.CallConstructor.class)
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "busId", scope = Vehicle.class)
+// @JsonDeserialize(converter = Vehicle.CallConstructor.class)
 public class Vehicle implements Drawable, TimeUpdate {
     private String busId;
     private Line line;
@@ -55,11 +55,11 @@ public class Vehicle implements Drawable, TimeUpdate {
     public Vehicle(String busId,Line line) {
         this.busId = busId;
         this.line = line;
-        //this.speed = speed;
         this.path = line.getPath();
         this.schedule = new Schedule(this);
-       // System.out.println(this);
-        fillSchedule();
+        this.startPosition = path.getPath().get(0);
+        this.position = startPosition;
+//        fillSchedule();
         setGui();
     
     }
@@ -162,7 +162,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                 int curSpeed = currentStreet.getStreetSpeed();
                 int tmpDistance = distance;
                 
-                for (int i = 0;i<curSpeed;i++){
+                for (int i = 0; i < curSpeed; i++){
                     position = path.getNextPosition(tmpDistance);
                     Stop currentStop = line.getStopFromCoords(position);
                     LocalTime time = startTime;
@@ -202,9 +202,6 @@ public class Vehicle implements Drawable, TimeUpdate {
         return position;
     }
 
-    // public double getSpeed() {
-    //     return speed;
-    // }
     @JsonIgnore
     public Path getPath() {
         return path;

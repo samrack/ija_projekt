@@ -62,7 +62,7 @@ streets:
   stops:
   - *stop1
   - *stop4
-  begin:  *1
+  begin: *1
   end: *4
 - &street25 streetName: null
   stops:
@@ -80,8 +80,8 @@ streets:
   stops:
   - *stop4
   - *stop5
-  begin:  *4
-  end:  *5
+  begin: *4
+  end: *5
 - &street56 streetName: null
   stops:
   - *stop4
@@ -130,6 +130,9 @@ lines:
   - *stop1
   - *stop4
   - *stop7
+  streetsList:
+  - *street14
+  - *street47
 - &l-2 yamlId: null
   id: "line-2"
   path:
@@ -145,6 +148,11 @@ lines:
   - *stop5
   - *stop2
   - *stop3
+  streetsList:
+  - *street78
+  - *street58
+  - *street25
+  - *street23
 - &l-3 yamlId: null
   id: "line-3"
   path:
@@ -162,12 +170,9 @@ lines:
   - *stop8
   - *stop7
   - *stop4
-
-vehicles:
-  - &bus1 busId: "B1"
-    line: *l-1
-  - &bus2 busId: "B2"
-    line: *l-2
-  - &bus3 busId: "B3"
-    line: *l-3
-  
+  streetsList:
+  - *street36
+  - *street69
+  - *street89
+  - *street78
+  - *street47

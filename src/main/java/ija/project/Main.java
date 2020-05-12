@@ -28,6 +28,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
+        System.out.println("test" + getClass().getResource("/Map.fxml"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Map.fxml"));
         if (null == loader.getLocation()){
                 System.out.println("ZAS JE NULL !!!!!!!!");
@@ -63,59 +64,59 @@ public class Main extends Application {
         //System.out.println(data1.getVehicles().size());
 
 
-//        // System.out.println(data1.getLines().size());
-//         List<Line> linesList = data1.getLines();
-//         System.out.println(linesList.size());
-//         System.out.println(linesList.get(0).getId() + String.valueOf(0));
-//         //list of vehicles 
+        // System.out.println(data1.getLines().size());
+         List<Line> linesList = data1.getLines();
+         System.out.println(linesList.size());
+         System.out.println(linesList.get(0).getId() + String.valueOf(0));
+         //list of vehicles
 
-//         List<Vehicle> vList = new ArrayList<>();
-//         System.out.println(String.format(" LIST SIZE SHOULD BE 0 - %d",vList.size()));
-//         for(int i = 0; i <+ 3;i++){
-//                 for(int j = 0; j <+ 10;j++){
-//                         try {
-//                                 //System.out.println(linesList.get(i).getPath());
-//                                 Vehicle v = new Vehicle("bus" + linesList.get(i).getId() + "_" + String.valueOf(j)  , linesList.get(i));
+         List<Vehicle> vList = new ArrayList<>();
+         System.out.println(String.format(" LIST SIZE SHOULD BE 0 - %d",vList.size()));
+         for(int i = 0; i < 3;i++){
+                 for(int j = 0; j < 10;j++){
+                         try {
+                                 System.out.println(linesList.get(i).getPath());
+                                 Vehicle v = new Vehicle("bus" + linesList.get(i).getId() + "_" + String.valueOf(j)  , linesList.get(i));
 //                                 v.setSchedule();
-//                                 //v.fillSchedule();
-//                                 vList.add(v);
-//                         }
-//                         catch(Exception e){
-//                                 System.out.println(e + "CHYBA") ;
-//                         }
+                                 //v.fillSchedule();
+                                 vList.add(v);
+                         }
+                         catch(Exception e){
+                                 System.out.println(e + "CHYBA") ;
+                         }
                         
-//                         //System.out.println(String.format("LIST SIZE IN LOOP %d",vList.size()));
-//                 }
-//         }
+                         //System.out.println(String.format("LIST SIZE IN LOOP %d",vList.size()));
+                 }
+         }
 
 
 
         
-//         System.out.println("SIZE " + vList.size());
-//         // if(vList == null){
-//         //         System.out.println("ISNULL");
-//         // }
+         System.out.println("SIZE " + vList.size());
+          if(vList == null){
+                  System.out.println("ISNULL");
+          }
 
-//         // for (Vehicle vehicle : vList) {
-//         //         if (vehicle == null){
-//         //                 System.out.println("ISNULL yes");
-//         //         }
-//         // }
-//         //System.out.println(vList.get(0));
+          for (Vehicle vehicle : vList) {
+                  if (vehicle == null){
+                          System.out.println("ISNULL yes");
+                  }
+          }
+         System.out.println(vList.get(0));
 
-//        // TODO : upravit vehicles posititons
-//         //System.out.println(String.format("%s",data1.getVehicles()));
-//         try {
-//                 //elements.addAll(vList);
-//         }
-//         catch(Exception e){
-//                 System.out.println("chytil som chybu");
-//         }
+        // TODO : upravit vehicles posititons
+         System.out.println(String.format("%s",data1.getVehicles()));
+         try {
+                 elements.addAll(vList);
+         }
+         catch(Exception e){
+                 System.out.println("chytil som chybu");
+         }
 
 
         elements.addAll(data1.getStops());
         elements.addAll(data1.getStreets());
-        elements.addAll(data1.getVehicles());
+//        elements.addAll(data1.getVehicles());
         
 
         controller.setElements(elements);
