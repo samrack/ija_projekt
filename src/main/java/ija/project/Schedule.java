@@ -12,13 +12,13 @@ public class Schedule {
         this.bus = bus;
     }
 
-    public void updateStopsList(Stop stop){
-        stopsList.add(stop);
-    }
+    // public void updateStopsList(Stop stop){
+    //     stopsList.add(stop);
+    // }
 
-    public void updateTimesList(LocalTime time){
-        timesList.add(time);
-    }
+    // public void updateTimesList(LocalTime time){
+    //     timesList.add(time);
+    // }
 
     public List<Stop> getStopsList(Stop stop){
         return stopsList;
@@ -26,6 +26,14 @@ public class Schedule {
 
     public List<LocalTime> getTimesList(LocalTime time){
         return timesList;
+    }
+
+    public void setStopList(List<Stop> stopList){
+        this.stopsList = stopList; 
+    }
+
+    public void setTimesList(List<LocalTime> timeList ){
+        this.timesList = timeList;
     }
 
     

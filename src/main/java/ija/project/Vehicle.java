@@ -57,19 +57,19 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.line = line;
         //this.speed = speed;
         this.path = line.getPath();
-        //this.schedule = new Schedule(this);
+        this.schedule = new Schedule(this);
        // System.out.println(this);
-        //fillSchedule();
-        //setGui();
+        fillSchedule();
+        setGui();
     
     }
 
-    /**
-     * @param schedule the schedule to set
-     */
-    public void setSchedule() {
-        this.schedule = new Schedule(this);
-    }
+    // /**
+    //  * @param schedule the schedule to set
+    //  */
+    // public void setSchedule() {
+    //     this.schedule = new Schedule(this);
+    // }
 
     /**
      * Updates time for vehicle:
@@ -153,22 +153,24 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void fillSchedule(){
         int distance = 0;
         long timeCount = 0;
+        List<Stop> stoplist = new ArrayList<>();
+        List<LocalTime> timeslist = new ArrayList<>();
         while(distance < path.getPathLength()){
             try{
                 Street currentStreet = line.getStreetByCoord(startPosition);
                 
                 int curSpeed = currentStreet.getStreetSpeed();
                 int tmpDistance = distance;
+                
                 for (int i = 0;i<curSpeed;i++){
                     position = path.getNextPosition(tmpDistance);
                     Stop currentStop = line.getStopFromCoords(position);
                     LocalTime time = startTime;
                     time.plusSeconds(timeCount);
                     if ( currentStop != null){
-                        schedule.updateStopsList(currentStop);
-                        schedule.updateTimesList(time);
+                        stoplist.add(currentStop);
+                        timeslist.add(time);
                     }
-
                 }
                 distance += curSpeed;
                 position = path.getNextPosition(distance); 
@@ -180,6 +182,8 @@ public class Vehicle implements Drawable, TimeUpdate {
                 break;
             }
        }
+        schedule.setStopList(stoplist);
+        schedule.setTimesList(timeslist);
     }
 
 
