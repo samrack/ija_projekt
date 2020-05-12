@@ -40,9 +40,9 @@ public class Vehicle implements Drawable, TimeUpdate {
 
 
     @JsonIgnore
-    private boolean inBetweenRounds = true;
+    private boolean inBetweenRounds = false;
     @JsonIgnore
-    private int timeBetweenRounds = 10; // 10 seconds
+    private int timeBetweenRounds = 60 * 5; // 2 minutes
     @JsonIgnore
     private int secondsPassed;
 
@@ -59,7 +59,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.schedule = new Schedule(this);
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
-//        fillSchedule();
+        //fillSchedule();
         setGui();
     
     }
@@ -70,7 +70,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     // public void setSchedule() {
     //     this.schedule = new Schedule(this);
     // }
-
+    static int timeCounter = 0;
     /**
      * Updates time for vehicle:
      *  - sets new distance driven based on current vehicle speed
@@ -78,11 +78,17 @@ public class Vehicle implements Drawable, TimeUpdate {
      * **/
     @Override
     public void update(LocalTime time) {
+        
+        if (timeCounter % 30 == 0){
+            System.out.println(String.format("TIME = %s ",time));
+        }
+       // System.out.println(timeCounter);
+        timeCounter++;
         double speed = 2;
         if (!inBetweenRounds){
             // TODO: should be changed to update based on speed on current street 
             distance += speed; // 2 is speed , will ba changed to speed from street 
-            System.out.println(String.format("path len: %f, distance: %f, time %s", path.getPathLength(), distance,time));
+            //System.out.println(String.format("path len: %f, distance: %f, time %s", path.getPathLength(), distance,time));
             if(distance > path.getPathLength()){
                 // stop at last Stop 
                 Coordinate coordinates = path.getlastCoordinateOfPath();
@@ -90,7 +96,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                 position = coordinates;
                 //wait for couple minutes
                 endRound();
-                System.out.println("IM ON THE END");
+                System.out.println("bus"+busId+ " ON THE END");
                 return;
             }
             Coordinate coordinates = path.getNextPosition(distance);
@@ -98,9 +104,10 @@ public class Vehicle implements Drawable, TimeUpdate {
             position = coordinates;
         }
         else{
-            System.out.println("IM WAITING because im finished");
+           // System.out.println("IM WAITING because im finished");
             secondsPassed++;
             if(secondsPassed >= timeBetweenRounds ){
+                System.out.println("bus"+busId+ " starting again");
                 startRound();
             }
             
@@ -153,25 +160,33 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void fillSchedule(){
         int distance = 0;
         long timeCount = 0;
+        startTime = LocalTime.now();
         List<Stop> stoplist = new ArrayList<>();
         List<LocalTime> timeslist = new ArrayList<>();
+        System.out.println("Streetslist lenghts " + line.getStreetsList().size()+ ". LIne id is " + line.getId());
+        System.out.println("path legnth: " + path.getPathLength());
         while(distance < path.getPathLength()){
             try{
-                Street currentStreet = line.getStreetByCoord(startPosition);
+                //Street currentStreet = line.getStreetByCoord(startPosition);
                 
-                int curSpeed = currentStreet.getStreetSpeed();
+                //int curSpeed = currentStreet.getStreetSpeed();
+                int curSpeed = 2;
                 int tmpDistance = distance;
                 
                 for (int i = 0; i < curSpeed; i++){
                     position = path.getNextPosition(tmpDistance);
                     Stop currentStop = line.getStopFromCoords(position);
+                    
                     LocalTime time = startTime;
+                    
                     time.plusSeconds(timeCount);
+                    
                     if ( currentStop != null){
                         stoplist.add(currentStop);
                         timeslist.add(time);
                     }
                 }
+                
                 distance += curSpeed;
                 position = path.getNextPosition(distance); 
                 timeCount++;
@@ -182,6 +197,8 @@ public class Vehicle implements Drawable, TimeUpdate {
                 break;
             }
        }
+       System.out.println("FILL SHCEDULE WHILE LOOP DONE");
+       position = startPosition;
         schedule.setStopList(stoplist);
         schedule.setTimesList(timeslist);
     }

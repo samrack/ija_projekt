@@ -58,18 +58,19 @@ public class MainController {
         try {
             System.out.println("VOLAL SOM ONNEWSETTIME");
             int hours = Integer.parseInt(timeSetHours.getText());
+
             int minutes = Integer.parseInt(timeSetMinutes.getText());
             int seconds = Integer.parseInt(timeSetSeconds.getText());
+            
             timer.cancel();
             time = LocalTime.of(hours, minutes, seconds);
             startTimer(1);
-        } catch (DateTimeParseException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time value");
+        } catch (Exception ex) {
+            System.out.println(ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
             alert.showAndWait();
         }
-        finally{
-            // somehow redraw everything
-        }
+       
 
     }
 
@@ -93,6 +94,7 @@ public class MainController {
     }
 
     public void startTimer(double scale) {
+        System.out.println("TIMER STARTED");
         timer = new Timer(false);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override

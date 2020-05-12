@@ -66,23 +66,23 @@ public class Main extends Application {
 
         // System.out.println(data1.getLines().size());
          List<Line> linesList = data1.getLines();
-         System.out.println(linesList.size());
-         System.out.println(linesList.get(0).getId() + String.valueOf(0));
+         //System.out.println(linesList.size());
+         //System.out.println(linesList.get(0).getId() + String.valueOf(0));
          //list of vehicles
 
          List<Vehicle> vList = new ArrayList<>();
          System.out.println(String.format(" LIST SIZE SHOULD BE 0 - %d",vList.size()));
          for(int i = 0; i < 3;i++){
-                 for(int j = 0; j < 10;j++){
+                 for(int j = 0; j < 1;j++){
                          try {
-                                 System.out.println(linesList.get(i).getPath());
+                                 //System.out.println(linesList.get(i).getPath());
                                  Vehicle v = new Vehicle("bus" + linesList.get(i).getId() + "_" + String.valueOf(j)  , linesList.get(i));
 //                                 v.setSchedule();
-                                 //v.fillSchedule();
+                                 v.fillSchedule();
                                  vList.add(v);
                          }
                          catch(Exception e){
-                                 System.out.println(e + "CHYBA") ;
+                                 System.out.println(e + " CHYBA") ;
                          }
                         
                          //System.out.println(String.format("LIST SIZE IN LOOP %d",vList.size()));
@@ -93,6 +93,7 @@ public class Main extends Application {
 
         
          System.out.println("SIZE " + vList.size());
+
           if(vList == null){
                   System.out.println("ISNULL");
           }
@@ -102,10 +103,10 @@ public class Main extends Application {
                           System.out.println("ISNULL yes");
                   }
           }
-         System.out.println(vList.get(0));
+         System.out.println("prvy prvok z vlist : " + vList.get(0));
 
         // TODO : upravit vehicles posititons
-         System.out.println(String.format("%s",data1.getVehicles()));
+         //System.out.println(String.format("%s",data1.getVehicles()));
          try {
                  elements.addAll(vList);
          }
@@ -127,7 +128,7 @@ public class Main extends Application {
         @Override
         public void stop(){
                 System.out.println("Stage is closing");
-                //System.exit(0);
+                System.exit(0);
                 // Save file
         }
 

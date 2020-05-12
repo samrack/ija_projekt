@@ -53,20 +53,25 @@ public class Line {
     }
 
     public Street getStreetByCoord(Coordinate coord) throws Exception {
+        //System.out.println(streetsList.size());
         for (Street street : streetsList) {
+            //System.out.println(street);
             if (street.isCoordOnStreet(coord)){
+                //System.out.println("FOUND STREET ");
                 return street;
             }
         }
+        System.out.println("UZ BOLI TRI ");
         throw new Exception("Coord not on any street in Line !");
     }
 
     public Stop getStopFromCoords(Coordinate coords){
         for(Stop stop : stopsList){
             if (stop.getCoordinate().equals(coords)){
+                //System.out.println("FOUND STOP ");
                 return stop;
             }
-        }
+        }//System.out.println("getStopfromCoords returned null");
         return null;
     }
 
