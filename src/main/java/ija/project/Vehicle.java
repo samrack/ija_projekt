@@ -44,6 +44,12 @@ public class Vehicle implements Drawable, TimeUpdate {
     @JsonIgnore
     private boolean inBetweenRounds = true;
 
+    @JsonIgnore
+    private boolean isOnStop;
+
+    @JsonIgnore
+    private int stopTimer = 0;
+
     // @JsonIgnore
     // private boolean firstRound = true;
 
@@ -201,7 +207,16 @@ public class Vehicle implements Drawable, TimeUpdate {
         timeCounter++;
         double speed ;
         Street currentStreet = null;
-        if (!inBetweenRounds) {
+        if(isOnStop){
+            if (stopTimer == 40){
+                isOnStop = false;
+                stopTimer = 0;
+            }
+            else{
+                stopTimer++;
+            }
+        }
+        else if (!inBetweenRounds) {
             // TODO: should be changed to update based on speed on current street
             try {
                 currentStreet = line.getStreetByCoord(position);
@@ -225,6 +240,15 @@ public class Vehicle implements Drawable, TimeUpdate {
             //System.out.println(coordinates);
             moveGui(coordinates);
             position = coordinates;
+
+            for (LocalTime myTime : schedule.getTimesList()) {
+                if(myTime.getHour() == time.getHour() && myTime.getMinute() == time.getMinute() && myTime.getSecond() == time.getSecond()) {
+                    isOnStop = true;
+                    break;
+                } 
+            }
+
+
         }
         // if vehicle is still late to start it will skip and go next hour, based on real life :) 
         else {
@@ -283,8 +307,14 @@ public class Vehicle implements Drawable, TimeUpdate {
                     //System.out.println(time);
                     
                     if ( currentStop != null){
+                        if(time != startTime ){
+                            timeCount += 40;
+                        }
+                        
                         stoplist.add(currentStop);
                         timeslist.add(time);
+                         
+                        
                         //System.out.println("ADDING STOP ");
                     }
                 }

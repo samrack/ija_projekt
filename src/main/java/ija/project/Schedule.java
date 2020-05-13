@@ -12,11 +12,11 @@ public class Schedule {
         this.bus = bus;
     }
 
-    public List<Stop> getStopsList(Stop stop){
+    public List<Stop> getStopsList(){
         return stopsList;
     }
 
-    public List<LocalTime> getTimesList(LocalTime time){
+    public List<LocalTime> getTimesList(){
         return timesList;
     }
 
