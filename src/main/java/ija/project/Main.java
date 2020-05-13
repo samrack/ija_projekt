@@ -64,7 +64,7 @@ public class Main extends Application {
         }
         else{System.out.println("NOT A FILE PEPEHANDS");}
 
-        Data data1 = mapper.readValue(new File("data.yml"), Data.class);
+        Data data1 = mapper.readValue(new File("data/data.yml"), Data.class);
 
         List<Line> linesList = data1.getLines();
 

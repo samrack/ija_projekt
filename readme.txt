@@ -1,0 +1,1 @@
+TODO: základní popis projektu (název, členové týmu, ...)
