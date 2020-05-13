@@ -65,6 +65,9 @@ public class MainController {
             
             timer.cancel();
             time = LocalTime.of(hours, minutes, seconds);
+            for(TimeUpdate update : updates) {
+                update.newTime(time);
+            }
             startTimer(1);
         } catch (Exception ex) {
             System.out.println(ex);
@@ -113,6 +116,9 @@ public class MainController {
             }
         
         }, 0, (long) (1000 / scale));
+
+        
+
 
     }
 

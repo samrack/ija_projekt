@@ -68,6 +68,7 @@ public class Line {
         //System.out.println(streetsList.size());
         for (Street street : streetsList) {
             //System.out.println(street);
+        
             if (street.isCoordOnStreet(coord)){
                 //System.out.println("FOUND STREET ");
                 return street;

@@ -65,17 +65,47 @@ public class Street implements Drawable {
 
     public boolean isCoordOnStreet(Coordinate coord){
         // y = a*x + b
-        double a = (begin.getY() -  end.getY()) / (begin.getX() - end.getX());
-        double b = 0 - ((a * begin.getX()) - begin.getY()) ;  
 
         double minX = Math.min(begin.getX(), end.getX());
         double minY = Math.min(begin.getY(), end.getY());
         double maxX = Math.max(begin.getX(), end.getX());
         double maxY = Math.max(begin.getY(), end.getY());
 
+        double a = 0;
+        double bottom = (begin.getX() - end.getX());
+        double top = (begin.getY() -  end.getY()) ;
+        if(bottom == 0 || top == 0){
+            if (top == 0){
+                if((coord.getX() >= minX)  && (coord.getX()  <= maxX)){
+                    //System.out.println("isCOORD WAS TRUE");
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            } 
+            else{
+                if((coord.getY() >= minY)  && (coord.getY()  <= maxY)){
+                    //System.out.println("isCOORD WAS TRUE");
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        else{
+             a = top / bottom ;
+        }
+        double b = 0 - ((a * begin.getX()) - begin.getY()) ;  
+
+        
+        System.out.println("A IS " + a + " and B is " + b + " y is "+ coord.getY() + " vylsedok " + (a * coord.getX() + b) + " konec.");
+
         // coord is on the street which is a line 
         if (coord.getY() == a * coord.getX() + b ){
             if ( (coord.getY() >= minY) && (coord.getY() <= maxY) && (coord.getX() >= minX)  && (coord.getX()  <= maxX)){
+                //System.out.println("isCOORD WAS TRUE");
                 return true;
             } 
         }

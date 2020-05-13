@@ -25,12 +25,12 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Line line;
     @JsonIgnore
     private Coordinate position;
-    //private double speed;
+    // private double speed;
     @JsonIgnore
     private double distance = 0;
     @JsonIgnore
     private Schedule schedule;
-    
+
     @JsonIgnore
     private LocalTime startTime;
     @JsonIgnore
@@ -40,7 +40,6 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Coordinate startPosition;
     @JsonIgnore
     private Path path;
-
 
     @JsonIgnore
     private boolean inBetweenRounds = true;
@@ -55,14 +54,13 @@ public class Vehicle implements Drawable, TimeUpdate {
     @JsonIgnore
     private long oneRideLength; // in seconds
 
-  
     @JsonIgnore
     private List<Shape> gui;
 
-    private Vehicle(){
+    private Vehicle() {
     }
 
-    public Vehicle(String busId,Line line,int startingMinute) {
+    public Vehicle(String busId, Line line, int startingMinute) {
         this.busId = busId;
         this.line = line;
         this.path = line.getPath();
@@ -72,22 +70,52 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.startingMinute = startingMinute;
         fillSchedule(composeStartignTime());
         setGui();
-    
+
     }
 
-    private LocalTime composeStartignTime(){
+    private LocalTime composeStartignTime() {
         return LocalTime.of(LocalTime.now().getHour(), startingMinute, 0);
     }
 
-/* TODO : 
-    - prekreslit giu vzdy ked sa setne cas 
-    - nacitat rychlost based on Street
-    - upravit cas implictny scale     // asi netreba ani 
-    - nastavit vehicles startTimes na rozne hodnoty podla vseobecnej schedule
-    - urobit visible timer 
-      
+    /*
+     * TODO : - prekreslit giu vzdy ked sa setne cas - nacitat rychlost based on
+     * Street - upravit cas implictny scale // asi netreba ani - nastavit vehicles
+     * startTimes na rozne hodnoty podla vseobecnej schedule - - urobit visible
+     * timer
+     * 
+     * 
+     */
 
-*/
+    // redraws all vehicles to the place where they should be
+    @Override
+    public void newTime(LocalTime time) {
+        System.out.println("ATTENTION PROGRAMMER NEWTIME HAS BEEN TRIGGERED with time : " + time);
+        Coordinate positionInTime;
+        //positionInTime = computePositionByTime(time);
+        inBetweenRounds = true;
+        //fillSchedule(time);
+        positionInTime = new Coordinate(300, 100);
+        System.out.println("start positon = " + startPosition);
+        System.out.println("Positon = " + position);
+        //distance = 0;
+        //position = startPosition;
+        moveGui(startPosition);
+        position = startPosition;
+        //System.out.println("Positon = " + position);
+        moveGui(positionInTime);
+        System.out.println("Positon = " + position);
+        position = positionInTime;
+        System.out.println("Positon po = " + position);
+        //inBetweenRounds = false;
+        try {
+            Street currentStreet = line.getStreetByCoord(position);
+            System.out.println(currentStreet.getStreetName());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+}
 
 
     // /**
@@ -104,7 +132,6 @@ public class Vehicle implements Drawable, TimeUpdate {
      * **/
     @Override
     public void update(LocalTime time) {
-        
         // if (timeCounter % 30 == 0){
         //     System.out.println(String.format("TIME = %s ",time));
         // }
@@ -130,6 +157,7 @@ public class Vehicle implements Drawable, TimeUpdate {
             moveGui(coordinates);
             position = coordinates;
         }
+        // if vehicle is still late to start it will skip and go next hour, based on real life :) 
         else {
             if (time.getMinute() == startingMinute){
                 //firstRound = false;
@@ -138,16 +166,6 @@ public class Vehicle implements Drawable, TimeUpdate {
                 
             }
         }
-        // else{
-        //     //System.out.println("IM WAITING because im finished");
-        //     secondsPassed++;
-        //     if(secondsPassed >= timeBetweenRounds ){
-        //         System.out.println("bus"+busId+ " starting again at time " + time );
-        //         startRound(time);
-                
-        //     }
-            
-        //}
     }
 
     private void endRound(){
@@ -168,21 +186,25 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
     // TODO  :  add if it is on break or not, based on time as well 
     // computes position of vehicle based on time of day 
-    private void computePositionByTime(LocalTime time){
+    private Coordinate computePositionByTime(LocalTime time) {
         long diffInSeconds = java.time.Duration.between(time, startTime).getSeconds();
-        int distance = 0;
+        int myDistance = 0;
+        System.out.println("Postiotn is " + position);
+        Coordinate newPosition = startPosition; // just so it is initialized
         for(int i = 0;i < diffInSeconds;i++){
             try{
-                Street currentStreet = line.getStreetByCoord(startPosition);
+                Street currentStreet = line.getStreetByCoord(newPosition);
                 int curSpeed = currentStreet.getStreetSpeed();
                 distance += curSpeed;
-                position = path.getNextPosition(distance); 
+                newPosition = path.getNextPosition(distance); 
                 
             }
             catch(Exception e){
                 System.out.println(e);
             }
        }
+       System.out.println(newPosition);
+       return newPosition;
     }
 
     // go through entire path and calculate arrive time for every stop
@@ -251,6 +273,9 @@ public class Vehicle implements Drawable, TimeUpdate {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()));
             shape.setTranslateY((coordinate.getY() - position.getY()));
+            System.out.println("=== reset ===");
+            System.out.println( shape.getTranslateX());
+            System.out.println( shape.getTranslateY());
             
         }
     
@@ -260,6 +285,9 @@ public class Vehicle implements Drawable, TimeUpdate {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()) + shape.getTranslateX());
             shape.setTranslateY((coordinate.getY() - position.getY()) + shape.getTranslateY());
+            System.out.println("=== move ===");
+            System.out.println( shape.getTranslateX());
+            System.out.println( shape.getTranslateY());
            
         }
     }
@@ -312,8 +340,6 @@ public class Vehicle implements Drawable, TimeUpdate {
     public Coordinate getStartPosition(){
         return startPosition;
     }
-  
-
 
     @JsonIgnore
     public boolean getInBetweenRounds(){
