@@ -100,19 +100,19 @@ public class Vehicle implements Drawable, TimeUpdate {
         // fillSchedule(time);
         // positionInTime = new Coordinate(300, 100);
         positionInTime = computePositionByTime(time);
-        System.out.println("Positonbytime = " + positionInTime);
-        System.out.println("start positon = " + startPosition);
-        System.out.println("Positon = " + position);
+        //System.out.println("Positonbytime = " + positionInTime);
+        //System.out.println("start positon = " + startPosition);
+        //System.out.println("Positon = " + position);
         // distance = 0;
         // position = startPosition;
         moveGui(startPosition);
         position = startPosition;
         // System.out.println("Positon = " + position);
         moveGui(positionInTime);
-        System.out.println("Positon = " + position);
+        //System.out.println("Positon = " + position);
         position = positionInTime;
-        System.out.println("Positon po = " + position);
-        System.out.println("DISTANCE = " + distance);
+        //System.out.println("Positon po = " + position);
+        //System.out.println("DISTANCE = " + distance);
         // vehicle is still in start or already at the end
         if (positionInTime.equals(startPosition) || distance >= path.getPathLength()) {
 
@@ -125,12 +125,36 @@ public class Vehicle implements Drawable, TimeUpdate {
     // TODO : add if it is on break or not, based on time as well
     // computes position of vehicle based on time of day
     private Coordinate computePositionByTime(LocalTime time) {
+        // vehicle started before end of hour and hasnt finished round yet
+        if((startingMinute + ((int)oneRideLength / 60)) > (60 + time.getMinute()) ){
+            int untilHour = (60 - startingMinute);
+
+            long secondsOnRoad = (untilHour + time.getMinute()) * 60;
+            Coordinate tmp2Position = startPosition;
+            System.out.println("START POSITION IN SPECIA IS = "+ tmp2Position);
+            int tmp2Distance = 0;
+
+            for (int i = 0; i < secondsOnRoad; i++) {
+                try {
+                    Street currentStreet = line.getStreetByCoord(tmp2Position);
+                    int curSpeed = currentStreet.getStreetSpeed();
+                    tmp2Distance += curSpeed;
+                    tmp2Position = path.getNextPosition(tmp2Distance);
+                    //System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            distance = tmp2Distance;
+            System.out.println("SOM V SPECIAL CASE = ");
+            return tmp2Position;
+        }
         // vehicle hasnt started route yet so it is in its starting station
-        if (time.getMinute() < startingMinute) {
+        else if (time.getMinute() < startingMinute) {
             return startPosition;
         }
         // vehicle finished route
-        else if (time.getMinute() >= startingMinute + (oneRideLength / 60)) {
+        else if (time.getMinute() >= startingMinute + (int)(oneRideLength / 60)) {
             return startPosition;
         }
         // vehicle is on the way
@@ -144,14 +168,14 @@ public class Vehicle implements Drawable, TimeUpdate {
                     Street currentStreet = line.getStreetByCoord(tmpPosition);
                     int curSpeed = currentStreet.getStreetSpeed();
                     tmpDistance += curSpeed;
-                    tmpPosition = path.getNextPosition(distance);
-                    System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
+                    tmpPosition = path.getNextPosition(tmpDistance);
+                    //System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
             distance = tmpDistance;
-            System.out.println("DISTANCE v compiute = " + distance);
+            //System.out.println("DISTANCE v compiute = " + distance);
             return tmpPosition;
         }
     }
