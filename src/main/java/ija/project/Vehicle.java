@@ -91,10 +91,12 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void newTime(LocalTime time) {
         System.out.println("ATTENTION PROGRAMMER NEWTIME HAS BEEN TRIGGERED with time : " + time);
         Coordinate positionInTime;
-        //positionInTime = computePositionByTime(time);
+        
         inBetweenRounds = true;
         //fillSchedule(time);
-        positionInTime = new Coordinate(300, 100);
+        //positionInTime = new Coordinate(300, 100);
+        positionInTime = computePositionByTime(time);
+        System.out.println("Positonbytime = " + positionInTime);
         System.out.println("start positon = " + startPosition);
         System.out.println("Positon = " + position);
         //distance = 0;
@@ -106,16 +108,50 @@ public class Vehicle implements Drawable, TimeUpdate {
         System.out.println("Positon = " + position);
         position = positionInTime;
         System.out.println("Positon po = " + position);
-        //inBetweenRounds = false;
-        try {
-            Street currentStreet = line.getStreetByCoord(position);
-            System.out.println(currentStreet.getStreetName());
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        System.out.println("DISTANCE = " + distance);
+        // vehicle is still in start or already at the end 
+        if (positionInTime.equals(startPosition) || distance >= path.getPathLength() ){
+
+        }
+        else{
+            inBetweenRounds = false;
         }
 
 }
+
+
+ // TODO  :  add if it is on break or not, based on time as well 
+    // computes position of vehicle based on time of day 
+    private Coordinate computePositionByTime(LocalTime time) {
+        // vehicle hasnt started route yet so it is in its starting station 
+        
+        if(time.getMinute() < startingMinute){
+            return startPosition;
+        }
+        // vehicle is on the way
+        else{
+            long secondsOnRoad = (time.getMinute() - startingMinute) * 60;
+            Coordinate tmpPosition = startPosition;
+            int tmpDistance = 0;
+
+            for(int i = 0; i < secondsOnRoad; i++){
+                try{
+                    Street currentStreet = line.getStreetByCoord(tmpPosition);
+                    int curSpeed = currentStreet.getStreetSpeed();
+                    tmpDistance += curSpeed;
+                    tmpPosition = path.getNextPosition(distance); 
+                    System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                }
+            }
+            distance = tmpDistance;
+            System.out.println("DISTANCE v compiute = " + distance);
+            return tmpPosition;
+        }
+    }
+
 
 
     // /**
@@ -184,28 +220,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         schedule.printOutSchedule();
     
     }
-    // TODO  :  add if it is on break or not, based on time as well 
-    // computes position of vehicle based on time of day 
-    private Coordinate computePositionByTime(LocalTime time) {
-        long diffInSeconds = java.time.Duration.between(time, startTime).getSeconds();
-        int myDistance = 0;
-        System.out.println("Postiotn is " + position);
-        Coordinate newPosition = startPosition; // just so it is initialized
-        for(int i = 0;i < diffInSeconds;i++){
-            try{
-                Street currentStreet = line.getStreetByCoord(newPosition);
-                int curSpeed = currentStreet.getStreetSpeed();
-                distance += curSpeed;
-                newPosition = path.getNextPosition(distance); 
-                
-            }
-            catch(Exception e){
-                System.out.println(e);
-            }
-       }
-       System.out.println(newPosition);
-       return newPosition;
-    }
+   
 
     // go through entire path and calculate arrive time for every stop
     public void fillSchedule(LocalTime begTime){
@@ -273,9 +288,9 @@ public class Vehicle implements Drawable, TimeUpdate {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()));
             shape.setTranslateY((coordinate.getY() - position.getY()));
-            System.out.println("=== reset ===");
-            System.out.println( shape.getTranslateX());
-            System.out.println( shape.getTranslateY());
+            // System.out.println("=== reset ===");
+            // System.out.println( shape.getTranslateX());
+            // System.out.println( shape.getTranslateY());
             
         }
     
@@ -285,9 +300,9 @@ public class Vehicle implements Drawable, TimeUpdate {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()) + shape.getTranslateX());
             shape.setTranslateY((coordinate.getY() - position.getY()) + shape.getTranslateY());
-            System.out.println("=== move ===");
-            System.out.println( shape.getTranslateX());
-            System.out.println( shape.getTranslateY());
+            // System.out.println("=== move ===");
+            // System.out.println( shape.getTranslateX());
+            // System.out.println( shape.getTranslateY());
            
         }
     }

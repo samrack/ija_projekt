@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-        static final byte VEHICLES_PER_LINE = 1;
+        static final byte VEHICLES_PER_LINE = 10;
 
         public static void main(String[] args) {
                 launch(args);
@@ -81,7 +81,7 @@ public class Main extends Application {
         LocalTime time = LocalTime.now();
          List<Vehicle> vList = new ArrayList<>();
          System.out.println(String.format(" LIST SIZE SHOULD BE 0 - %d",vList.size()));
-         for(int i = 0; i < linesList.size() -2 ;i++){
+         for(int i = 0; i < linesList.size()  ;i++){
                  for(int j = 0; j < VEHICLES_PER_LINE;j++){
                          try {
                                  //System.out.println(linesList.get(i).getPath());

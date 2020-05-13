@@ -26,7 +26,7 @@ public class Street implements Drawable {
     private List<Stop> stops = new ArrayList<>();
     //private List<Coordinate> coordinates = new ArrayList<>();
 
-    private int speed;
+    private int speed = 2;
 
     private Street () {
     }
