@@ -267,10 +267,10 @@ public class Vehicle implements Drawable, TimeUpdate {
         System.out.println("path legnth: " + path.getPathLength());
         while(distance <= path.getPathLength()){
             try{
-                //Street currentStreet = line.getStreetByCoord(startPosition);
+                Street currentStreet = line.getStreetByCoord(startPosition);
                 
-                //int curSpeed = currentStreet.getStreetSpeed();
-                int curSpeed = 2;
+                int curSpeed = currentStreet.getStreetSpeed();
+                //int curSpeed = 2;
                 int tmpDistance = distance;
                 
                 for (int i = 0; i < curSpeed; i++){

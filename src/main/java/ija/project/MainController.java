@@ -31,11 +31,8 @@ public class MainController {
     private TextField timeSetSeconds;
 
     @FXML
-    private TextField slowedStreetName;
-
-    @FXML
-    private TextField speedUpStreetName;
-
+    private TextField textStreetName;
+   
 
     private Timer timer;
     private LocalTime time = LocalTime.now();
@@ -49,7 +46,7 @@ public class MainController {
 
     @FXML
     private void onSlowStreet() {
-        String streetName = (slowedStreetName.getText());
+        String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
             if(street.getStreetName() == streetName){
                 street.setStreetSpeed(Street.SLOWED_SPEED);
@@ -70,7 +67,7 @@ public class MainController {
 
     @FXML
     private void onSpeedUpStreet() {
-        String streetName = (speedUpStreetName.getText());
+        String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
             if(street.getStreetName() == streetName){
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
