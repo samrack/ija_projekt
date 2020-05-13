@@ -36,5 +36,7 @@ public class Schedule {
        }
    }
     
-    
+   /* KAZDA LINKA MA STARTTIMES :  00 06 12 18 24 20 36 42 48 54  */ 
+
+
 }

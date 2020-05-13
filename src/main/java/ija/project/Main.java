@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-        static final byte VEHICLES_PER_LINE = 1;
+        static final byte VEHICLES_PER_LINE = 10;
 
         public static void main(String[] args) {
                 launch(args);
@@ -72,6 +72,10 @@ public class Main extends Application {
         linesList.get(0).setLineColor(Color.BLUE);
         linesList.get(1).setLineColor(Color.GREEN);
         linesList.get(2).setLineColor(Color.ORANGE);
+
+
+        /* list of depart time of buses of the line */
+        List<Integer> departTimesList = Arrays.asList( 0, 6, 12, 18, 24, 20, 36, 42, 48, 54);
          
          //list of vehicles
         LocalTime time = LocalTime.now();
@@ -81,10 +85,7 @@ public class Main extends Application {
                  for(int j = 0; j < VEHICLES_PER_LINE;j++){
                          try {
                                  //System.out.println(linesList.get(i).getPath());
-                                 Vehicle v = new Vehicle("bus" + linesList.get(i).getId() + "_" + String.valueOf(j)  , linesList.get(i));
-//                                 v.setSchedule();
-                                 //v.fillSchedule(time);
-                                 
+                                 Vehicle v = new Vehicle("bus" + linesList.get(i).getId() + "_" + String.valueOf(j)  , linesList.get(i), departTimesList.get(j));
                                  vList.add(v);
                          }
                          catch(Exception e){

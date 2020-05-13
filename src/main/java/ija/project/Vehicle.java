@@ -34,13 +34,20 @@ public class Vehicle implements Drawable, TimeUpdate {
     @JsonIgnore
     private LocalTime startTime;
     @JsonIgnore
+    private int startingMinute;
+
+    @JsonIgnore
     private Coordinate startPosition;
     @JsonIgnore
     private Path path;
 
 
     @JsonIgnore
-    private boolean inBetweenRounds = false;
+    private boolean inBetweenRounds = true;
+
+    @JsonIgnore
+    private boolean firstRound = true;
+
     @JsonIgnore
     private int timeBetweenRounds = 60 * 5; // 5 minutes
     @JsonIgnore
@@ -55,22 +62,27 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Vehicle(){
     }
 
-    public Vehicle(String busId,Line line) {
+    public Vehicle(String busId,Line line,int startingMinute) {
         this.busId = busId;
         this.line = line;
         this.path = line.getPath();
         this.schedule = new Schedule(this);
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
-        fillSchedule(LocalTime.now());
+        this.startingMinute = startingMinute;
+        fillSchedule(composeStartignTime());
         setGui();
     
+    }
+
+    private LocalTime composeStartignTime(){
+        return LocalTime.of(LocalTime.now().getHour(), startingMinute, 0);
     }
 
 /* TODO : 
     - prekreslit giu vzdy ked sa setne cas 
     - nacitat rychlost based on Street
-    - upravit cas implictny scale
+    - upravit cas implictny scale     // asi netreba ani 
     - nastavit vehicles startTimes na rozne hodnoty podla vseobecnej schedule
     - urobit visible timer 
       
@@ -118,8 +130,13 @@ public class Vehicle implements Drawable, TimeUpdate {
             moveGui(coordinates);
             position = coordinates;
         }
+        else if(firstRound) {
+            if (time.getMinute() == startingMinute){
+                firstRound = false;
+            }
+        }
         else{
-            System.out.println("IM WAITING because im finished");
+            //System.out.println("IM WAITING because im finished");
             secondsPassed++;
             if(secondsPassed >= timeBetweenRounds ){
                 System.out.println("bus"+busId+ " starting again at time " + time );
@@ -208,12 +225,13 @@ public class Vehicle implements Drawable, TimeUpdate {
                 break;
             }
         }
-        System.out.println("FILL SHCEDULE WHILE LOOP DONE");
+       // System.out.println("FILL SHCEDULE WHILE LOOP DONE");
         
         schedule.setStopList(stoplist);
         schedule.setTimesList(timeslist);
         oneRideLength = calculateOneRide(timeslist);
         System.out.println("one ride by "+ busId+" takes "+ oneRideLength/60 + " minutes");
+        //schedule.printOutSchedule();
     
     }
     
