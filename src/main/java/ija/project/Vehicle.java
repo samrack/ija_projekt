@@ -67,6 +67,17 @@ public class Vehicle implements Drawable, TimeUpdate {
     
     }
 
+/* TODO : 
+    - prekreslit giu vzdy ked sa setne cas 
+    - nacitat rychlost based on Street
+    - upravit cas implictny scale
+    - nastavit vehicles startTimes na rozne hodnoty podla vseobecnej schedule
+    - urobit visible timer 
+      
+
+*/
+
+
     // /**
     //  * @param schedule the schedule to set
     //  */
@@ -118,32 +129,6 @@ public class Vehicle implements Drawable, TimeUpdate {
             
         }
     }
-
-    private void resetGui(Coordinate coordinate) {
-        for (Shape shape : gui) {
-            shape.setTranslateX((coordinate.getX() - position.getX()));
-            shape.setTranslateY((coordinate.getY() - position.getY()));
-            
-        }
-    
-    }
-
-    private void moveGui(Coordinate coordinate) {
-        for (Shape shape : gui) {
-            shape.setTranslateX((coordinate.getX() - position.getX()) + shape.getTranslateX());
-            shape.setTranslateY((coordinate.getY() - position.getY()) + shape.getTranslateY());
-           
-        }
-    }
-
-    public void setGui() {
-        this.gui = new ArrayList<Shape>();
-        this.gui.add(new Circle(position.getX(), position.getY(), 10, Color.BLUE));
-      
-        
-
-    }
-
 
     private void endRound(){
         inBetweenRounds = true;
@@ -212,9 +197,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                         timeslist.add(time);
                         //System.out.println("ADDING STOP ");
                     }
-                    
                 }
-                
                 distance += curSpeed;
                 position = path.getNextPosition(distance); 
                 timeCount++;
@@ -231,8 +214,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         schedule.setTimesList(timeslist);
         oneRideLength = calculateOneRide(timeslist);
         System.out.println("one ride by "+ busId+" takes "+ oneRideLength/60 + " minutes");
-        
-
+    
     }
     
     private long calculateOneRide(List<LocalTime> timesList){
@@ -240,6 +222,34 @@ public class Vehicle implements Drawable, TimeUpdate {
          return Math.abs(duration);
     }
 
+
+
+    // =========== gui =========== // 
+
+    private void resetGui(Coordinate coordinate) {
+        for (Shape shape : gui) {
+            shape.setTranslateX((coordinate.getX() - position.getX()));
+            shape.setTranslateY((coordinate.getY() - position.getY()));
+            
+        }
+    
+    }
+
+    private void moveGui(Coordinate coordinate) {
+        for (Shape shape : gui) {
+            shape.setTranslateX((coordinate.getX() - position.getX()) + shape.getTranslateX());
+            shape.setTranslateY((coordinate.getY() - position.getY()) + shape.getTranslateY());
+           
+        }
+    }
+
+    public void setGui() {
+        this.gui = new ArrayList<Shape>();
+        this.gui.add(new Circle(position.getX(), position.getY(), 10, line.getLineColor()));
+      
+    }
+    
+    // =========== Getters =========== // 
 
     @JsonIgnore
     @Override

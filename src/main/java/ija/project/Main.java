@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-        final byte VEHICLES_PER_LINE = 10;
+        static final byte VEHICLES_PER_LINE = 1;
 
         public static void main(String[] args) {
                 launch(args);
@@ -64,13 +65,14 @@ public class Main extends Application {
         else{System.out.println("NOT A FILE PEPEHANDS");}
 
         Data data1 = mapper.readValue(new File("data.yml"), Data.class);
-        //System.out.println(data1.getVehicles().size());
 
+        List<Line> linesList = data1.getLines();
 
-        // System.out.println(data1.getLines().size());
-         List<Line> linesList = data1.getLines();
-         //System.out.println(linesList.size());
-         //System.out.println(linesList.get(0).getId() + String.valueOf(0));
+        // ----- set color to lines -----// 
+        linesList.get(0).setLineColor(Color.BLUE);
+        linesList.get(1).setLineColor(Color.GREEN);
+        linesList.get(2).setLineColor(Color.ORANGE);
+         
          //list of vehicles
         LocalTime time = LocalTime.now();
          List<Vehicle> vList = new ArrayList<>();
@@ -125,7 +127,7 @@ public class Main extends Application {
 
         elements.addAll(data1.getStops());
         elements.addAll(data1.getStreets());
-//        elements.addAll(data1.getVehicles());
+
         
 
         controller.setElements(elements);
