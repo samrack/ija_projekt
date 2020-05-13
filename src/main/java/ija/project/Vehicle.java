@@ -78,13 +78,17 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
     /*
-     * TODO : - prekreslit giu vzdy ked sa setne cas - nacitat rychlost based on
-     * Street - upravit cas implictny scale // asi netreba ani - nastavit vehicles
-     * startTimes na rozne hodnoty podla vseobecnej schedule - - urobit visible
+     * TODO : 
      * timer - osetrit time set pre buses ktore su na prelome hodiny
      * 
      * 
      */
+
+
+    @Override
+     public void reloadSchedule(LocalTime time) {
+         fillSchedule(time);         
+     }
 
     // redraws all vehicles to the place where they should be
     @Override

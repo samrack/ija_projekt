@@ -16,7 +16,7 @@ import java.util.TimerTask;
 
 public class MainController {
 
-   
+   // Possible TODO : set Scale to class variable so then it is consistent after timeset or sltreet slow, it might be better not to do it tho.
 
     @FXML
     private Pane content;
@@ -54,6 +54,11 @@ public class MainController {
             if(street.getStreetName() == streetName){
                 street.setStreetSpeed(Street.SLOWED_SPEED);
                 System.out.println("street " + streetName + " slowed");
+                timer.cancel();
+                for(TimeUpdate update : updates) {
+                    update.reloadSchedule(time);
+                }
+                startTimer(1);
                 return;
             }
         }
@@ -70,6 +75,12 @@ public class MainController {
             if(street.getStreetName() == streetName){
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
                 System.out.println("street " + streetName + " back to default speed");
+
+                timer.cancel();
+                for(TimeUpdate update : updates) {
+                    update.reloadSchedule(time);
+                }
+                startTimer(1);
                 return;
             }
         }
