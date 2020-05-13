@@ -82,6 +82,7 @@ public class Vehicle implements Drawable, TimeUpdate {
      * Street - upravit cas implictny scale // asi netreba ani - nastavit vehicles
      * startTimes na rozne hodnoty podla vseobecnej schedule - - urobit visible
      * timer
+     * - osetrit time set pre buses ktore su na prelome hodiny
      * 
      * 
      */
@@ -124,8 +125,11 @@ public class Vehicle implements Drawable, TimeUpdate {
     // computes position of vehicle based on time of day 
     private Coordinate computePositionByTime(LocalTime time) {
         // vehicle hasnt started route yet so it is in its starting station 
-        
         if(time.getMinute() < startingMinute){
+            return startPosition;
+        }
+        // vehicle finished route
+        else if (time.getMinute() >= startingMinute + (oneRideLength / 60)) {
             return startPosition;
         }
         // vehicle is on the way

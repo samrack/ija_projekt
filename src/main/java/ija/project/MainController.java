@@ -108,6 +108,7 @@ public class MainController {
                 public void run() {
                     
                     time = time.plusSeconds(1);
+                    System.out.println("TIME = " + time);
                     for(TimeUpdate update : updates) {
                         update.update(time);
                     }
