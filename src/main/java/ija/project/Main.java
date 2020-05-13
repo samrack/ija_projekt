@@ -75,13 +75,13 @@ public class Main extends Application {
 
 
         /* list of depart time of buses of the line */
-        List<Integer> departTimesList = Arrays.asList( 0, 6, 12, 18, 24, 20, 36, 42, 48, 54);
+        List<Integer> departTimesList = Arrays.asList( 0, 6, 12, 18, 24, 30, 36, 42, 48, 54);
          
          //list of vehicles
         LocalTime time = LocalTime.now();
          List<Vehicle> vList = new ArrayList<>();
          System.out.println(String.format(" LIST SIZE SHOULD BE 0 - %d",vList.size()));
-         for(int i = 0; i < linesList.size();i++){
+         for(int i = 0; i < linesList.size() -2 ;i++){
                  for(int j = 0; j < VEHICLES_PER_LINE;j++){
                          try {
                                  //System.out.println(linesList.get(i).getPath());

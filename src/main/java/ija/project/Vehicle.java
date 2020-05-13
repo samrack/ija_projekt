@@ -45,8 +45,8 @@ public class Vehicle implements Drawable, TimeUpdate {
     @JsonIgnore
     private boolean inBetweenRounds = true;
 
-    @JsonIgnore
-    private boolean firstRound = true;
+    // @JsonIgnore
+    // private boolean firstRound = true;
 
     @JsonIgnore
     private int timeBetweenRounds = 60 * 5; // 5 minutes
@@ -130,21 +130,24 @@ public class Vehicle implements Drawable, TimeUpdate {
             moveGui(coordinates);
             position = coordinates;
         }
-        else if(firstRound) {
+        else {
             if (time.getMinute() == startingMinute){
-                firstRound = false;
-            }
-        }
-        else{
-            //System.out.println("IM WAITING because im finished");
-            secondsPassed++;
-            if(secondsPassed >= timeBetweenRounds ){
+                //firstRound = false;
                 System.out.println("bus"+busId+ " starting again at time " + time );
                 startRound(time);
                 
             }
-            
         }
+        // else{
+        //     //System.out.println("IM WAITING because im finished");
+        //     secondsPassed++;
+        //     if(secondsPassed >= timeBetweenRounds ){
+        //         System.out.println("bus"+busId+ " starting again at time " + time );
+        //         startRound(time);
+                
+        //     }
+            
+        //}
     }
 
     private void endRound(){
