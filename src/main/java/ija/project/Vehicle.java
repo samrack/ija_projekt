@@ -81,8 +81,7 @@ public class Vehicle implements Drawable, TimeUpdate {
      * TODO : - prekreslit giu vzdy ked sa setne cas - nacitat rychlost based on
      * Street - upravit cas implictny scale // asi netreba ani - nastavit vehicles
      * startTimes na rozne hodnoty podla vseobecnej schedule - - urobit visible
-     * timer
-     * - osetrit time set pre buses ktore su na prelome hodiny
+     * timer - osetrit time set pre buses ktore su na prelome hodiny
      * 
      * 
      */
@@ -92,40 +91,38 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void newTime(LocalTime time) {
         System.out.println("ATTENTION PROGRAMMER NEWTIME HAS BEEN TRIGGERED with time : " + time);
         Coordinate positionInTime;
-        
+
         inBetweenRounds = true;
-        //fillSchedule(time);
-        //positionInTime = new Coordinate(300, 100);
+        // fillSchedule(time);
+        // positionInTime = new Coordinate(300, 100);
         positionInTime = computePositionByTime(time);
         System.out.println("Positonbytime = " + positionInTime);
         System.out.println("start positon = " + startPosition);
         System.out.println("Positon = " + position);
-        //distance = 0;
-        //position = startPosition;
+        // distance = 0;
+        // position = startPosition;
         moveGui(startPosition);
         position = startPosition;
-        //System.out.println("Positon = " + position);
+        // System.out.println("Positon = " + position);
         moveGui(positionInTime);
         System.out.println("Positon = " + position);
         position = positionInTime;
         System.out.println("Positon po = " + position);
         System.out.println("DISTANCE = " + distance);
-        // vehicle is still in start or already at the end 
-        if (positionInTime.equals(startPosition) || distance >= path.getPathLength() ){
+        // vehicle is still in start or already at the end
+        if (positionInTime.equals(startPosition) || distance >= path.getPathLength()) {
 
-        }
-        else{
+        } else {
             inBetweenRounds = false;
         }
 
-}
+    }
 
-
- // TODO  :  add if it is on break or not, based on time as well 
-    // computes position of vehicle based on time of day 
+    // TODO : add if it is on break or not, based on time as well
+    // computes position of vehicle based on time of day
     private Coordinate computePositionByTime(LocalTime time) {
-        // vehicle hasnt started route yet so it is in its starting station 
-        if(time.getMinute() < startingMinute){
+        // vehicle hasnt started route yet so it is in its starting station
+        if (time.getMinute() < startingMinute) {
             return startPosition;
         }
         // vehicle finished route
@@ -133,20 +130,19 @@ public class Vehicle implements Drawable, TimeUpdate {
             return startPosition;
         }
         // vehicle is on the way
-        else{
+        else {
             long secondsOnRoad = (time.getMinute() - startingMinute) * 60;
             Coordinate tmpPosition = startPosition;
             int tmpDistance = 0;
 
-            for(int i = 0; i < secondsOnRoad; i++){
-                try{
+            for (int i = 0; i < secondsOnRoad; i++) {
+                try {
                     Street currentStreet = line.getStreetByCoord(tmpPosition);
                     int curSpeed = currentStreet.getStreetSpeed();
                     tmpDistance += curSpeed;
-                    tmpPosition = path.getNextPosition(distance); 
+                    tmpPosition = path.getNextPosition(distance);
                     System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     System.out.println(e);
                 }
             }
@@ -156,30 +152,35 @@ public class Vehicle implements Drawable, TimeUpdate {
         }
     }
 
-
-
     // /**
-    //  * @param schedule the schedule to set
-    //  */
+    // * @param schedule the schedule to set
+    // */
     // public void setSchedule() {
-    //     this.schedule = new Schedule(this);
+    // this.schedule = new Schedule(this);
     // }
     static int timeCounter = 0;
+
     /**
-     * Updates time for vehicle:
-     *  - sets new distance driven based on current vehicle speed
-     *  - this distance is used to update vehicle position
-     * **/
+     * Updates time for vehicle: - sets new distance driven based on current vehicle
+     * speed - this distance is used to update vehicle position
+     **/
     @Override
     public void update(LocalTime time) {
         // if (timeCounter % 30 == 0){
-        //     System.out.println(String.format("TIME = %s ",time));
+        // System.out.println(String.format("TIME = %s ",time));
         // }
-       // System.out.println(timeCounter);
+        // System.out.println(timeCounter);
         timeCounter++;
-        double speed = 2;
-        if (!inBetweenRounds){
-            // TODO: should be changed to update based on speed on current street 
+        double speed ;
+        Street currentStreet = null;
+        if (!inBetweenRounds) {
+            // TODO: should be changed to update based on speed on current street
+            try {
+                currentStreet = line.getStreetByCoord(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            speed = currentStreet.getStreetSpeed();
             distance += speed; // 2 is speed , will ba changed to speed from street 
             //System.out.println(String.format("path len: %f, distance: %f, time %s positon %s", path.getPathLength(), distance,time, position));
             if(distance > path.getPathLength()){

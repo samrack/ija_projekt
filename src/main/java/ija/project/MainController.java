@@ -16,6 +16,8 @@ import java.util.TimerTask;
 
 public class MainController {
 
+   
+
     @FXML
     private Pane content;
 
@@ -28,11 +30,51 @@ public class MainController {
     @FXML
     private TextField timeSetSeconds;
 
+    @FXML
+    private TextField slowedStreetName;
+
+
     private Timer timer;
     private LocalTime time = LocalTime.now();
 
     private List<Drawable> elements = new ArrayList<>();
     private List<TimeUpdate> updates = new ArrayList<>();
+
+    private List<Street> streetsList = new ArrayList<>();
+
+
+
+    @FXML
+    private void onSlowStreet() {
+        String streetName = (slowedStreetName.getText());
+        for (Street street : streetsList) {
+            if(street.getStreetName() == streetName){
+                street.setStreetSpeed(Street.SLOWED_SPEED);
+                System.out.println("street " + streetName + " slowed");
+                return;
+            }
+        }
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Street name doest match any of the streets !");
+            alert.showAndWait();
+
+        
+    }
+
+    @FXML
+    private void onSpeedUpStreet() {
+        String streetName = (slowedStreetName.getText());
+        for (Street street : streetsList) {
+            if(street.getStreetName() == streetName){
+                street.setStreetSpeed(Street.DEFAULT_SPEED);
+                System.out.println("street " + streetName + " back to default speed");
+                return;
+            }
+        }
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Street name doest match any of the streets !");
+            alert.showAndWait();
+        
+    }
+
 
     @FXML
     private void onTimeScaleChange() {
@@ -108,7 +150,7 @@ public class MainController {
                 public void run() {
                     
                     time = time.plusSeconds(1);
-                    System.out.println("TIME = " + time);
+                    //System.out.println("TIME = " + time);
                     for(TimeUpdate update : updates) {
                         update.update(time);
                     }
@@ -125,6 +167,11 @@ public class MainController {
 
     public Timer getTimer() {
         return timer;
+    }
+
+
+    public void setStreetsList(List<Street> list){
+        this.streetsList = list;
     }
 
 }

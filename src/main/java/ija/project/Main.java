@@ -129,6 +129,8 @@ public class Main extends Application {
         elements.addAll(data1.getStops());
         elements.addAll(data1.getStreets());
 
+        controller.setStreetsList(data1.getStreets());
+
         
 
         controller.setElements(elements);

@@ -19,6 +19,10 @@ import java.util.List;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "streetName", scope = Street.class)
 public class Street implements Drawable {
+
+    static final public int DEFAULT_SPEED = 2;
+    static final public int SLOWED_SPEED = 1;
+
     private String streetName;
     
     private Coordinate begin;
@@ -26,7 +30,7 @@ public class Street implements Drawable {
     private List<Stop> stops = new ArrayList<>();
     //private List<Coordinate> coordinates = new ArrayList<>();
 
-    private int speed = 2;
+    private int speed = DEFAULT_SPEED;
 
     private Street () {
     }
@@ -132,5 +136,9 @@ public class Street implements Drawable {
                 ", stops=" + stops +
                 '}';
     }
+
+	public void setStreetSpeed(int slowedSpeed) {
+        this.speed = slowedSpeed;
+	}
     
 }
