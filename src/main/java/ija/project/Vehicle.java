@@ -91,7 +91,7 @@ public class Vehicle implements Drawable, TimeUpdate {
      */
     @Override
     public void newTime(LocalTime time) {
-        System.out.println("ATTENTION PROGRAMMER NEWTIME HAS BEEN TRIGGERED with time : " + time);
+        //System.out.println("ATTENTION PROGRAMMER NEWTIME HAS BEEN TRIGGERED with time : " + time);
         Coordinate positionInTime;
 
         inBetweenRounds = true;
@@ -126,7 +126,7 @@ public class Vehicle implements Drawable, TimeUpdate {
 
             long secondsOnRoad = (untilHour + time.getMinute()) * 60;
             Coordinate tmp2Position = startPosition;
-            System.out.println("START POSITION IN SPECIA IS = " + tmp2Position);
+            //System.out.println("START POSITION IN SPECIA IS = " + tmp2Position);
             int tmp2Distance = 0;
 
             for (int i = 0; i < secondsOnRoad; i++) {
@@ -141,7 +141,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                 }
             }
             distance = tmp2Distance;
-            System.out.println("SOM V SPECIAL CASE = ");
+            
             return tmp2Position;
         }
         // vehicle hasnt started route yet so it is in its starting station
@@ -234,10 +234,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         // real life :)
         else {
             if (time.getMinute() == startingMinute) {
-
-                System.out.println("bus" + busId + " starting again at time " + time);
                 startRound(time);
-
             }
         }
     }
@@ -315,7 +312,6 @@ public class Vehicle implements Drawable, TimeUpdate {
                 break;
             }
         }
-
         schedule.setStopList(stoplist);
         schedule.setTimesList(timeslist);
         oneRideLength = calculateOneRide(timeslist);

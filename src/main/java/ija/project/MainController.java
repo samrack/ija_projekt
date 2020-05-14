@@ -52,7 +52,7 @@ public class MainController {
         for (Street street : streetsList) {
             if (street.getStreetName() == streetName) {
                 street.setStreetSpeed(Street.SLOWED_SPEED);
-                System.out.println("street " + streetName + " slowed");
+                //System.out.println("street " + streetName + " slowed");
                 timer.cancel();
                 for (TimeUpdate update : updates) {
                     update.reloadSchedule(time);
@@ -76,7 +76,7 @@ public class MainController {
         for (Street street : streetsList) {
             if (street.getStreetName() == streetName) {
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
-                System.out.println("street " + streetName + " back to default speed");
+                //System.out.println("street " + streetName + " back to default speed");
 
                 timer.cancel();
                 for (TimeUpdate update : updates) {
@@ -97,7 +97,6 @@ public class MainController {
     @FXML
     private void onTimeScaleChange() {
         try {
-            System.out.println("VOLAL SOM ontimescalechange");
             float scale = Float.parseFloat(timeScale.getText());
             if (scale <= 0) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time scale value");
@@ -118,7 +117,6 @@ public class MainController {
      */
     @FXML
     private void onNewTimeSet() {
-
         try {
             System.out.println("VOLAL SOM ONNEWSETTIME");
             int hours = Integer.parseInt(timeSetHours.getText());
@@ -171,7 +169,7 @@ public class MainController {
      * @param scale
      */
     public void startTimer(double scale) {
-        System.out.println("TIMER STARTED");
+       
         timer = new Timer(false);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
