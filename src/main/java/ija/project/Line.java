@@ -13,9 +13,6 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 
 import javafx.scene.paint.Color;
 
-
-
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "yamlId", scope = Line.class)
 public class Line {
     private String yamlId;
@@ -25,9 +22,10 @@ public class Line {
     private List<Street> streetsList;
     private Color lineColor;
 
-    private Line(){}
+    private Line() {
+    }
 
-    public Line(String id,Path path, List<Stop> stopsList, List<Street> streetList) {
+    public Line(String id, Path path, List<Stop> stopsList, List<Street> streetList) {
         this.id = id;
         this.path = path;
         this.stopsList = stopsList;
@@ -35,42 +33,68 @@ public class Line {
 
     }
 
-
-    public void setLineColor(Color color){
+    /**
+     * @param color
+     */
+    public void setLineColor(Color color) {
         this.lineColor = color;
     }
 
-    public Color getLineColor(){
+    /**
+     * @return Color
+     */
+    public Color getLineColor() {
         return lineColor;
     }
 
-    public String getYamlId(){
+    /**
+     * @return String
+     */
+    public String getYamlId() {
         return yamlId;
     }
 
-    public String getId(){
+    /**
+     * @return String
+     */
+    public String getId() {
         return id;
     }
 
-    public Path getPath(){
+    /**
+     * @return Path
+     */
+    public Path getPath() {
         return path;
     }
 
-    public List<Stop> getStopsList(){
+    /**
+     * @return List<Stop>
+     */
+    public List<Stop> getStopsList() {
         return stopsList;
     }
 
+    /**
+     * @return List<Street>
+     */
     public List<Street> getStreetsList() {
         return streetsList;
     }
 
+    /**
+     * Get street the coordinate is on. Street is always a straight line
+     * 
+     * @param coord
+     * @return Street
+     * @throws Exception
+     */
     public Street getStreetByCoord(Coordinate coord) throws Exception {
-        //System.out.println(streetsList.size());
+
         for (Street street : streetsList) {
-            //System.out.println(street);
-        
-            if (street.isCoordOnStreet(coord)){
-                //System.out.println("FOUND STREET ");
+
+            if (street.isCoordOnStreet(coord)) {
+
                 return street;
             }
         }
@@ -78,51 +102,18 @@ public class Line {
         throw new Exception("Coord not on any street in Line !");
     }
 
-    public Stop getStopFromCoords(Coordinate coords){
-        for(Stop stop : stopsList){
-            if (stop.getCoordinate().equals(coords)){
-                //System.out.println("FOUND STOP ");
+    /**
+     * @param coords
+     * @return Stop
+     */
+    public Stop getStopFromCoords(Coordinate coords) {
+        for (Stop stop : stopsList) {
+            if (stop.getCoordinate().equals(coords)) {
+
                 return stop;
             }
-        }//System.out.println("getStopfromCoords returned null");
+        }
         return null;
     }
-
-
-
-
-    
-    // public boolean addStop​(Stop stop) {
-    //     if (StopsList.isEmpty()) {
-    //         streetsStopsList.add(new SimpleImmutableEntry<>(stop.getStreet(), stop));
-    //         return true;
-    //     } else {
-    //         Street lastStreet = streetsStopsList.get(streetsStopsList.size() - 1).getKey();
-    //         if (stop.getStreet().follows​(lastStreet)) {
-    //             streetsStopsList.add(new SimpleImmutableEntry<>(stop.getStreet(), stop));
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     }
-    // }
-
-    
-    // public boolean addStreet​(Street street) {
-    //     if (streetsStopsList.isEmpty()){
-    //         return false;
-    //     }
-    //     else {
-    //         Street lastStreet = streetsStopsList.get(streetsStopsList.size() - 1).getKey();
-    //         if (street.follows​(lastStreet)) {
-    //             streetsStopsList.add(new SimpleImmutableEntry<>(street, null));
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     }
-    // }
-
-
 
 }

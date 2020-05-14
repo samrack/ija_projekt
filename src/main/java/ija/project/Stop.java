@@ -15,13 +15,13 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "stopId", scope = Stop.class)
 @JsonDeserialize(converter = Stop.CallConstructor.class)
 public class Stop implements Drawable {
-    //private Line line;
+    // private Line line;
     private String stopId;
     private Coordinate coordinate;
     @JsonIgnore
     private List<Shape> gui;
 
-    public Stop () {
+    public Stop() {
     }
 
     public Stop(Coordinate coordinate) {
@@ -35,22 +35,35 @@ public class Stop implements Drawable {
         this.gui.add(new Circle(coordinate.getX(), coordinate.getY(), 12, Color.RED));
     }
 
+    /**
+     * @return List<Shape>
+     */
     @JsonIgnore
     @Override
     public List<Shape> getGUI() {
         return gui;
     }
 
+    /**
+     * @return String
+     */
     public String getStopId() {
         return stopId;
     }
 
+    /**
+     * @return Coordinate
+     */
     public Coordinate getCoordinate() {
         return coordinate;
     }
 
+    /**
+     * @param obj
+     * @return boolean
+     */
     @Override
-    public boolean equals (Object obj) {
+    public boolean equals(Object obj) {
 
         if (obj.getClass() == this.getClass()) {
 
@@ -60,8 +73,11 @@ public class Stop implements Drawable {
         return false;
     }
 
+    /**
+     * @return int
+     */
     @Override
-    public int hashCode () {
+    public int hashCode() {
 
         final int prime = 31;
         int result = 1;
@@ -72,17 +88,17 @@ public class Stop implements Drawable {
     static class CallConstructor extends StdConverter<Stop, Stop> {
 
         @Override
-        public Stop convert (Stop value) {
+        public Stop convert(Stop value) {
             value.setGui();
             return value;
         }
     }
 
+    /**
+     * @return String
+     */
     @Override
     public String toString() {
-        return "Stop{" +
-                "stopId='" + stopId + '\'' +
-                ", coordinate=" + coordinate +
-                '}';
+        return "Stop{" + "stopId='" + stopId + '\'' + ", coordinate=" + coordinate + '}';
     }
 }

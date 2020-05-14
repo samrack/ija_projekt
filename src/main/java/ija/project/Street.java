@@ -16,58 +16,75 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "streetName", scope = Street.class)
 public class Street implements Drawable {
+    
 
     static final public int DEFAULT_SPEED = 2;
     static final public int SLOWED_SPEED = 1;
 
     private String streetName;
-    
+
     private Coordinate begin;
     private Coordinate end;
     private List<Stop> stops = new ArrayList<>();
-    //private List<Coordinate> coordinates = new ArrayList<>();
 
     private int speed = DEFAULT_SPEED;
 
-    private Street () {
+    private Street() {
     }
 
-    public Street (String name, List<Stop> stops, Coordinate begin, Coordinate end) {
+    public Street(String name, List<Stop> stops, Coordinate begin, Coordinate end) {
         this.streetName = name;
         this.begin = begin;
         this.end = end;
         this.stops.addAll(stops);
-        //this.coordinates.addAll(Arrays.asList(coordinates));
+
     }
-    
+
+    /**
+     * @return String
+     */
     public String getStreetName() {
         return streetName;
     }
 
+    /**
+     * @return List<Stop>
+     */
     public List<Stop> getStops() {
         return Collections.unmodifiableList(stops);
     }
 
-    // public List<Coordinate> getCoordinates() {
-    //     return Collections.unmodifiableList(coordinates);
-    // }
-    
+    /**
+     * @return Coordinate
+     */
     public Coordinate getBegin() {
         return begin;
     }
-    
-    public Coordinate getEnd() { 
+
+    /**
+     * @return Coordinate
+     */
+    public Coordinate getEnd() {
         return end;
     }
+
+    /**
+     * @return int
+     */
     @JsonIgnore
-    public int getStreetSpeed() { 
+    public int getStreetSpeed() {
         return speed;
     }
 
-    public boolean isCoordOnStreet(Coordinate coord){
+    /**
+     * Check if coordinate lies on the street
+     * 
+     * @param coord
+     * @return boolean
+     */
+    public boolean isCoordOnStreet(Coordinate coord) {
         // y = a*x + b
 
         double minX = Math.min(begin.getX(), end.getX());
@@ -77,68 +94,67 @@ public class Street implements Drawable {
 
         double a = 0;
         double bottom = (begin.getX() - end.getX());
-        double top = (begin.getY() -  end.getY()) ;
-        if(bottom == 0 || top == 0){
-            if (top == 0){
-                if((coord.getX() >= minX)  && (coord.getX()  <= maxX)){
-                    //System.out.println("isCOORD WAS TRUE");
+        double top = (begin.getY() - end.getY());
+        if (bottom == 0 || top == 0) {
+            if (top == 0) {
+                if ((coord.getX() >= minX) && (coord.getX() <= maxX)) {
+
                     return true;
-                }
-                else{
+                } else {
                     return false;
                 }
-            } 
-            else{
-                if((coord.getY() >= minY)  && (coord.getY()  <= maxY)){
-                    //System.out.println("isCOORD WAS TRUE");
+            } else {
+                if ((coord.getY() >= minY) && (coord.getY() <= maxY)) {
+
                     return true;
-                }
-                else{
+                } else {
                     return false;
                 }
             }
+        } else {
+            a = top / bottom;
         }
-        else{
-             a = top / bottom ;
-        }
-        double b = 0 - ((a * begin.getX()) - begin.getY()) ;  
+        double b = 0 - ((a * begin.getX()) - begin.getY());
 
-        
-        System.out.println("A IS " + a + " and B is " + b + " y is "+ coord.getY() + " vylsedok " + (a * coord.getX() + b) + " konec.");
+        System.out.println("A IS " + a + " and B is " + b + " y is " + coord.getY() + " vylsedok "
+                + (a * coord.getX() + b) + " konec.");
 
-        // coord is on the street which is a line 
-        if (coord.getY() == a * coord.getX() + b ){
-            if ( (coord.getY() >= minY) && (coord.getY() <= maxY) && (coord.getX() >= minX)  && (coord.getX()  <= maxX)){
-                //System.out.println("isCOORD WAS TRUE");
+        // coord is on the street which is a line
+        if (coord.getY() == a * coord.getX() + b) {
+            if ((coord.getY() >= minY) && (coord.getY() <= maxY) && (coord.getX() >= minX) && (coord.getX() <= maxX)) {
+
                 return true;
-            } 
+            }
         }
         System.out.println("isCOORD WAS FALSE");
         return false;
     }
 
-   
-
+    /**
+     * @return List<Shape>
+     */
     @JsonIgnore
     @Override
     public List<Shape> getGUI() {
         return Arrays.asList(
                 new Text(this.getBegin().getX() + Math.abs(this.getBegin().diffX(this.getEnd())) / 2,
-                         this.getBegin().getY() + Math.abs(this.getBegin().diffY(this.getEnd())) / 2, streetName),
-                new Line(this.getBegin().getX(), this.getBegin().getY(), this.getEnd().getX(), this.getEnd().getY())
-        );
+                        this.getBegin().getY() + Math.abs(this.getBegin().diffY(this.getEnd())) / 2, streetName),
+                new Line(this.getBegin().getX(), this.getBegin().getY(), this.getEnd().getX(), this.getEnd().getY()));
     }
 
+    /**
+     * @return String
+     */
     @Override
     public String toString() {
-        return "Street{" +
-                "streetName='" + streetName + '\'' +
-                ", stops=" + stops +
-                '}';
+        return "Street{" + "streetName='" + streetName + '\'' + ", stops=" + stops + '}';
     }
 
-	public void setStreetSpeed(int slowedSpeed) {
+    /**
+     * @param slowedSpeed
+     */
+    public void setStreetSpeed(int slowedSpeed) {
         this.speed = slowedSpeed;
-	}
-    
+    }
+
 }

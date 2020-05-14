@@ -18,50 +18,38 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "busId", scope = Vehicle.class)
-// @JsonDeserialize(converter = Vehicle.CallConstructor.class)
 public class Vehicle implements Drawable, TimeUpdate {
     private String busId;
+
     private Line line;
-    @JsonIgnore
+
     private Coordinate position;
-    // private double speed;
-    @JsonIgnore
+
     private double distance = 0;
-    @JsonIgnore
+
     private Schedule schedule;
 
-    @JsonIgnore
     private LocalTime startTime;
-    @JsonIgnore
+
     private int startingMinute;
 
-    @JsonIgnore
     private Coordinate startPosition;
-    @JsonIgnore
+
     private Path path;
 
-    @JsonIgnore
     private boolean inBetweenRounds = true;
 
-    @JsonIgnore
     private boolean isOnStop;
 
-    @JsonIgnore
     private int stopTimer = 0;
 
-    // @JsonIgnore
-    // private boolean firstRound = true;
-
-    @JsonIgnore
-    private int timeBetweenRounds = 60 * 5; // 5 minutes
-    @JsonIgnore
     private int secondsPassed;
-    @JsonIgnore
+
     private long oneRideLength; // in seconds
 
-    @JsonIgnore
     private List<Shape> gui;
+
+    static int timeCounter = 0;
 
     private Vehicle() {
     }
@@ -79,47 +67,44 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     }
 
+    /**
+     * @return LocalTime
+     */
     private LocalTime composeStartignTime() {
         return LocalTime.of(LocalTime.now().getHour(), startingMinute, 0);
     }
 
-    /*
-     * TODO : 
-     * timer - osetrit time set pre buses ktore su na prelome hodiny
+    /**
+     * Refills schedule for current time 
      * 
-     * 
+     * @param time
      */
-
-
     @Override
-     public void reloadSchedule(LocalTime time) {
-         fillSchedule(time);         
-     }
+    public void reloadSchedule(LocalTime time) {
+        fillSchedule(time);
+    }
 
-    // redraws all vehicles to the place where they should be
+    /**
+     * Redraws all vehicles to the place where they should be
+     * 
+     * @param time
+     */
     @Override
     public void newTime(LocalTime time) {
         System.out.println("ATTENTION PROGRAMMER NEWTIME HAS BEEN TRIGGERED with time : " + time);
         Coordinate positionInTime;
 
         inBetweenRounds = true;
-        // fillSchedule(time);
-        // positionInTime = new Coordinate(300, 100);
+
         positionInTime = computePositionByTime(time);
-        //System.out.println("Positonbytime = " + positionInTime);
-        //System.out.println("start positon = " + startPosition);
-        //System.out.println("Positon = " + position);
-        // distance = 0;
-        // position = startPosition;
+
         moveGui(startPosition);
         position = startPosition;
-        // System.out.println("Positon = " + position);
+
         moveGui(positionInTime);
-        //System.out.println("Positon = " + position);
+
         position = positionInTime;
-        //System.out.println("Positon po = " + position);
-        //System.out.println("DISTANCE = " + distance);
-        // vehicle is still in start or already at the end
+
         if (positionInTime.equals(startPosition) || distance >= path.getPathLength()) {
 
         } else {
@@ -128,16 +113,20 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     }
 
-    // TODO : add if it is on break or not, based on time as well
-    // computes position of vehicle based on time of day
+    /**
+     * Calculate position of vehicle on the map at the set time 
+     * 
+     * @param time 
+     * @return Coordinate - position of vehicle
+     */
     private Coordinate computePositionByTime(LocalTime time) {
         // vehicle started before end of hour and hasnt finished round yet
-        if((startingMinute + ((int)oneRideLength / 60)) > (60 + time.getMinute()) ){
+        if ((startingMinute + ((int) oneRideLength / 60)) > (60 + time.getMinute())) {
             int untilHour = (60 - startingMinute);
 
             long secondsOnRoad = (untilHour + time.getMinute()) * 60;
             Coordinate tmp2Position = startPosition;
-            System.out.println("START POSITION IN SPECIA IS = "+ tmp2Position);
+            System.out.println("START POSITION IN SPECIA IS = " + tmp2Position);
             int tmp2Distance = 0;
 
             for (int i = 0; i < secondsOnRoad; i++) {
@@ -146,7 +135,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                     int curSpeed = currentStreet.getStreetSpeed();
                     tmp2Distance += curSpeed;
                     tmp2Position = path.getNextPosition(tmp2Distance);
-                    //System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -160,7 +149,7 @@ public class Vehicle implements Drawable, TimeUpdate {
             return startPosition;
         }
         // vehicle finished route
-        else if (time.getMinute() >= startingMinute + (int)(oneRideLength / 60)) {
+        else if (time.getMinute() >= startingMinute + (int) (oneRideLength / 60)) {
             return startPosition;
         }
         // vehicle is on the way
@@ -175,285 +164,307 @@ public class Vehicle implements Drawable, TimeUpdate {
                     int curSpeed = currentStreet.getStreetSpeed();
                     tmpDistance += curSpeed;
                     tmpPosition = path.getNextPosition(tmpDistance);
-                    //System.out.println("TMP_DISTANCE v compiute = " + tmpDistance);
+
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
             distance = tmpDistance;
-            //System.out.println("DISTANCE v compiute = " + distance);
+
             return tmpPosition;
         }
     }
 
-    // /**
-    // * @param schedule the schedule to set
-    // */
-    // public void setSchedule() {
-    // this.schedule = new Schedule(this);
-    // }
-    static int timeCounter = 0;
 
     /**
-     * Updates time for vehicle: - sets new distance driven based on current vehicle
-     * speed - this distance is used to update vehicle position
+     * Updates time for vehicle:
+     * - sets new distance driven based on current vehicle speed 
+     * - this distance is used to update vehicle position
+     * 
+     * @param LocalTime time recieved from Timer in MainController
      **/
     @Override
     public void update(LocalTime time) {
-        // if (timeCounter % 30 == 0){
-        // System.out.println(String.format("TIME = %s ",time));
-        // }
-        // System.out.println(timeCounter);
+
         timeCounter++;
-        double speed ;
+        double speed;
         Street currentStreet = null;
-        if(isOnStop){
-            if (stopTimer == 40){
+        if (isOnStop) {
+            if (stopTimer == 40) {
                 isOnStop = false;
                 stopTimer = 0;
-            }
-            else{
+            } else {
                 stopTimer++;
             }
-        }
-        else if (!inBetweenRounds) {
-            // TODO: should be changed to update based on speed on current street
+        } else if (!inBetweenRounds) {
+
             try {
                 currentStreet = line.getStreetByCoord(position);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             speed = currentStreet.getStreetSpeed();
-            distance += speed; // 2 is speed , will ba changed to speed from street 
-            //System.out.println(String.format("path len: %f, distance: %f, time %s positon %s", path.getPathLength(), distance,time, position));
-            if(distance > path.getPathLength()){
-                // stop at last Stop 
+            distance += speed;
+
+            if (distance > path.getPathLength()) {
+                // stop at last Stop
                 Coordinate coordinates = path.getlastCoordinateOfPath();
                 moveGui(coordinates);
                 position = coordinates;
-                //wait for couple minutes
+                // wait for couple minutes
                 endRound();
-                //System.out.println("bus " + busId + " ON THE END at time " + time);
+
                 return;
             }
             Coordinate coordinates = path.getNextPosition(distance);
-            //System.out.println(coordinates);
+
             moveGui(coordinates);
             position = coordinates;
 
             for (LocalTime myTime : schedule.getTimesList()) {
-                if(myTime.getHour() == time.getHour() && myTime.getMinute() == time.getMinute() && myTime.getSecond() == time.getSecond()) {
+                if (myTime.getHour() == time.getHour() && myTime.getMinute() == time.getMinute()
+                        && myTime.getSecond() == time.getSecond()) {
                     isOnStop = true;
                     break;
-                } 
+                }
             }
 
-
         }
-        // if vehicle is still late to start it will skip and go next hour, based on real life :) 
+        // if vehicle is still late to start it will skip and go next hour, based on
+        // real life :)
         else {
-            if (time.getMinute() == startingMinute){
-                //firstRound = false;
-                System.out.println("bus"+busId+ " starting again at time " + time );
+            if (time.getMinute() == startingMinute) {
+
+                System.out.println("bus" + busId + " starting again at time " + time);
                 startRound(time);
-                
+
             }
         }
     }
 
-    private void endRound(){
+    /**
+     * End a round of vehicle on the Line
+     */
+    private void endRound() {
         inBetweenRounds = true;
         secondsPassed = 0;
     }
 
-    private void startRound(LocalTime time){
+    /**
+     * Start a round of vehicle on the Line
+     * 
+     * @param time
+     */
+    private void startRound(LocalTime time) {
         fillSchedule(time);
         distance = 0;
         resetGui(startPosition);
         position = startPosition;
-        
         inBetweenRounds = false;
-        
-        schedule.printOutSchedule();
-    
-    }
-   
+        // schedule.printOutSchedule();
 
-    // go through entire path and calculate arrive time for every stop
-    public void fillSchedule(LocalTime begTime){
+    }
+
+    /**
+     * Go through entire path and calculate arrive time for every stop and fill
+     * schedule with it
+     * 
+     * @param begTime start time for vehicle at first station
+     */
+
+    public void fillSchedule(LocalTime begTime) {
         int distance = 0;
         long timeCount = 0;
-        //startTime = LocalTime.now().plusMinutes(5+7).plusSeconds(30);
+
         startTime = begTime;
         List<Stop> stoplist = new ArrayList<>();
         List<LocalTime> timeslist = new ArrayList<>();
-        System.out.println("Streetslist lenghts " + line.getStreetsList().size()+ ". LIne id is " + line.getId());
-        System.out.println("path legnth: " + path.getPathLength());
-        while(distance <= path.getPathLength()){
-            try{
+
+        while (distance <= path.getPathLength()) {
+            try {
                 Street currentStreet = line.getStreetByCoord(startPosition);
-                
+
                 int curSpeed = currentStreet.getStreetSpeed();
-                //int curSpeed = 2;
+
                 int tmpDistance = distance;
-                
-                for (int i = 0; i < curSpeed; i++){
+
+                for (int i = 0; i < curSpeed; i++) {
                     position = path.getNextPosition(tmpDistance + i);
                     Stop currentStop = line.getStopFromCoords(position);
-                    
+
                     LocalTime time = startTime;
-                    //System.out.println(timeCount);                    
+
                     time = time.plusSeconds(timeCount);
-                    //System.out.println(time);
-                    
-                    if ( currentStop != null){
-                        if(time != startTime ){
+
+                    if (currentStop != null) {
+                        if (time != startTime) {
                             timeCount += 40;
                         }
-                        
+
                         stoplist.add(currentStop);
                         timeslist.add(time);
-                         
-                        
-                        //System.out.println("ADDING STOP ");
+
                     }
                 }
                 distance += curSpeed;
-                position = path.getNextPosition(distance); 
+                position = path.getNextPosition(distance);
                 timeCount++;
-                
-            }
-            catch(Exception e){
+
+            } catch (Exception e) {
                 System.out.println(e + " FILLSCHEDULE Error");
                 break;
             }
         }
-       // System.out.println("FILL SHCEDULE WHILE LOOP DONE");
-        
+
         schedule.setStopList(stoplist);
         schedule.setTimesList(timeslist);
         oneRideLength = calculateOneRide(timeslist);
-        System.out.println("one ride by "+ busId+" takes "+ oneRideLength/60 + " minutes");
-        //schedule.printOutSchedule();
-    
-    }
-    
-    private long calculateOneRide(List<LocalTime> timesList){
-         long duration =  java.time.Duration.between(timesList.get(timesList.size()-1),timesList.get(0)).getSeconds();
-         return Math.abs(duration);
+
     }
 
+    /**
+     * Calculates duration of one ride through while line in seconds
+     * 
+     * @param timesList
+     * @return long duration in seconds
+     */
+    private long calculateOneRide(List<LocalTime> timesList) {
+        long duration = java.time.Duration.between(timesList.get(timesList.size() - 1), timesList.get(0)).getSeconds();
+        return Math.abs(duration);
+    }
 
-
-    // =========== gui =========== // 
-
+    /**
+     * Resets vehicle circle to its starting position
+     * 
+     * @param coordinate
+     */
     private void resetGui(Coordinate coordinate) {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()));
             shape.setTranslateY((coordinate.getY() - position.getY()));
-            // System.out.println("=== reset ===");
-            // System.out.println( shape.getTranslateX());
-            // System.out.println( shape.getTranslateY());
-            
+
         }
-    
+
     }
 
+    /**
+     * Move vehicle circle to the coordinate
+     * 
+     * @param coordinate
+     */
     private void moveGui(Coordinate coordinate) {
         for (Shape shape : gui) {
             shape.setTranslateX((coordinate.getX() - position.getX()) + shape.getTranslateX());
             shape.setTranslateY((coordinate.getY() - position.getY()) + shape.getTranslateY());
-            // System.out.println("=== move ===");
-            // System.out.println( shape.getTranslateX());
-            // System.out.println( shape.getTranslateY());
-           
+
         }
     }
 
     public void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, line.getLineColor()));
-      
-    }
-    
-    // =========== Getters =========== // 
 
-    @JsonIgnore
+    }
+
+    /**
+     * @return List<Shape>
+     */
     @Override
     public List<Shape> getGUI() {
         return gui;
     }
 
+    /**
+     * @return Line
+     */
     public Line getLine() {
         return line;
     }
-    @JsonIgnore
+
+    /**
+     * @return Coordinate
+     */
     public Coordinate getPosition() {
         return position;
     }
 
-    @JsonIgnore
+    /**
+     * @return Path
+     */
     public Path getPath() {
         return path;
     }
 
+    /**
+     * @return String
+     */
     public String getBusId() {
         return busId;
     }
-   
-    @JsonIgnore
-    public double getDistance(){
+
+    /**
+     * @return double
+     */
+    public double getDistance() {
         return distance;
     }
-    @JsonIgnore
-    public Schedule getSchedule(){
+
+    /**
+     * @return Schedule
+     */
+    public Schedule getSchedule() {
         return schedule;
     }
-    
-    @JsonIgnore
-    public LocalTime getStartTime(){
+
+    /**
+     * @return LocalTime
+     */
+    public LocalTime getStartTime() {
         return startTime;
     }
-    @JsonIgnore
-    public Coordinate getStartPosition(){
+
+    /**
+     * @return Coordinate
+     */
+    public Coordinate getStartPosition() {
         return startPosition;
     }
 
-    @JsonIgnore
-    public boolean getInBetweenRounds(){
+    /**
+     * @return boolean
+     */
+    public boolean getInBetweenRounds() {
         return inBetweenRounds;
     }
-    @JsonIgnore
-    public int getTmeBetweenRounds(){
-        return timeBetweenRounds;
-    } 
-    @JsonIgnore
-    public int getSecondsPassed(){
+
+    /**
+     * @return int
+     */
+    public int getSecondsPassed() {
         return secondsPassed;
     }
-    @JsonIgnore
-    public long getOneRideLength(){
+
+    /**
+     * @return long
+     */
+    public long getOneRideLength() {
         return oneRideLength;
     } // in seconds
-    
-
 
     static class CallConstructor extends StdConverter<Vehicle, Vehicle> {
 
         @Override
-        public Vehicle convert (Vehicle value) {
+        public Vehicle convert(Vehicle value) {
             value.setGui();
             return value;
         }
     }
 
+    /**
+     * @return String
+     */
     @Override
     public String toString() {
-        return "Vehicle{" +
-                "line='" + line + '\'' +
-                //", position=" + position +
-                //", speed=" + speed +
-               // ", path=" + path +
-                '}';
+        return "Vehicle{" + "line='" + line + '\'' + '}';
     }
 }
