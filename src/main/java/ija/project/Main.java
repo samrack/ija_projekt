@@ -65,7 +65,7 @@ public class Main extends Application {
                 LocalTime time = LocalTime.now();
                 List<Vehicle> vList = new ArrayList<>();
 
-                for (int i = 0; i < linesList.size(); i++) {
+                for (int i = 0; i < 1; i++) {
                         for (int j = 0; j < 1; j++) {
                                 try {
 

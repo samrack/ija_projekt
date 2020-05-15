@@ -62,7 +62,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
         this.startingMinute = startingMinute;
-        fillSchedule(composeStartignTime());
+        fillSchedule(composeStartingTime());
         setGui();
 
     }
@@ -70,7 +70,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     /**
      * @return LocalTime
      */
-    private LocalTime composeStartignTime() {
+    private LocalTime composeStartingTime() {
         return LocalTime.of(LocalTime.now().getHour(), startingMinute, 0);
     }
 
@@ -181,7 +181,7 @@ public class Vehicle implements Drawable, TimeUpdate {
      * - sets new distance driven based on current vehicle speed 
      * - this distance is used to update vehicle position
      * 
-     * @param LocalTime time recieved from Timer in MainController
+     * @param time recieved from Timer in MainController
      **/
     @Override
     public void update(LocalTime time) {

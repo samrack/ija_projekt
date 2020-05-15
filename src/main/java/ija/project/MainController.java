@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -34,6 +35,11 @@ public class MainController {
     @FXML
     private TextField textStreetName;
 
+
+    @FXML
+    private Text timeField;
+
+
     private Timer timer;
     private LocalTime time = LocalTime.now();
     private float scale = 1;
@@ -49,6 +55,10 @@ public class MainController {
      */
     @FXML
     private void onSlowStreet() {
+        //TODO opravit metodu - meni sa position vozidiel
+        //TODO po spusteni timeru, reload schedule asi funguje
+        //TODO skus si dat pathlength ako property (debug) a porovnaj distance
+        //TODO niekde  sa musi zmenit radikalne pozicia
         String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
             if (street.getStreetName().equals(streetName)) {
@@ -82,7 +92,6 @@ public class MainController {
      */
     @FXML
     private void onSpeedUpStreet() {
-        //TODO pozriet ci sa zmeni poloha stopiek na zastavke alebo vozidla
         String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
             if (street.getStreetName().equals(streetName)) {
@@ -190,7 +199,7 @@ public class MainController {
                     public void run() {
 
                         time = time.plusSeconds(1);
-                        System.out.println(time.toString());
+                        timeField.setText(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
                         for (TimeUpdate update : updates) {
                             update.update(time);
                         }
