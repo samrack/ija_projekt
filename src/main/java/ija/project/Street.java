@@ -20,7 +20,7 @@ import java.util.List;
 public class Street implements Drawable {
     
 
-    static final public int DEFAULT_SPEED = 2;
+    static final public int DEFAULT_SPEED = 5;
     static final public int SLOWED_SPEED = 1;
 
     private String streetName;
@@ -147,14 +147,14 @@ public class Street implements Drawable {
      */
     @Override
     public String toString() {
-        return "Street{" + "streetName='" + streetName + '\'' + ", stops=" + stops + '}';
+        return "Street{" + "streetName='" + streetName + "_CurrentSpeed=" + speed +'}';
     }
 
     /**
-     * @param slowedSpeed
+     * @param speed
      */
-    public void setStreetSpeed(int slowedSpeed) {
-        this.speed = slowedSpeed;
+    public void setStreetSpeed(int speed) {
+        this.speed = speed;
     }
 
 }

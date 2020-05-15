@@ -66,7 +66,7 @@ public class Main extends Application {
                 List<Vehicle> vList = new ArrayList<>();
 
                 for (int i = 0; i < linesList.size(); i++) {
-                        for (int j = 0; j < VEHICLES_PER_LINE; j++) {
+                        for (int j = 0; j < 1; j++) {
                                 try {
 
                                         Vehicle v = new Vehicle(

@@ -36,6 +36,7 @@ public class MainController {
 
     private Timer timer;
     private LocalTime time = LocalTime.now();
+    private float scale = 1;
 
     private List<Drawable> elements = new ArrayList<>();
     private List<TimeUpdate> updates = new ArrayList<>();
@@ -50,20 +51,29 @@ public class MainController {
     private void onSlowStreet() {
         String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
-            if (street.getStreetName() == streetName) {
-                street.setStreetSpeed(Street.SLOWED_SPEED);
-                //System.out.println("street " + streetName + " slowed");
-                timer.cancel();
-                for (TimeUpdate update : updates) {
-                    update.reloadSchedule(time);
+            if (street.getStreetName().equals(streetName)) {
+                if(street.getStreetSpeed() > 1) {
+
+                    street.setStreetSpeed(street.getStreetSpeed() - 1);
+                    timer.cancel();
+                    for (TimeUpdate update : updates) {
+                        update.reloadSchedule(time);
+                    }
+                    startTimer(scale);
+                    System.out.println(street.toString());
+                    return;
+
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Traffic on the street is as slow as possible!");
+                    alert.showAndWait();
+                    return;
+
                 }
-                startTimer(1);
-                return;
             }
         }
+
         Alert alert = new Alert(Alert.AlertType.ERROR, "Street name doest match any of the streets !");
         alert.showAndWait();
-
     }
 
     /*
@@ -72,9 +82,10 @@ public class MainController {
      */
     @FXML
     private void onSpeedUpStreet() {
+        //TODO pozriet ci sa zmeni poloha stopiek na zastavke alebo vozidla
         String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
-            if (street.getStreetName() == streetName) {
+            if (street.getStreetName().equals(streetName)) {
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
                 //System.out.println("street " + streetName + " back to default speed");
 
@@ -82,7 +93,7 @@ public class MainController {
                 for (TimeUpdate update : updates) {
                     update.reloadSchedule(time);
                 }
-                startTimer(1);
+                startTimer(scale);
                 return;
             }
         }
@@ -97,7 +108,7 @@ public class MainController {
     @FXML
     private void onTimeScaleChange() {
         try {
-            float scale = Float.parseFloat(timeScale.getText());
+            scale = Float.parseFloat(timeScale.getText());
             if (scale <= 0) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time scale value");
                 alert.showAndWait();
@@ -119,8 +130,8 @@ public class MainController {
     private void onNewTimeSet() {
         try {
             System.out.println("VOLAL SOM ONNEWSETTIME");
-            int hours = Integer.parseInt(timeSetHours.getText());
 
+            int hours = Integer.parseInt(timeSetHours.getText());
             int minutes = Integer.parseInt(timeSetMinutes.getText());
             int seconds = Integer.parseInt(timeSetSeconds.getText());
 
@@ -129,7 +140,7 @@ public class MainController {
             for (TimeUpdate update : updates) {
                 update.newTime(time);
             }
-            startTimer(1);
+            startTimer(scale);
         } catch (Exception ex) {
             System.out.println(ex);
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
@@ -166,10 +177,10 @@ public class MainController {
     /**
      * Timer that runs TimerTask at fixed rate that can be changes by scale
      * 
-     * @param scale
+     * @param scaleValue
      */
-    public void startTimer(double scale) {
-       
+    public void startTimer(double scaleValue) {
+
         timer = new Timer(false);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -179,7 +190,7 @@ public class MainController {
                     public void run() {
 
                         time = time.plusSeconds(1);
-
+                        System.out.println(time.toString());
                         for (TimeUpdate update : updates) {
                             update.update(time);
                         }
@@ -187,7 +198,7 @@ public class MainController {
                 });
             }
 
-        }, 0, (long) (1000 / scale));
+        }, 0, (long) (1000 / scaleValue));
 
     }
 

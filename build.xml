@@ -9,9 +9,9 @@
     
     
     <target name="run_script">
-    <exec dir="${libs.dir}" executable="/bin/bash">
-        <arg value="get-libs.sh"/>
-      </exec>
+        <exec dir="${libs.dir}" executable="/bin/bash">
+            <arg value="get-libs.sh"/>
+        </exec>
     </target>
 
     <!-- Deletes the existing build, docs and dist directory-->
