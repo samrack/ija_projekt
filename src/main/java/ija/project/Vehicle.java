@@ -195,6 +195,8 @@ public class Vehicle implements Drawable, TimeUpdate {
             }
             speed = currentStreet.getStreetSpeed();
             distance += speed;
+            System.out.println("Street=" + currentStreet.getStreetName() + "Speed=" + speed);
+            System.out.println("Position=" + position.toString());
 
             if (distance > path.getPathLength()) {
                 // stop at last Stop
@@ -220,6 +222,8 @@ public class Vehicle implements Drawable, TimeUpdate {
             for (Stop stop : schedule.getStopsList()) {
                 if (stop.getCoordinate().equals(position)) {
                     isOnStop = true;
+                    System.out.println(stop.getCoordinate().toString());
+                    System.out.println(this.getPosition().toString());
                     break;
                 }
             }
@@ -240,6 +244,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     private void endRound() {
         inBetweenRounds = true;
         secondsPassed = 0;
+        position = startPosition;
     }
 
     /**
@@ -250,8 +255,8 @@ public class Vehicle implements Drawable, TimeUpdate {
     private void startRound(LocalTime time) {
         fillSchedule(time);
         distance = 0;
-        resetGui(startPosition);
         position = startPosition;
+        resetGui(startPosition);
         inBetweenRounds = false;
         // schedule.printOutSchedule();
 
@@ -263,6 +268,64 @@ public class Vehicle implements Drawable, TimeUpdate {
      * 
      * @param begTime start time for vehicle at first station
      */
+
+//    public void fillSchedule(LocalTime begTime) {
+//        int distance = 0;
+//        long timeCount = 0;
+//
+//        startTime = begTime;
+//        Coordinate tmpPosition = startPosition;
+//        List<Stop> stoplist = new ArrayList<>();
+//        List<LocalTime> timeslist = new ArrayList<>();
+//        boolean completed = false;
+//
+//        while (distance <= path.getPathLength()) {
+//            try {
+//                Street currentStreet = line.getStreetByCoord(tmpPosition);
+//                int curSpeed = currentStreet.getStreetSpeed();
+//                int tmpDistance = distance;
+//
+//                for (int i = 0; i < curSpeed; i++) {
+//                    tmpPosition = path.getNextPosition(tmpDistance + i);
+//                    Stop currentStop = line.getStopFromCoords(tmpPosition);
+//
+//                    LocalTime time = startTime;
+//
+//                    time = time.plusSeconds(timeCount);
+//
+//                    if (currentStop != null) {
+//                        if (time != startTime) {
+//                            timeCount += 40;
+//                        }
+//
+//                        stoplist.add(currentStop);
+//                        timeslist.add(time);
+//
+//                        if(distance >= path.getPathLength()) {
+//                            completed = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                if(completed) {
+//                    break;
+//                }
+//                distance += curSpeed;
+//                tmpPosition = path.getNextPosition(distance);
+//                timeCount++;
+//
+//            } catch (Exception e) {
+//                System.out.println(e + " FILLSCHEDULE Error");
+//                break;
+//            }
+//        }
+//        schedule.setStopList(stoplist);
+//        schedule.setTimesList(timeslist);
+//        oneRideLength = calculateOneRide(timeslist);
+//        System.out.println("position: " + position + "tmpPos:" + tmpPosition);
+//
+//    }
 
     public void fillSchedule(LocalTime begTime) {
         int distance = 0;
@@ -277,10 +340,10 @@ public class Vehicle implements Drawable, TimeUpdate {
         while (distance <= path.getPathLength()) {
             try {
                 Street currentStreet = line.getStreetByCoord(tmpPosition);
-                int curSpeed = currentStreet.getStreetSpeed();
+                int speed = Street.DEFAULT_SPEED;
                 int tmpDistance = distance;
 
-                for (int i = 0; i < curSpeed; i++) {
+                for (int i = 0; i < speed; i++) {
                     tmpPosition = path.getNextPosition(tmpDistance + i);
                     Stop currentStop = line.getStopFromCoords(tmpPosition);
 
@@ -306,7 +369,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                 if(completed) {
                     break;
                 }
-                distance += curSpeed;
+                distance += speed;
                 tmpPosition = path.getNextPosition(distance);
                 timeCount++;
 
@@ -322,20 +385,20 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     }
 
-    /**
-     * Refills schedule taking into consideration current time and street speeds on path
-     *
-     * @param time
-     */
-    @Override
-    public void reloadSchedule(LocalTime time) {
-
-        System.out.println("Now is:" + time.toString());
-        this.getSchedule().printOutSchedule();
-        LocalTime begTime = LocalTime.of(time.getHour(), startingMinute, 0);
-        fillSchedule(begTime);
-        this.getSchedule().printOutSchedule();
-    }
+//    /**
+//     * Refills schedule taking into consideration current time and street speeds on path
+//     *
+//     * @param time
+//     */
+//    @Override
+//    public void reloadSchedule(LocalTime time) {
+//
+//        System.out.println("Now is:" + time.toString());
+//        this.getSchedule().printOutSchedule();
+//        LocalTime begTime = LocalTime.of(time.getHour(), startingMinute, 0);
+//        fillSchedule(begTime);
+//        this.getSchedule().printOutSchedule();
+//    }
 
     /**
      * Calculates duration of one ride through while line in seconds
@@ -355,9 +418,10 @@ public class Vehicle implements Drawable, TimeUpdate {
      */
     private void resetGui(Coordinate coordinate) {
         for (Shape shape : gui) {
-            shape.setTranslateX((coordinate.getX() - position.getX()));
-            shape.setTranslateY((coordinate.getY() - position.getY()));
-
+//            shape.setTranslateX((coordinate.getX() - position.getX()));
+//            shape.setTranslateY((coordinate.getY() - position.getY()));
+            shape.setTranslateX(0);
+            shape.setTranslateY(0);
         }
 
     }

@@ -84,50 +84,72 @@ public class Street implements Drawable {
      * @param coord
      * @return boolean
      */
+//    public boolean isCoordOnStreet(Coordinate coord) {
+//        // y = a*x + b
+//
+//        double minX = Math.min(begin.getX(), end.getX());
+//        double minY = Math.min(begin.getY(), end.getY());
+//        double maxX = Math.max(begin.getX(), end.getX());
+//        double maxY = Math.max(begin.getY(), end.getY());
+//
+//        double a = 0;
+//        double bottom = (begin.getX() - end.getX());
+//        double top = (begin.getY() - end.getY());
+//        if (bottom == 0.0 || top == 0.0) {
+//            if (top == 0.0 && begin.getY() - coord.getY() == 0) {
+//                if ((coord.getX() >= minX) && (coord.getX() <= maxX)) {
+//
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            } else if(begin.getX() - coord.getX() == 0){
+//                if ((coord.getY() >= minY) && (coord.getY() <= maxY)) {
+//
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//        } else {
+//            a = top / bottom;
+//        }
+//        double b = 0 - ((a * begin.getX()) - begin.getY());
+//
+//        System.out.println("A IS " + a + " and B is " + b + " y is " + coord.getY() + " vylsedok "
+//                + (a * coord.getX() + b) + " konec.");
+//
+//        // coord is on the street which is a line
+//        if (coord.getY() == a * coord.getX() + b) {
+//            if ((coord.getY() >= minY) && (coord.getY() <= maxY) && (coord.getX() >= minX) && (coord.getX() <= maxX)) {
+//
+//                return true;
+//            }
+//        }
+//        System.out.println("isCOORD WAS FALSE");
+//        return false;
+//    }
+
     public boolean isCoordOnStreet(Coordinate coord) {
-        // y = a*x + b
+        double dxc = coord.getX() - begin.getX();
+        double dyc = coord.getY() - begin.getY();
 
-        double minX = Math.min(begin.getX(), end.getX());
-        double minY = Math.min(begin.getY(), end.getY());
-        double maxX = Math.max(begin.getX(), end.getX());
-        double maxY = Math.max(begin.getY(), end.getY());
+        double dxl = end.getX() - begin.getX();
+        double dyl = end.getY() - begin.getY();
 
-        double a = 0;
-        double bottom = (begin.getX() - end.getX());
-        double top = (begin.getY() - end.getY());
-        if (bottom == 0 || top == 0) {
-            if (top == 0) {
-                if ((coord.getX() >= minX) && (coord.getX() <= maxX)) {
+        if(dxc * dyl - dyc * dxl == 0) {
 
-                    return true;
-                } else {
-                    return false;
-                }
+            if(Math.abs(dxl) >= Math.abs(dyl)) {
+                return dxl > 0 ?
+                        begin.getX() <= coord.getX() && coord.getX() <= end.getX() :
+                        end.getX() <= coord.getX() && coord.getX() <= begin.getX();
             } else {
-                if ((coord.getY() >= minY) && (coord.getY() <= maxY)) {
-
-                    return true;
-                } else {
-                    return false;
-                }
+                return dyl > 0 ?
+                        begin.getY() <= coord.getY() && coord.getY() <= end.getY() :
+                        end.getY() <= coord.getY() && coord.getY() <= begin.getY();
             }
-        } else {
-            a = top / bottom;
-        }
-        double b = 0 - ((a * begin.getX()) - begin.getY());
 
-        System.out.println("A IS " + a + " and B is " + b + " y is " + coord.getY() + " vylsedok "
-                + (a * coord.getX() + b) + " konec.");
-
-        // coord is on the street which is a line
-        if (coord.getY() == a * coord.getX() + b) {
-            if ((coord.getY() >= minY) && (coord.getY() <= maxY) && (coord.getX() >= minX) && (coord.getX() <= maxX)) {
-
-                return true;
-            }
-        }
-        System.out.println("isCOORD WAS FALSE");
-        return false;
+        } else return false;
     }
 
     /**

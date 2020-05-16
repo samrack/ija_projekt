@@ -84,7 +84,7 @@ streets:
   end: *5
 - &street56 streetName: null
   stops:
-  - *stop4
+  - *stop5
   - *stop6
   begin: *5
   end: *6

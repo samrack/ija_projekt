@@ -66,13 +66,14 @@ public class MainController {
                     //\testovanie
 
                     street.setStreetSpeed(street.getStreetSpeed() - 2);
-                    timer.cancel();
-                    for (TimeUpdate update : updates) {
-                        update.reloadSchedule(time);
+//                    timer.cancel();
+//                    for (TimeUpdate update : updates) {
+//                        update.reloadSchedule(time);
+//                    }
+//                    startTimer(scale);
+                    for (Street streetTmp : streetsList) {
+                        System.out.println(streetTmp.toString());
                     }
-                    startTimer(scale);
-                    System.out.println(street.toString());
-
                     return;
 
                 } else {
@@ -98,13 +99,13 @@ public class MainController {
         for (Street street : streetsList) {
             if (street.getStreetName().equals(streetName)) {
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
-                //System.out.println("street " + streetName + " back to default speed");
+                System.out.println("street " + streetName + " back to default speed");
 
-                timer.cancel();
-                for (TimeUpdate update : updates) {
-                    update.reloadSchedule(time);
-                }
-                startTimer(scale);
+//                timer.cancel();
+//                for (TimeUpdate update : updates) {
+//                    update.reloadSchedule(time);
+//                }
+//                startTimer(scale);
                 return;
             }
         }
@@ -120,7 +121,7 @@ public class MainController {
     private void onTimeScaleChange() {
         try {
             scale = Float.parseFloat(timeScale.getText());
-            if (scale <= 0) {
+            if (scale <= 0 || scale >= 1000) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time scale value");
                 alert.showAndWait();
                 return;
