@@ -26,7 +26,7 @@
    <right>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="timeScale" alignment="CENTER" layoutX="41.0" layoutY="22.0" prefHeight="26.0" prefWidth="118.0" promptText="default 1" />
+            <TextField fx:id="timeScale" alignment="CENTER" layoutX="25.0" layoutY="22.0" prefHeight="26.0" prefWidth="152.0" promptText="default 1 max 1000" />
             <Button layoutX="26.0" layoutY="62.0" mnemonicParsing="false" onAction="#onTimeScaleChange" text="Change time speed" />
             <TextField fx:id="timeSetHours" layoutX="14.0" layoutY="118.0" prefHeight="26.0" prefWidth="40.0" />
             <TextField fx:id="timeSetMinutes" layoutX="80.0" layoutY="118.0" prefHeight="26.0" prefWidth="40.0" />

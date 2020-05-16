@@ -55,22 +55,24 @@ public class MainController {
      */
     @FXML
     private void onSlowStreet() {
-        //TODO opravit metodu - meni sa position vozidiel
-        //TODO po spusteni timeru, reload schedule asi funguje
-        //TODO skus si dat pathlength ako property (debug) a porovnaj distance
-        //TODO niekde  sa musi zmenit radikalne pozicia
         String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
             if (street.getStreetName().equals(streetName)) {
                 if(street.getStreetSpeed() > 1) {
 
-                    street.setStreetSpeed(street.getStreetSpeed() - 1);
+                    //testovanie
+//                    street.setStreetSpeed(Street.DEFAULT_SPEED);
+//                    street.setStreetSpeed(1);
+                    //\testovanie
+
+                    street.setStreetSpeed(street.getStreetSpeed() - 2);
                     timer.cancel();
                     for (TimeUpdate update : updates) {
                         update.reloadSchedule(time);
                     }
                     startTimer(scale);
                     System.out.println(street.toString());
+
                     return;
 
                 } else {
