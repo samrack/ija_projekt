@@ -98,7 +98,6 @@ public class Line {
                 return street;
             }
         }
-        System.out.println("UZ BOLI TRI ");
         throw new Exception("Coord not on any street in Line !");
     }
 

@@ -43,7 +43,7 @@ public class Coordinate {
      */
     public double diffX(Coordinate c) {
 
-        return this.x - c.x;
+        return this.x - c.getX();
     }
 
     
@@ -55,7 +55,7 @@ public class Coordinate {
      */
     public double diffY(Coordinate c) {
 
-        return this.y - c.y;
+        return this.y - c.getY();
     }
 
     

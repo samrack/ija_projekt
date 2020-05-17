@@ -442,6 +442,9 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, line.getLineColor()));
+    }
+
+    private void showItinerary () {
 
     }
 
