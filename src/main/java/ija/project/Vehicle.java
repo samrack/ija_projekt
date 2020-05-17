@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.Converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -50,6 +52,11 @@ public class Vehicle implements Drawable, TimeUpdate {
     private List<Shape> gui;
 
     static int timeCounter = 0;
+
+    private List<Stop> stoplist = new ArrayList<>();
+    private List<LocalTime> timeslist = new ArrayList<>();
+
+    private boolean active = false;
 
     private Vehicle() {
     }
@@ -219,6 +226,7 @@ public class Vehicle implements Drawable, TimeUpdate {
 //                    isOnStop = true;
 //                    break;
 //                }
+
             for (Stop stop : schedule.getStopsList()) {
                 if (stop.getCoordinate().equals(position)) {
                     isOnStop = true;
@@ -333,14 +341,13 @@ public class Vehicle implements Drawable, TimeUpdate {
 
         startTime = begTime;
         Coordinate tmpPosition = startPosition;
-        List<Stop> stoplist = new ArrayList<>();
-        List<LocalTime> timeslist = new ArrayList<>();
+
         boolean completed = false;
 
         while (distance <= path.getPathLength()) {
             try {
                 Street currentStreet = line.getStreetByCoord(tmpPosition);
-                int speed = Street.DEFAULT_SPEED;
+                int speed = currentStreet.getStreetSpeed();
                 int tmpDistance = distance;
 
                 for (int i = 0; i < speed; i++) {
@@ -442,10 +449,22 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, line.getLineColor()));
+        this.gui.get(0).setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println(busId + "clicked");
+                active = true;
+            }
+        });
     }
 
-    private void showItinerary () {
 
+    public boolean isActive () {
+        return active;
+    }
+
+    public void deactivate () {
+        active = false;
     }
 
     /**
@@ -510,6 +529,14 @@ public class Vehicle implements Drawable, TimeUpdate {
      */
     public Coordinate getStartPosition() {
         return startPosition;
+    }
+
+    public List<Stop> getStoplist() {
+        return stoplist;
+    }
+
+    public List<LocalTime> getTimeslist() {
+        return timeslist;
     }
 
     /**

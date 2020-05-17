@@ -41,11 +41,18 @@
             <Button layoutX="103.0" layoutY="259.0" mnemonicParsing="false" onAction="#onSpeedUpStreet" prefHeight="26.0" prefWidth="91.0" text="Normal" />
             <Line endX="100.00006103515625" layoutX="100.0" layoutY="191.0" startX="-100.0" stroke="#00000060" />
             <Line endX="100.0" layoutX="100.0" layoutY="103.0" startX="-100.0" stroke="#00000065" />
-            <Text fx:id="timeField" layoutX="26.0" layoutY="360.0">
+            <Text fx:id="timeField" layoutX="26.0" layoutY="340.0">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font></Text>
          </children>
       </AnchorPane>
    </right>
+   <bottom>
+      <Pane fx:id="timeline" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Line endX="500.0" layoutX="42.0" layoutY="31.0" />
+         </children>
+      </Pane>
+   </bottom>
 </BorderPane>

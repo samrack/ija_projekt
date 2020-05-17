@@ -64,6 +64,7 @@ public class Main extends Application {
                 // list of vehicles
                 LocalTime time = LocalTime.now();
                 List<Vehicle> vList = new ArrayList<>();
+                List<Itinerary> iList = new ArrayList<>();
 
                 for (int i = 0; i < linesList.size(); i++) {
                         for (int j = 0; j < VEHICLES_PER_LINE; j++) {
@@ -73,6 +74,7 @@ public class Main extends Application {
                                                         "bus" + linesList.get(i).getId() + "_" + String.valueOf(j),
                                                         linesList.get(i), departTimesList.get(j));
                                         vList.add(v);
+                                        iList.add(new Itinerary(v));
                                 } catch (Exception e) {
                                         System.out.println(e + " CHYBA");
                                 }
@@ -96,6 +98,7 @@ public class Main extends Application {
 
                 try {
                         elements.addAll(vList);
+                        elements.addAll(iList);
                 } catch (Exception e) {
                         System.out.println("chytil som chybu");
                 }

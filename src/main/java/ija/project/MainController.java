@@ -1,9 +1,11 @@
 package ija.project;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -39,6 +41,8 @@ public class MainController {
     @FXML
     private Text timeField;
 
+    @FXML
+    private Pane timeline;
 
     private Timer timer;
     private LocalTime time = LocalTime.now();
@@ -48,6 +52,10 @@ public class MainController {
     private List<TimeUpdate> updates = new ArrayList<>();
 
     private List<Street> streetsList = new ArrayList<>();
+
+    private String selectedId = "unactive";
+
+
 
     /*
      * Checks if input street exists on map and if it does, slows its speed to
@@ -186,6 +194,13 @@ public class MainController {
         }
     }
 
+//    EventHandler<javafx.scene.input.MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+//        @Override
+//        public void handle(MouseEvent event) {
+//            System.out.println("clicked on circle");
+//        }
+//    };
+
     /**
      * Timer that runs TimerTask at fixed rate that can be changes by scale
      * 
@@ -203,8 +218,52 @@ public class MainController {
 
                         time = time.plusSeconds(1);
                         timeField.setText(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
+
+                        //zoznam aktivnych spojov (max 2)
+                        List<String> activeBuses = new ArrayList<>();
+                        String newActiveId = "unactive";
+
+                        //prechadzam elementy vozidiel
                         for (TimeUpdate update : updates) {
-                            update.update(time);
+                            if(update instanceof Vehicle) {
+                                Boolean isActive = ((Vehicle) update).isActive();
+                                String busId = ((Vehicle) update).getBusId();
+
+                                //Ak najdem aktivny spoj, vlozim do zoznamu aktivnych IDciek
+                                if(isActive) {
+                                    activeBuses.add(busId);
+                                }
+                            }
+                        }
+
+                        if(activeBuses.size() == 1) {
+                            newActiveId = activeBuses.get(0);
+                        }
+
+                        if(activeBuses.size() == 2) {
+                            if (selectedId.equals(activeBuses.get(0))) {
+                                newActiveId = activeBuses.get(1);
+                            } else {
+                                newActiveId = activeBuses.get(0);
+                            }
+                        }
+
+                        selectedId = newActiveId;
+
+                        //Update vehicles and timelines
+                        for (TimeUpdate update : updates) {
+
+                            //Ak je newActiveId "unactive", deaktivujem vsetky timelines
+                            //Inak deaktivujem vsetky okrem aktivneho, ktory ma zhodne id s newActiveId.
+                            if (update instanceof Vehicle) {
+                                Boolean isActive = ((Vehicle) update).isActive();
+                                String currentId = ((Vehicle) update).getBusId();
+                                if (!newActiveId.equals(currentId)) {
+                                    ((Vehicle) update).deactivate();
+                                }
+
+                                update.update(time);
+                            }
                         }
                     }
                 });
