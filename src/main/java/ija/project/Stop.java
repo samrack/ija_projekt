@@ -12,6 +12,12 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
+/** 
+ * Represents a Stop on a line   
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "stopId", scope = Stop.class)
 @JsonDeserialize(converter = Stop.CallConstructor.class)
 public class Stop implements Drawable {

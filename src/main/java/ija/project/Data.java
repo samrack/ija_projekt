@@ -2,6 +2,13 @@ package ija.project;
 
 import java.util.List;
 
+/** 
+ * Stores loaded data for map setup    
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
+
 public class Data {
     private List<Coordinate> coordinates;
     private List<Vehicle> vehicles;

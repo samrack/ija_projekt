@@ -17,6 +17,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/** 
+ * Represents a street on a map
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "streetName", scope = Street.class)
 public class Street implements Drawable {
     

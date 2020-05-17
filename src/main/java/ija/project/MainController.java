@@ -17,10 +17,15 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+/** 
+ * Main controller, controls things like timer and street speed
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 public class MainController {
 
-    // Possible TODO : set Scale to class variable so then it is consistent after
-    // timeset or sltreet slow, it might be better not to do it tho.
 
     @FXML
     private Pane content;

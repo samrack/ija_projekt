@@ -7,6 +7,12 @@ import javafx.scene.text.Text;
 
 import java.time.LocalTime;
 import java.util.*;
+/** 
+ * Represents Itenerar for vehicle 
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 
 public class Itinerary implements Drawable, TimeUpdate {
 
@@ -31,6 +37,10 @@ public class Itinerary implements Drawable, TimeUpdate {
         setGui();
     }
 
+    
+    /** 
+     * @return List<Shape>
+     */
     @Override
     public List<Shape> getGUI() {
         return gui;
@@ -61,16 +71,28 @@ public class Itinerary implements Drawable, TimeUpdate {
         this.gui.addAll(stopTextsGui);
     }
 
+    
+    /** 
+     * @param coordinate
+     */
     //TODO coordinate v ramci priamky
     private void moveGui (Coordinate coordinate) {
 
                 this.gui.get(0).setTranslateX((coordinate.getX() - vehiclePos.getX()) + this.gui.get(0).getTranslateX());
     }
 
+    
+    /** 
+     * @param position
+     */
     public void setDistanceByPosition(Coordinate position) {
 
     }
 
+    
+    /** 
+     * @param time
+     */
     @Override
     public void update (LocalTime time) {
 
@@ -85,6 +107,10 @@ public class Itinerary implements Drawable, TimeUpdate {
         }
     }
 
+    
+    /** 
+     * @param time
+     */
     public void newTime (LocalTime time) {
 
     }

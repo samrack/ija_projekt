@@ -3,6 +3,14 @@ package ija.project;
 import java.time.LocalTime;
 import java.util.List;
 
+
+/** 
+ * Represents schedule for a one certain vehicle    
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
+
 public class Schedule {
     private Vehicle bus;
     private List<Stop> stopsList;

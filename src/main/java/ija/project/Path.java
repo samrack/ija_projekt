@@ -4,6 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
+/** 
+ * Represents path that vehicle follows   
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 public class Path {
 
     private List<Coordinate> path;
@@ -67,7 +73,11 @@ public class Path {
         return length;
     }
 
-    /* Returns last coordinate of path a.k.a last Stop */
+    /** 
+     * Returns last coordinate of path a.k.a last Stop 
+     * 
+     * @return last Coordinate of path
+    * */
     public Coordinate getlastCoordinateOfPath() {
         return path.get(path.size() - 1);
     }

@@ -12,7 +12,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
 import javafx.scene.paint.Color;
-
+/** 
+ * Represents Line, which defines stops and streets that vehicle goes through    
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "yamlId", scope = Line.class)
 public class Line {
     private String yamlId;
@@ -102,8 +107,10 @@ public class Line {
     }
 
     /**
+     * Check if stop lies on the given coordinates 
+     * 
      * @param coords
-     * @return Stop
+     * @return Stop if found, else null
      */
     public Stop getStopFromCoords(Coordinate coords) {
         for (Stop stop : stopsList) {

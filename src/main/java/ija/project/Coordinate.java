@@ -5,6 +5,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.Objects;
 
+/** 
+ * Represents a Coordinate on the map     
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Coordinate {
 

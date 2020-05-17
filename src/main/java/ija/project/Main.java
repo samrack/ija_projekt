@@ -18,6 +18,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/** 
+ * Main class, controls loading data, aplication start and end. 
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 public class Main extends Application {
 
         static final byte VEHICLES_PER_LINE = 10;

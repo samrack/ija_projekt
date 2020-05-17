@@ -20,6 +20,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/** 
+ * Represents a vehicle   
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 public class Vehicle implements Drawable, TimeUpdate {
     private String busId;
 
