@@ -16,17 +16,16 @@
 
     <!-- Deletes the existing build, docs and dist directory-->
     <target name="clean">
-        <delete dir="${build.dir}" />
-    
-        <delete dir="${dist.dir}" />
-    </target>
-    <!-- Creates the  build, docs and dist directory-->
-    <target name="makedir">
-        <mkdir dir="${build.dir}" />
-    
-        <mkdir dir="${dist.dir}" />
-    </target>
+        <delete>
+            <fileset dir="${build.dir}/" includes="**/*"/>
+        </delete>
 
+        <delete>
+            <fileset dir="${dist.dir}/" includes="**/*"/>
+        </delete>
+    
+    </target>
+    
     <path id="build-classpath">
         <fileset dir="${libs.dir}">
             <include name="*.jar" />
@@ -41,7 +40,7 @@
 
 
     <!-- Compiles the java code (including the usage of library for JUnit -->
-    <target name="compile" depends="clean, makedir, run_script ">
+    <target name="compile" depends="clean, run_script ">
         <javac srcdir="${src.dir}" includeantruntime='true' destdir="${build.dir}">
             <classpath refid="build-classpath" />
         </javac>
