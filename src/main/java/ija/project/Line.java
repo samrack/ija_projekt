@@ -96,6 +96,11 @@ public class Line {
      */
     public Street getStreetByCoord(Coordinate coord) throws Exception {
 
+        try {
+
+        } catch (Exception e) {
+            System.out.println();
+        }
         for (Street street : streetsList) {
 
             if (street.isCoordOnStreet(coord)) {

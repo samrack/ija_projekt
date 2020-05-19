@@ -13,5 +13,4 @@ public interface TimeUpdate {
 
     void newTime(LocalTime time);
 
-//    void reloadSchedule(LocalTime time);
 }

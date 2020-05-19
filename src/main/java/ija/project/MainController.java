@@ -30,6 +30,9 @@ public class MainController {
     @FXML
     private Pane content;
 
+//    @FXML
+//    private Pane timeline;
+
     @FXML
     private TextField timeScale;
     @FXML
@@ -46,8 +49,7 @@ public class MainController {
     @FXML
     private Text timeField;
 
-    @FXML
-    private Pane timeline;
+
 
     private Timer timer;
     private LocalTime time = LocalTime.now();
@@ -55,10 +57,12 @@ public class MainController {
 
     private List<Drawable> elements = new ArrayList<>();
     private List<TimeUpdate> updates = new ArrayList<>();
+//    private List<Itinerary> timelines = new ArrayList<>();
+
 
     private List<Street> streetsList = new ArrayList<>();
 
-    private String selectedId = "unactive";
+//    private String selectedId = "unactive";
 
 
 
@@ -73,17 +77,8 @@ public class MainController {
             if (street.getStreetName().equals(streetName)) {
                 if(street.getStreetSpeed() > 1) {
 
-                    //testovanie
-//                    street.setStreetSpeed(Street.DEFAULT_SPEED);
-//                    street.setStreetSpeed(1);
-                    //\testovanie
-
                     street.setStreetSpeed(street.getStreetSpeed() - 2);
-//                    timer.cancel();
-//                    for (TimeUpdate update : updates) {
-//                        update.reloadSchedule(time);
-//                    }
-//                    startTimer(scale);
+
                     for (Street streetTmp : streetsList) {
                         System.out.println(streetTmp.toString());
                     }
@@ -113,12 +108,6 @@ public class MainController {
             if (street.getStreetName().equals(streetName)) {
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
                 System.out.println("street " + streetName + " back to default speed");
-
-//                timer.cancel();
-//                for (TimeUpdate update : updates) {
-//                    update.reloadSchedule(time);
-//                }
-//                startTimer(scale);
                 return;
             }
         }
@@ -134,7 +123,7 @@ public class MainController {
     private void onTimeScaleChange() {
         try {
             scale = Float.parseFloat(timeScale.getText());
-            if (scale <= 0 || scale >= 1000) {
+            if (scale <= 0 || scale > 1000) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid time scale value");
                 alert.showAndWait();
                 return;
@@ -154,7 +143,6 @@ public class MainController {
     @FXML
     private void onNewTimeSet() {
         try {
-            System.out.println("VOLAL SOM ONNEWSETTIME");
 
             int hours = Integer.parseInt(timeSetHours.getText());
             int minutes = Integer.parseInt(timeSetMinutes.getText());
@@ -163,6 +151,7 @@ public class MainController {
             timer.cancel();
             time = LocalTime.of(hours, minutes, seconds);
             for (TimeUpdate update : updates) {
+                if(update instanceof Vehicle) ((Vehicle) update).fillSchedule(time);
                 update.newTime(time);
             }
             startTimer(scale);
@@ -199,12 +188,14 @@ public class MainController {
         }
     }
 
-//    EventHandler<javafx.scene.input.MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-//        @Override
-//        public void handle(MouseEvent event) {
-//            System.out.println("clicked on circle");
+//    public void setItineraryElems(List<Itinerary> elems) {
+//        this.timelines = elems;
+//        for(Itinerary elem : elems) {
+//            timeline.getChildren().addAll(elem.getGUI());
+//            updates.add((TimeUpdate) elem);
 //        }
-//    };
+//    }
+
 
     /**
      * Timer that runs TimerTask at fixed rate that can be changes by scale
@@ -224,51 +215,58 @@ public class MainController {
                         time = time.plusSeconds(1);
                         timeField.setText(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
 
-                        //zoznam aktivnych spojov (max 2)
-                        List<String> activeBuses = new ArrayList<>();
-                        String newActiveId = "unactive";
+////////////////////////////ITINERAR/////////////////////////////\\\\\\\\\\\\\\\\\\\\
+//                        //zoznam aktivnych spojov (max 2)
+//                        List<String> activeBuses = new ArrayList<>();
+//                        String newActiveId = "unactive";
+//
+//                        //prechadzam elementy vozidiel
+///////////////////////////ITINERAR///////////////////////////////////
 
-                        //prechadzam elementy vozidiel
-                        for (TimeUpdate update : updates) {
-                            if(update instanceof Vehicle) {
-                                Boolean isActive = ((Vehicle) update).isActive();
-                                String busId = ((Vehicle) update).getBusId();
-
-                                //Ak najdem aktivny spoj, vlozim do zoznamu aktivnych IDciek
-                                if(isActive) {
-                                    activeBuses.add(busId);
-                                }
-                            }
-                        }
-
-                        if(activeBuses.size() == 1) {
-                            newActiveId = activeBuses.get(0);
-                        }
-
-                        if(activeBuses.size() == 2) {
-                            if (selectedId.equals(activeBuses.get(0))) {
-                                newActiveId = activeBuses.get(1);
-                            } else {
-                                newActiveId = activeBuses.get(0);
-                            }
-                        }
-
-                        selectedId = newActiveId;
-
-                        //Update vehicles and timelines
                         for (TimeUpdate update : updates) {
 
-                            //Ak je newActiveId "unactive", deaktivujem vsetky timelines
-                            //Inak deaktivujem vsetky okrem aktivneho, ktory ma zhodne id s newActiveId.
-                            if (update instanceof Vehicle) {
-                                Boolean isActive = ((Vehicle) update).isActive();
-                                String currentId = ((Vehicle) update).getBusId();
-                                if (!newActiveId.equals(currentId)) {
-                                    ((Vehicle) update).deactivate();
-                                }
+///////////////////////////ITINERAR-NEMENIT//////////////////////\\\\\\\\\\\\\\\\\\\\\\
+//                            if(update instanceof Vehicle) {
+//                                Boolean isActive = ((Vehicle) update).isActive();
+//                                String busId = ((Vehicle) update).getBusId();
+//
+//                                //Ak najdem aktivny spoj, vlozim do zoznamu aktivnych IDciek
+//                                if(isActive) {
+//                                    activeBuses.add(busId);
+//                                }
+//                            }
+//                        }
+//
+//                        if(activeBuses.size() == 1) {
+//                            newActiveId = activeBuses.get(0);
+//                        }
+//
+//                        if(activeBuses.size() == 2) {
+//                            if (selectedId.equals(activeBuses.get(0))) {
+//                                newActiveId = activeBuses.get(1);
+//                            } else {
+//                                newActiveId = activeBuses.get(0);
+//                            }
+//                        }
+//
+//                        selectedId = newActiveId;
+//
+//                        //Update vehicles and timelines
+//                        for (TimeUpdate update : updates) {
+//
+//                            //Ak je newActiveId "unactive", deaktivujem vsetky timelines
+//                            //Inak deaktivujem vsetky okrem aktivneho, ktory ma zhodne id s newActiveId.
+//                            if (update instanceof Vehicle) {
+//                                Boolean isActive = ((Vehicle) update).isActive();
+//                                String currentId = ((Vehicle) update).getBusId();
+//                                if (!newActiveId.equals(currentId)) {
+//                                    ((Vehicle) update).deactivate();
+//                                }
+//
+//                            }
+////////////////////////////ITINERAR////////////////////////////////////////////////////////////
 
-                                update.update(time);
-                            }
+                            update.update(time);
                         }
                     }
                 });

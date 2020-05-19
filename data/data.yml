@@ -26,25 +26,6 @@ coordinates:
 - &9 name: null
   x: 1000.0
   y: 1000.0
-- &10 name: null
-  x: 1300.0
-  y: 1000.0
-- &11 name: null
-  x: 1000.0
-  y: 1500.0
-- &12 name: null
-  x: 1300.0
-  y: 1500.0
-- &13 name: null
-  x: 1300.0
-  y: 1900.0
-- &14 name: null
-  x: 1500.0
-  y: 1900.0
-- &15 name: null
-  x: 100.0
-  y: 1500.0
-
 stops:
 - &stop1 stopId: null
   coordinate: *1
@@ -64,18 +45,6 @@ stops:
   coordinate: *8
 - &stop9 stopId: null
   coordinate: *9
-- &stop10 stopId: null
-  coordinate: *10
-- &stop11 stopId: null
-  coordinate: *11
-- &stop12 stopId: null
-  coordinate: *12
-- &stop13 stopId: null
-  coordinate: *13
-- &stop14 stopId: null
-  coordinate: *14
-- &stop15 stopId: null
-  coordinate: *15
 streets:
 - &street12 streetName: null
   stops:
@@ -149,54 +118,6 @@ streets:
   - *stop9
   begin: *8
   end: *9
-- &street910 streetName: null
-  stops:
-  - *stop9
-  - *stop10
-  begin: *9
-  end: *10
-- &street911 streetName: null
-  stops:
-  - *stop9
-  - *stop11
-  begin: *9
-  end: *11
-- &street1012 streetName: null
-  stops:
-  - *stop10
-  - *stop12
-  begin: *10
-  end: *12
-- &street1112 streetName: null
-  stops:
-  - *stop11
-  - *stop12
-  begin: *11
-  end: *12
-- &street1213 streetName: null
-  stops:
-  - *stop12
-  - *stop13
-  begin: *12
-  end: *13
-- &street1314 streetName: null
-  stops:
-  - *stop13
-  - *stop14
-  begin: *13
-  end: *14
-- &street1115 streetName: null
-  stops:
-  - *stop11
-  - *stop15
-  begin: *11
-  end: *15
-- &street715 streetName: null
-  stops:
-  - *stop7
-  - *stop15
-  begin: *7
-  end: *15
 lines:
 - &l-1 yamlId: null
   id: "line-1"
@@ -205,29 +126,13 @@ lines:
     - *1
     - *4
     - *7
-    - *15
-    - *11
-    - *12
-    - *13
-    - *14
   stopsList:
   - *stop1
   - *stop4
   - *stop7
-  - *stop15
-  - *stop11
-  - *stop12
-  - *stop13
-  - *stop14
   streetsList:
   - *street14
   - *street47
-  - *street715
-  - *street1115
-  - *street1112
-  - *street1213
-  - *street1314
-
 - &l-2 yamlId: null
   id: "line-2"
   path:
@@ -237,53 +142,37 @@ lines:
     - *5
     - *2
     - *3
-    - *6
-    - *9
-    - *10
-    - *12
   stopsList:
   - *stop7
   - *stop8
   - *stop5
   - *stop2
   - *stop3
-  - *stop6
-  - *stop9
-  - *stop10
-  - *stop12
   streetsList:
   - *street78
   - *street58
   - *street25
   - *street23
-  - *street36
-  - *street69
-  - *street910
-  - *street1012
-
 - &l-3 yamlId: null
   id: "line-3"
   path:
     path:
-    - *2
-    - *1
-    - *4
-    - *5
+    - *3
     - *6
     - *9
-    - *11
+    - *8
+    - *7
+    - *4
   stopsList:
-  - *stop2
-  - *stop1
-  - *stop4
-  - *stop5
+  - *stop3
   - *stop6
   - *stop9
-  - *stop11
+  - *stop8
+  - *stop7
+  - *stop4
   streetsList:
-  - *street12
-  - *street14
-  - *street45
-  - *street56
+  - *street36
   - *street69
-  - *street911
+  - *street89
+  - *street78
+  - *street47

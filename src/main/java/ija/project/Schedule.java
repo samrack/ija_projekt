@@ -48,16 +48,4 @@ public class Schedule {
         this.timesList = timeList;
     }
 
-    // Function for testing to see the schedule
-    public void printOutSchedule() {
-        int numberOfStops = stopsList.size();
-        System.out.println(numberOfStops);
-        for (int i = 0; i < numberOfStops; i++) {
-            System.out.println("BUS " + bus.getBusId() + " will be on stop " + stopsList.get(i).getStopId()
-                    + " at time : " + String.format("%s", timesList.get(i)));
-        }
-    }
-
-    /* KAZDA LINKA MA STARTTIMES : 00 06 12 18 24 20 36 42 48 54 */
-
 }

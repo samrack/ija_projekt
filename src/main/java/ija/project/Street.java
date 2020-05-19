@@ -2,16 +2,12 @@ package ija.project;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
-import jdk.nashorn.internal.ir.ReturnNode;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +24,6 @@ public class Street implements Drawable {
     
 
     static final public int DEFAULT_SPEED = 5;
-    static final public int SLOWED_SPEED = 1;
 
     private String streetName;
 
@@ -85,39 +80,6 @@ public class Street implements Drawable {
         return speed;
     }
 
-
-
-//    public boolean isCoordOnStreet(Coordinate coord) {
-//
-//        BigDecimal bigCoordX = new BigDecimal(String.valueOf(coord.getX()));
-//        BigDecimal bigCoordY = new BigDecimal(String.valueOf(coord.getY()));
-//        int intCoordX = bigCoordX.intValue();
-//        int intCoordY = bigCoordY.intValue();
-//
-//        double coordX = intCoordX;
-//        double coordY = intCoordY;
-//
-//        double dxc = coordX - begin.getX();
-//        double dyc = coordY - begin.getY();
-//
-//        double dxl = end.getX() - begin.getX();
-//        double dyl = end.getY() - begin.getY();
-//
-//        if (dxc * dyl - dyc * dxl == 0) {
-//
-//            if (Math.abs(dxl) >= Math.abs(dyl)) {
-//                return dxl > 0 ?
-//                        begin.getX() <= coordX && coordX <= end.getX() :
-//                        end.getX() <= coordX && coordX <= begin.getX();
-//            } else {
-//                return dyl > 0 ?
-//                        begin.getY() <= coordY && coordY <= end.getY() :
-//                        end.getY() <= coordY && coordY <= begin.getY();
-//            }
-//
-//        } else return false;
-//    }
-
     /**
      * Check if coordinate lies on the street
      *
@@ -132,7 +94,11 @@ public class Street implements Drawable {
         double dxl = end.getX() - begin.getX();
         double dyl = end.getY() - begin.getY();
 
-        if(dxc * dyl - dyc * dxl == 0) {
+        if(Math.abs(dxc * dyl - dyc * dxl) > 1) {
+
+            return false;
+
+        } else {
 
             if(Math.abs(dxl) >= Math.abs(dyl)) {
                 return dxl > 0 ?
@@ -143,8 +109,7 @@ public class Street implements Drawable {
                         begin.getY() <= coord.getY() && coord.getY() <= end.getY() :
                         end.getY() <= coord.getY() && coord.getY() <= begin.getY();
             }
-
-        } else return false;
+        }
     }
 
     /**

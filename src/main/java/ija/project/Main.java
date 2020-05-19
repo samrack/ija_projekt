@@ -5,14 +5,12 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +37,6 @@ public class Main extends Application {
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Map.fxml"));
                 if (null == loader.getLocation()) {
-                        System.out.println("ZAS JE NULL !!!!!!!!");
 
                 }
 
@@ -55,7 +52,7 @@ public class Main extends Application {
                 YAMLFactory factory = new YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER);
                 ObjectMapper mapper = new ObjectMapper(factory);
 
-                Data data1 = mapper.readValue(new File("data/data.yml"), Data.class);
+                Data data1 = mapper.readValue(new File("data/data1.yml"), Data.class);
 
                 List<Line> linesList = data1.getLines();
 
@@ -70,7 +67,7 @@ public class Main extends Application {
                 // list of vehicles
                 LocalTime time = LocalTime.now();
                 List<Vehicle> vList = new ArrayList<>();
-                List<Itinerary> iList = new ArrayList<>();
+//                List<Itinerary> iList = new ArrayList<>();
 
                 for (int i = 0; i < linesList.size(); i++) {
                         for (int j = 0; j < VEHICLES_PER_LINE; j++) {
@@ -80,7 +77,8 @@ public class Main extends Application {
                                                         "bus" + linesList.get(i).getId() + "_" + String.valueOf(j),
                                                         linesList.get(i), departTimesList.get(j));
                                         vList.add(v);
-                                        iList.add(new Itinerary(v));
+//                                        Itinerary itin = new Itinerary(v);
+//                                        iList.add(itin);
                                 } catch (Exception e) {
                                         System.out.println(e + " CHYBA");
                                 }
@@ -88,23 +86,10 @@ public class Main extends Application {
                         }
                 }
 
-//                for (int j = 0; j < 1; j++) {
-//                        try {
-//
-//                                Vehicle v = new Vehicle(
-//                                        "bus" + linesList.get(0).getId() + "_" + String.valueOf(j),
-//                                        linesList.get(0), departTimesList.get(j));
-//                                vList.add(v);
-//                        } catch (Exception e) {
-//                                System.out.println(e + " CHYBA");
-//                        }
-//
-//                }
-
 
                 try {
                         elements.addAll(vList);
-                        elements.addAll(iList);
+//                        elements.addAll(iList);
                 } catch (Exception e) {
                         System.out.println("chytil som chybu");
                 }
@@ -115,6 +100,7 @@ public class Main extends Application {
                 controller.setStreetsList(data1.getStreets());
 
                 controller.setElements(elements);
+//                controller.setItineraryElems(iList);
                 controller.startTimer(1);
         }
 

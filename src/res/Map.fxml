@@ -48,11 +48,7 @@
          </children>
       </AnchorPane>
    </right>
-   <bottom>
-      <Pane fx:id="timeline" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Line endX="500.0" layoutX="42.0" layoutY="31.0" />
-         </children>
-      </Pane>
-   </bottom>
+<!--   <bottom>-->
+<!--      <Pane fx:id="timeline" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER" />-->
+<!--   </bottom>-->
 </BorderPane>
