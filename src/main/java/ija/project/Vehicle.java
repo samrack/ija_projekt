@@ -53,13 +53,16 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     private List<Stop> stoplist = new ArrayList<>();
     private List<LocalTime> timeslist = new ArrayList<>();
+    private List<Double> stopDistances = new ArrayList<>();
 
     private boolean active = false;
+    public EventHandler<MouseEvent> handler;
+
 
     private Vehicle() {
     }
 
-    public Vehicle(String busId, Line line, int startingMinute) {
+    public Vehicle(String busId, Line line, int startingMinute, EventHandler<MouseEvent> handler) {
         this.busId = busId;
         this.line = line;
         this.path = line.getPath();
@@ -67,7 +70,9 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
         this.startingMinute = startingMinute;
+        this.handler = handler;
         fillSchedule(composeStartingTime());
+        setStopDistances();
         setGui();
 
     }
@@ -377,15 +382,24 @@ public class Vehicle implements Drawable, TimeUpdate {
     public void setGui() {
         this.gui = new ArrayList<Shape>();
         this.gui.add(new Circle(position.getX(), position.getY(), 10, line.getLineColor()));
-//        this.gui.get(0).setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                System.out.println(busId + "clicked");
-//                active = true;
-//            }
-//        });
+        this.gui.get(0).setOnMouseClicked(this.handler);
+
     }
 
+
+    public void setStopDistances() {
+
+        for(int i = 0; i < schedule.getStopsList().size(); i++) {
+            double stopDistance = 0;
+            Coordinate stopCoordinate = startPosition;
+
+            while (!stopCoordinate.equals(schedule.getStopsList().get(i).getCoordinate())) {
+                stopDistance++;
+                stopCoordinate = path.getNextPosition(stopDistance);
+            }
+            stopDistances.add(stopDistance);
+        }
+    }
 
     public boolean isActive () {
         return active;
@@ -487,6 +501,10 @@ public class Vehicle implements Drawable, TimeUpdate {
     public long getOneRideLength() {
         return oneRideLength;
     } // in seconds
+
+    public List<Double> getStopDistances() {
+        return stopDistances;
+    }
 
     static class CallConstructor extends StdConverter<Vehicle, Vehicle> {
 

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -67,7 +69,23 @@ public class Main extends Application {
                 // list of vehicles
                 LocalTime time = LocalTime.now();
                 List<Vehicle> vList = new ArrayList<>();
-//                List<Itinerary> iList = new ArrayList<>();
+
+                EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+
+                                Vehicle clickedVehicle;
+                                for (Drawable elem : elements) {
+                                        if(elem instanceof Vehicle) {
+                                                if(elem.getGUI().get(0) == event.getTarget()) {
+                                                        clickedVehicle = (Vehicle) elem;
+                                                        System.out.println("clicked" + clickedVehicle.getBusId() );
+                                                        controller.setItinerary((Vehicle) elem);
+                                                }
+                                        }
+                                }
+                        }
+                };
 
                 for (int i = 0; i < linesList.size(); i++) {
                         for (int j = 0; j < VEHICLES_PER_LINE; j++) {
@@ -75,10 +93,9 @@ public class Main extends Application {
 
                                         Vehicle v = new Vehicle(
                                                         "bus" + linesList.get(i).getId() + "_" + String.valueOf(j),
-                                                        linesList.get(i), departTimesList.get(j));
+                                                        linesList.get(i), departTimesList.get(j), handler);
                                         vList.add(v);
-//                                        Itinerary itin = new Itinerary(v);
-//                                        iList.add(itin);
+
                                 } catch (Exception e) {
                                         System.out.println(e + " CHYBA");
                                 }
@@ -89,7 +106,6 @@ public class Main extends Application {
 
                 try {
                         elements.addAll(vList);
-//                        elements.addAll(iList);
                 } catch (Exception e) {
                         System.out.println("chytil som chybu");
                 }
@@ -100,7 +116,6 @@ public class Main extends Application {
                 controller.setStreetsList(data1.getStreets());
 
                 controller.setElements(elements);
-//                controller.setItineraryElems(iList);
                 controller.startTimer(1);
         }
 

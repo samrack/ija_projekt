@@ -3,6 +3,7 @@ package ija.project;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -30,8 +31,8 @@ public class MainController {
     @FXML
     private Pane content;
 
-//    @FXML
-//    private Pane timeline;
+    @FXML
+    private Pane timeline;
 
     @FXML
     private TextField timeScale;
@@ -57,12 +58,9 @@ public class MainController {
 
     private List<Drawable> elements = new ArrayList<>();
     private List<TimeUpdate> updates = new ArrayList<>();
-//    private List<Itinerary> timelines = new ArrayList<>();
-
-
     private List<Street> streetsList = new ArrayList<>();
 
-//    private String selectedId = "unactive";
+    private Itinerary itinerary;
 
 
 
@@ -144,6 +142,8 @@ public class MainController {
     private void onNewTimeSet() {
         try {
 
+            timeline.getChildren().clear();
+
             int hours = Integer.parseInt(timeSetHours.getText());
             int minutes = Integer.parseInt(timeSetMinutes.getText());
             int seconds = Integer.parseInt(timeSetSeconds.getText());
@@ -151,7 +151,9 @@ public class MainController {
             timer.cancel();
             time = LocalTime.of(hours, minutes, seconds);
             for (TimeUpdate update : updates) {
-                if(update instanceof Vehicle) ((Vehicle) update).fillSchedule(time);
+                if(update instanceof Vehicle) {
+                    ((Vehicle) update).fillSchedule(time);
+                }
                 update.newTime(time);
             }
             startTimer(scale);
@@ -188,13 +190,12 @@ public class MainController {
         }
     }
 
-//    public void setItineraryElems(List<Itinerary> elems) {
-//        this.timelines = elems;
-//        for(Itinerary elem : elems) {
-//            timeline.getChildren().addAll(elem.getGUI());
-//            updates.add((TimeUpdate) elem);
-//        }
-//    }
+    public void setItinerary (Vehicle vehicle) {
+        this.itinerary = new Itinerary(vehicle);
+        timeline.getChildren().clear();
+        timeline.getChildren().addAll(itinerary.getGUI());
+    }
+
 
 
     /**
@@ -215,58 +216,11 @@ public class MainController {
                         time = time.plusSeconds(1);
                         timeField.setText(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
 
-////////////////////////////ITINERAR/////////////////////////////\\\\\\\\\\\\\\\\\\\\
-//                        //zoznam aktivnych spojov (max 2)
-//                        List<String> activeBuses = new ArrayList<>();
-//                        String newActiveId = "unactive";
-//
-//                        //prechadzam elementy vozidiel
-///////////////////////////ITINERAR///////////////////////////////////
-
                         for (TimeUpdate update : updates) {
-
-///////////////////////////ITINERAR-NEMENIT//////////////////////\\\\\\\\\\\\\\\\\\\\\\
-//                            if(update instanceof Vehicle) {
-//                                Boolean isActive = ((Vehicle) update).isActive();
-//                                String busId = ((Vehicle) update).getBusId();
-//
-//                                //Ak najdem aktivny spoj, vlozim do zoznamu aktivnych IDciek
-//                                if(isActive) {
-//                                    activeBuses.add(busId);
-//                                }
-//                            }
-//                        }
-//
-//                        if(activeBuses.size() == 1) {
-//                            newActiveId = activeBuses.get(0);
-//                        }
-//
-//                        if(activeBuses.size() == 2) {
-//                            if (selectedId.equals(activeBuses.get(0))) {
-//                                newActiveId = activeBuses.get(1);
-//                            } else {
-//                                newActiveId = activeBuses.get(0);
-//                            }
-//                        }
-//
-//                        selectedId = newActiveId;
-//
-//                        //Update vehicles and timelines
-//                        for (TimeUpdate update : updates) {
-//
-//                            //Ak je newActiveId "unactive", deaktivujem vsetky timelines
-//                            //Inak deaktivujem vsetky okrem aktivneho, ktory ma zhodne id s newActiveId.
-//                            if (update instanceof Vehicle) {
-//                                Boolean isActive = ((Vehicle) update).isActive();
-//                                String currentId = ((Vehicle) update).getBusId();
-//                                if (!newActiveId.equals(currentId)) {
-//                                    ((Vehicle) update).deactivate();
-//                                }
-//
-//                            }
-////////////////////////////ITINERAR////////////////////////////////////////////////////////////
-
                             update.update(time);
+                            if (itinerary != null) {
+                                itinerary.update(time);
+                            }
                         }
                     }
                 });
