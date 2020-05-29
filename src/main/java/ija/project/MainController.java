@@ -9,14 +9,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.shape.Line;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 
 /** 
@@ -40,8 +39,7 @@ public class MainController {
     private TextField timeSetHours;
     @FXML
     private TextField timeSetMinutes;
-    @FXML
-    private TextField timeSetSeconds;
+
 
     @FXML
     private TextField textStreetName;
@@ -61,7 +59,8 @@ public class MainController {
     private List<Street> streetsList = new ArrayList<>();
 
     private Itinerary itinerary;
-
+    public Vehicle activeVehicle;
+    private List<Street> activeStreets;
 
 
     /*
@@ -76,14 +75,13 @@ public class MainController {
                 if(street.getStreetSpeed() > 1) {
 
                     street.setStreetSpeed(street.getStreetSpeed() - 2);
-
-                    for (Street streetTmp : streetsList) {
-                        System.out.println(streetTmp.toString());
+                    if(itinerary != null) {
+                        setItinerary(activeVehicle);
                     }
                     return;
 
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Traffic on the street is as slow as possible!");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Traffic on the street cannot get any slower!");
                     alert.showAndWait();
                     return;
 
@@ -91,7 +89,7 @@ public class MainController {
             }
         }
 
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Street name doest match any of the streets !");
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Street name doest match any of the streets!");
         alert.showAndWait();
     }
 
@@ -104,8 +102,11 @@ public class MainController {
         String streetName = (textStreetName.getText());
         for (Street street : streetsList) {
             if (street.getStreetName().equals(streetName)) {
+
                 street.setStreetSpeed(Street.DEFAULT_SPEED);
-                System.out.println("street " + streetName + " back to default speed");
+                if(itinerary != null) {
+                    setItinerary(activeVehicle);
+                }
                 return;
             }
         }
@@ -142,17 +143,27 @@ public class MainController {
     private void onNewTimeSet() {
         try {
 
-            timeline.getChildren().clear();
-
             int hours = Integer.parseInt(timeSetHours.getText());
             int minutes = Integer.parseInt(timeSetMinutes.getText());
-            int seconds = Integer.parseInt(timeSetSeconds.getText());
 
             timer.cancel();
-            time = LocalTime.of(hours, minutes, seconds);
+            time = LocalTime.of(hours, minutes, 0);
+
+            timeline.getChildren().clear();
+            unsetHighligtedLine();
+            activeVehicle = null;
+
             for (TimeUpdate update : updates) {
                 if(update instanceof Vehicle) {
-                    ((Vehicle) update).fillSchedule(time);
+
+                    int resultCar = ((Vehicle) update).getStartingMinute() + ((int)((Vehicle) update).getOneRideLength()/60);
+                    int resultTime = 60 + time.getMinute();
+                    if(((Vehicle) update).getStartingMinute() + ((int)((Vehicle) update).getOneRideLength()/60)
+                        > (60 + time.getMinute())) {
+                        ((Vehicle) update).reloadSchedule(LocalTime.of(hours - 1, minutes, 0));
+                    } else {
+                        ((Vehicle) update).reloadSchedule(time);
+                    }
                 }
                 update.newTime(time);
             }
@@ -191,11 +202,30 @@ public class MainController {
     }
 
     public void setItinerary (Vehicle vehicle) {
-        this.itinerary = new Itinerary(vehicle);
+        this.itinerary = new Itinerary(vehicle, time);
         timeline.getChildren().clear();
         timeline.getChildren().addAll(itinerary.getGUI());
     }
 
+    public void unsetHighligtedLine () {
+        if (activeVehicle != null) {
+
+            int from = content.getChildren().size() - activeVehicle.getLine().getStreetsList().size();
+            int to = content.getChildren().size();
+
+            content.getChildren().remove(from, to);
+        }
+    }
+
+
+    public void setHighlightedLine () {
+        ija.project.Line activeLine = activeVehicle.getLine();
+        for (Street street : activeLine.getStreetsList()) {
+            Line l = new Line(street.getBegin().getX(), street.getBegin().getY(), street.getEnd().getX(), street.getEnd().getY());
+            l.setStrokeWidth(3);
+            content.getChildren().add(l);
+        }
+    }
 
 
     /**

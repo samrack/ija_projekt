@@ -80,7 +80,11 @@ public class Main extends Application {
                                                 if(elem.getGUI().get(0) == event.getTarget()) {
                                                         clickedVehicle = (Vehicle) elem;
                                                         System.out.println("clicked" + clickedVehicle.getBusId() );
+
+                                                        controller.unsetHighligtedLine();
+                                                        controller.activeVehicle = clickedVehicle;
                                                         controller.setItinerary((Vehicle) elem);
+                                                        controller.setHighlightedLine();
                                                 }
                                         }
                                 }

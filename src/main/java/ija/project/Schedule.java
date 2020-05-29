@@ -48,4 +48,11 @@ public class Schedule {
         this.timesList = timeList;
     }
 
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "bus=" + bus.getBusId() +
+                ", timesList=" + timesList +
+                '}';
+    }
 }

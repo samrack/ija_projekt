@@ -8,10 +8,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /** 
  * Represents a street on a map
@@ -81,6 +78,13 @@ public class Street implements Drawable {
     }
 
     /**
+     * @param speed
+     */
+    public void setStreetSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    /**
      * Check if coordinate lies on the street
      *
      * @param coord
@@ -138,11 +142,16 @@ public class Street implements Drawable {
         return "Street{" + "streetName='" + streetName + "_CurrentSpeed=" + speed +'}';
     }
 
-    /**
-     * @param speed
-     */
-    public void setStreetSpeed(int speed) {
-        this.speed = speed;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Street street = (Street) o;
+        return streetName.equals(street.streetName);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(streetName);
+    }
 }

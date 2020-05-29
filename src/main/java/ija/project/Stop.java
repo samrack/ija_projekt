@@ -90,7 +90,6 @@ public class Stop implements Drawable {
         return result;
     }
 
-    //TODO skusit zmazat
     static class CallConstructor extends StdConverter<Stop, Stop> {
 
         @Override

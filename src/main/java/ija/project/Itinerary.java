@@ -25,25 +25,34 @@ public class Itinerary implements Drawable, TimeUpdate {
     private Shape vehicleGui;
     private List<Shape> stopsGui;
     private List<Shape> stopTextsGui;
+    private List<Integer> delays;
+    private List<Double> stopsTranslates;
 
     private List<Shape> gui;
 
-    public Itinerary (Vehicle vehicle) {
+    public Itinerary (Vehicle vehicle, LocalTime time) {
 
         this.vehicle = vehicle;
         this.startingPosition = Coordinate.create(50,30);
         this.position = startingPosition;
 
         this.pathDistance = vehicle.getPath().getPathLength();
-        setGui();
+        setGui(time);
     }
+
+//        if (time.getHour() != vehicle.getHourStarted()) {
+//
+//            setGui(LocalTime.of(vehicle.getHourStarted(), time.getMinute(), time.getSecond()));
+//        } else {
+//            setGui(time);
+//        }
 
     @Override
     public List<Shape> getGUI() {
         return gui;
     }
 
-    public void setGui() {
+    public void setGui(LocalTime time) {
         this.gui = new ArrayList<Shape>();
         setStopsGui();
         this.lineGui = new Line(50,30,850,30);
@@ -53,6 +62,8 @@ public class Itinerary implements Drawable, TimeUpdate {
         this.gui.add(lineGui);
         this.gui.addAll(stopsGui);
         this.gui.addAll(stopTextsGui);
+
+        setDelaysGui(time);
     }
 
     private void moveGui (double value) {
@@ -69,6 +80,7 @@ public class Itinerary implements Drawable, TimeUpdate {
 
         this.stopsGui = new ArrayList<Shape>();
         this.stopTextsGui = new ArrayList<Shape>();
+        this.stopsTranslates = new ArrayList<>();
         String stopId;
         LocalTime stopTime;
         String stopTimeString;
@@ -86,6 +98,7 @@ public class Itinerary implements Drawable, TimeUpdate {
 
             stopDistance = vehicle.getStopDistances().get(i);
             translateX = getTranslateValue(stopDistance);
+            stopsTranslates.add(translateX);
 
             t = new Text(50 + translateX - 20,50,stopId);
             t.setFont(Font.font("Verdana", 10));
@@ -97,6 +110,28 @@ public class Itinerary implements Drawable, TimeUpdate {
 
             stopsGui.add(new Circle(50 + translateX,30,8, Color.RED));
         }
+    }
+
+    public void setDelaysGui(LocalTime time) {
+        this.vehicle.fillDelaysList(time);
+
+        for(int i = 0; i < this.vehicle.getDelaysList().size(); i++) {
+
+            int delaySeconds = this.vehicle.getDelaysList().get(i);
+
+            if(delaySeconds > 10) {
+                String delayTime = "+ " + delaySeconds/60 + ":" + delaySeconds % 60;
+                Text t = new Text(50 + stopsTranslates.get(i) - 30,90, delayTime);
+                t.setFont(Font.font("Verdana", 12));
+                t.setFill(Color.RED);
+                gui.add(t);
+            } else {
+                String delayTime = " ";
+                Text t = new Text(50 + stopsTranslates.get(i) - 30,90, delayTime);
+                gui.add(t);
+            }
+        }
+
     }
 
     @Override
