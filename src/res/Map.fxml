@@ -43,6 +43,9 @@
                <font>
                   <Font name="System Bold" size="36.0" />
                </font></Text>
+            <TextField fx:id="bypassLabel" layoutX="25.0" layoutY="464.0" />
+            <Button layoutX="24.0" layoutY="502.0" mnemonicParsing="false" onAction="#onNewBypass" prefHeight="26.0" prefWidth="150.0" text="New bypass" />
+            <Button layoutX="24.0" layoutY="545.0" mnemonicParsing="false" onAction="#onConfirmBypass" prefHeight="26.0" prefWidth="150.0" text="Confirm bypass" />
          </children>
       </AnchorPane>
    </right>
