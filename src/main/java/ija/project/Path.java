@@ -4,11 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
+/** 
+ * Represents path that vehicle follows   
+* 
+* @author Samuel Stuchly xstuch06
+* @author Samuel Spisak xspisa02
+*/
 public class Path {
 
     private List<Coordinate> path;
 
-    private Path(){}
+    private Path() {
+    }
 
     public Path(List<Coordinate> path) {
         this.path = path;
@@ -23,7 +30,7 @@ public class Path {
 
     /**
      * @return coordinate on new position based on distance driven
-     * **/
+     **/
     public Coordinate getNextPosition(double distance) {
         double currentLength = 0;
         double nextLength = 0;
@@ -31,20 +38,22 @@ public class Path {
         Coordinate a = null;
         Coordinate b = null;
 
-        for(int i = 0; i < path.size() - 1; i++) {
+        for (int i = 0; i < path.size() - 1; i++) {
             a = path.get(i);
             b = path.get(i + 1);
             nextLength = getCoordinatesDistance(a, b);
 
-            if(currentLength + nextLength >= distance) {
+            if (currentLength + nextLength >= distance) {
                 break;
             }
             currentLength += nextLength;
         }
-        if(a == null || b == null) return null;
+        if (a == null || b == null)
+            return null;
 
         double completed = (distance - currentLength) / nextLength;
-        return Coordinate.create(a.getX() + (b.getX() - a.getX()) * completed, a.getY() + (b.getY() - a.getY()) * completed);
+        return Coordinate.create(a.getX() + (b.getX() - a.getX()) * completed,
+                a.getY() + (b.getY() - a.getY()) * completed);
     }
 
     public List<Coordinate> getPath() {
@@ -53,14 +62,23 @@ public class Path {
 
     /**
      * @return total length of the path
-     * **/
+     **/
     @JsonIgnore
-    public double getPathLength () {
+    public double getPathLength() {
         double length = 0;
 
-        for(int i = 0; i < path.size() - 1; i++) {
-            length += getCoordinatesDistance(path.get(i), path.get(i+1));
+        for (int i = 0; i < path.size() - 1; i++) {
+            length += getCoordinatesDistance(path.get(i), path.get(i + 1));
         }
         return length;
+    }
+
+    /** 
+     * Returns last coordinate of path a.k.a last Stop 
+     * 
+     * @return last Coordinate of path
+    * */
+    public Coordinate getlastCoordinateOfPath() {
+        return path.get(path.size() - 1);
     }
 }

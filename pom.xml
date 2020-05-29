@@ -18,6 +18,11 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/res</directory>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>

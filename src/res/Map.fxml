@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.MainController">
+   <center>
+      <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <content>
+            <Group>
+               <children>
+                  <Pane fx:id="content" onScroll="#onScroll" prefHeight="1200.0" prefWidth="1200.0" />
+               </children>
+            </Group>
+        </content>
+      </ScrollPane>
+   </center>
+   <right>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="timeScale" alignment="CENTER" layoutX="25.0" layoutY="22.0" prefHeight="26.0" prefWidth="152.0" promptText="default 1 max 1000" />
+            <Button layoutX="26.0" layoutY="62.0" mnemonicParsing="false" onAction="#onTimeScaleChange" text="Change time speed" />
+            <TextField fx:id="timeSetHours" layoutX="14.0" layoutY="118.0" prefHeight="26.0" prefWidth="54.0" />
+            <TextField fx:id="timeSetMinutes" layoutX="105.0" layoutY="118.0" prefHeight="26.0" prefWidth="54.0" />
+            <Button layoutX="70.0" layoutY="153.0" mnemonicParsing="false" onAction="#onNewTimeSet" text="Set time" />
+            <Text layoutX="82.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="h" />
+            <Text layoutX="170.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="m" wrappingWidth="14.26483154296875" />
+            <TextField fx:id="textStreetName" alignment="CENTER" layoutX="41.0" layoutY="223.0" prefHeight="26.0" prefWidth="118.0" promptText="name of street" />
+            <Button layoutX="5.0" layoutY="259.0" mnemonicParsing="false" onAction="#onSlowStreet" prefHeight="26.0" prefWidth="87.0" text="Slower" />
+            <Text layoutX="31.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change street speed" />
+            <Button layoutX="103.0" layoutY="259.0" mnemonicParsing="false" onAction="#onSpeedUpStreet" prefHeight="26.0" prefWidth="91.0" text="Normal" />
+            <Line endX="100.00006103515625" layoutX="100.0" layoutY="191.0" startX="-100.0" stroke="#00000060" />
+            <Line endX="100.0" layoutX="100.0" layoutY="103.0" startX="-100.0" stroke="#00000065" />
+            <Text fx:id="timeField" layoutX="26.0" layoutY="340.0">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font></Text>
+         </children>
+      </AnchorPane>
+   </right>
+   <bottom>
+      <Pane fx:id="timeline" prefHeight="100.0" prefWidth="900.0" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
