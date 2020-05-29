@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -44,10 +45,11 @@ public class MainController {
     @FXML
     private TextField textStreetName;
 
-
     @FXML
     private Text timeField;
 
+    @FXML
+    private TextField bypassLabel;
 
 
     private Timer timer;
@@ -61,6 +63,15 @@ public class MainController {
     private Itinerary itinerary;
     public Vehicle activeVehicle;
 
+
+    @FXML
+    private void onNewBypass() {
+        //TODO
+    }
+    @FXML
+    private void onConfirmBypass() {
+        //TODO
+    }
 
     /*
      * Checks if input street exists on map and if it does, slows its speed to
@@ -78,7 +89,9 @@ public class MainController {
                         setItinerary(activeVehicle);
                     }
                     return;
-
+                    //TODO checknut
+                    // ci pri novom time a naslednom setItinerary nie je
+                    // active vehicle null!
                 } else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Traffic on the street cannot get any slower!");
                     alert.showAndWait();
