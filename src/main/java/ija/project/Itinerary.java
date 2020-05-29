@@ -25,7 +25,6 @@ public class Itinerary implements Drawable, TimeUpdate {
     private Shape vehicleGui;
     private List<Shape> stopsGui;
     private List<Shape> stopTextsGui;
-    private List<Integer> delays;
     private List<Double> stopsTranslates;
 
     private List<Shape> gui;
@@ -39,13 +38,6 @@ public class Itinerary implements Drawable, TimeUpdate {
         this.pathDistance = vehicle.getPath().getPathLength();
         setGui(time);
     }
-
-//        if (time.getHour() != vehicle.getHourStarted()) {
-//
-//            setGui(LocalTime.of(vehicle.getHourStarted(), time.getMinute(), time.getSecond()));
-//        } else {
-//            setGui(time);
-//        }
 
     @Override
     public List<Shape> getGUI() {

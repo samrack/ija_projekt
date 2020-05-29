@@ -60,7 +60,6 @@ public class MainController {
 
     private Itinerary itinerary;
     public Vehicle activeVehicle;
-    private List<Street> activeStreets;
 
 
     /*
@@ -156,8 +155,6 @@ public class MainController {
             for (TimeUpdate update : updates) {
                 if(update instanceof Vehicle) {
 
-                    int resultCar = ((Vehicle) update).getStartingMinute() + ((int)((Vehicle) update).getOneRideLength()/60);
-                    int resultTime = 60 + time.getMinute();
                     if(((Vehicle) update).getStartingMinute() + ((int)((Vehicle) update).getOneRideLength()/60)
                         > (60 + time.getMinute())) {
                         ((Vehicle) update).reloadSchedule(LocalTime.of(hours - 1, minutes, 0));
