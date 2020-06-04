@@ -73,7 +73,7 @@ public class MainController {
 
     public Boolean alreadySetByPass = false;
 
-
+    private int highlightedLinesCounter;
     private ByPass byPass;
 
 
@@ -390,7 +390,8 @@ public class MainController {
     public void unsetHighligtedLine () {
         if (activeVehicle != null) {
 
-            int from = content.getChildren().size() - activeVehicle.getLine().getStreetsList().size();
+//            int from = content.getChildren().size() - activeVehicle.getLine().getStreetsList().size();
+            int from = content.getChildren().size() - highlightedLinesCounter;
             int to = content.getChildren().size();
 
             content.getChildren().remove(from, to);
@@ -400,10 +401,28 @@ public class MainController {
 
     public void setHighlightedLine () {
         ija.project.Line activeLine = activeVehicle.getLine();
+        highlightedLinesCounter = 0;
         for (Street street : activeLine.getStreetsList()) {
+            if(byPass != null) {
+                if (alreadySetByPass) {
+                    if (byPass.getAffectedLines().contains(activeLine)) {
+                        if (street.equals(activeLine.getStreetsList().get(activeLine.getStreetsList().size() - 1))) {
+                            break;
+                        }
+                    }
+                } else {
+                    if (byPass.getAffectedLines().contains(activeLine)) {
+                        if (street.equals(activeLine.getStreetsList().get(activeLine.getStreetsList().size() - byPass.getReplacmenetStreets().size()))) {
+                            break;
+                        }
+                    }
+                }
+            }
             Line l = new Line(street.getBegin().getX(), street.getBegin().getY(), street.getEnd().getX(), street.getEnd().getY());
             l.setStrokeWidth(3);
             content.getChildren().add(l);
+            highlightedLinesCounter++;
+
         }
     }
 
