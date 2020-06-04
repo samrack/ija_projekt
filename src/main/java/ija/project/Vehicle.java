@@ -22,6 +22,7 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     private Line line;
     private Path path;
+    private Path originalPath;
     private Schedule schedule;
 
     private Coordinate position;
@@ -57,6 +58,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     private int replacedStreetIndex = 0;
     private int replacedStreetSize = 0;
     private boolean isDeactivate;
+    private boolean onRedWhenActivate;
 
     private Vehicle() {
     }
@@ -65,13 +67,14 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.busId = busId;
         this.line = line;
         this.path = line.getPath();
+        this.originalPath = new Path(this.path.getPath());
         this.schedule = new Schedule(this);
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
         this.startingMinute = startingMinute;
         this.handler = handler;
         fillSchedule(composeStartingTime());
-        setStopDistances();
+        setStopDistances(this.path);
         setGui();
 
     }
@@ -379,14 +382,14 @@ public class Vehicle implements Drawable, TimeUpdate {
 
         boolean completed = false;
 
-        while (distance <= path.getPathLength()) {
+        while (distance <= originalPath.getPathLength()) {
             try {
 
                 int speed = Street.DEFAULT_SPEED;
                 int tmpDistance = distance;
 
                 for (int i = 0; i < speed; i++) {
-                    tmpPosition = path.getNextPosition(tmpDistance + i);
+                    tmpPosition = originalPath.getNextPosition(tmpDistance + i);
                     Stop currentStop = line.getStopFromCoords(tmpPosition);
 
                     LocalTime time = startTime;
@@ -401,7 +404,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                         stoplist.add(currentStop);
                         timeslist.add(time);
 
-                        if(distance >= path.getPathLength()) {
+                        if(distance >= originalPath.getPathLength()) {
                             completed = true;
                             break;
                         }
@@ -553,7 +556,7 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
 
-    public void setStopDistances() {
+    public void setStopDistances(Path path) {
 
         for(int i = 0; i < schedule.getStopsList().size(); i++) {
             double stopDistance = 0;
@@ -663,11 +666,23 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.replacedStreetSize = replacedStreetSize;
     }
 
+    public void setOnRedWhenActivate(boolean onRedWhenActivate) {
+        this.onRedWhenActivate = onRedWhenActivate;
+    }
+
+    public boolean isOnRedWhenActivate() {
+        return onRedWhenActivate;
+    }
+
     /**
      * @return boolean
      */
     public boolean getInBetweenRounds() {
         return inBetweenRounds;
+    }
+
+    public Path getOriginalPath() {
+        return originalPath;
     }
 
     /**

@@ -161,7 +161,7 @@ public class MainController {
         for(ija.project.Line line : byPass.getAffectedLines()){
             for(Vehicle v : vList){
                 if(line.getId().equals(v.getLine().getId())){
-                    checkIfCanUpdate(v);
+                    checkIfCanUpdate(v, line);
                     v.setDeactivate(deactivateValue);
                     v.setUpdatedLine(line);
                     v.setReplacedStreetIndex(byPass.getIndex());
@@ -174,7 +174,7 @@ public class MainController {
     }
 
 
-     private void checkIfCanUpdate(Vehicle v){
+     private void checkIfCanUpdate(Vehicle v, ija.project.Line line){
         Street currentStreet = getStreetFromCoord(v.getPosition());
                 System.out.println(currentStreet);
                 System.out.println(currentStreet.getStreetName());
@@ -182,16 +182,23 @@ public class MainController {
                 if ((currentStreet.getStreetName() == redStreet.getText()) && !v.getInBetweenRounds()){
                     System.out.println("============= JE NA REDSTREET ========");
                     v.setCanUpdate(false);
+                    v.setOnRedWhenActivate(true);
+                    v.getStopDistances().clear();
+                    v.setStopDistances(v.getOriginalPath());
                     return;
                 }
                 else if (isOnGreen(currentStreet) && !v.getInBetweenRounds()){
                     System.out.println("============= JE NA ZELENOM ========");
                     v.setCanUpdate(true);
+                    v.getStopDistances().clear();
+                    v.setStopDistances(line.getPath());
                     return;
                 }
                 else{
                     System.out.println("============= JE NA NEOVPLYVNENEJ STREET ========");
                     v.setCanUpdate(true);
+                    v.getStopDistances().clear();
+                    v.setStopDistances(line.getPath());
                 }
     }
     
@@ -253,9 +260,7 @@ public class MainController {
                         setItinerary(activeVehicle);
                     }
                     return;
-                    //TODO checknut
-                    // ci pri novom time a naslednom setItinerary nie je
-                    // active vehicle null!
+
                 } else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Traffic on the street cannot get any slower!");
                     alert.showAndWait();

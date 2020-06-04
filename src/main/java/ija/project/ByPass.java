@@ -6,19 +6,6 @@ import java.util.List;
 
 
 
-
-
-
-
-// TODO : Cancel byPass has to work ! ----- Done !
-//        Bypass confirm ked su vehicles na ulici musi byt postponed  -> docielime tak ze nastavime flag v vehicle tkory bude spustat vzdy v update a vonkajsia funkcia nastavi len flag 
-//        Nastavit spomalenie ulic --------- Done !
-
-
-
-
-
-
 public class ByPass {
 
     private List<List<Street>> origStreetLists = new ArrayList<>();

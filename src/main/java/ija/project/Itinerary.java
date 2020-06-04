@@ -20,6 +20,7 @@ public class Itinerary implements Drawable, TimeUpdate {
     private Coordinate position;
 
     private double pathDistance;
+    private double origPathDistance;
 
     private Shape lineGui;
     private Shape vehicleGui;
@@ -36,6 +37,7 @@ public class Itinerary implements Drawable, TimeUpdate {
         this.position = startingPosition;
 
         this.pathDistance = vehicle.getPath().getPathLength();
+        this.origPathDistance = vehicle.getOriginalPath().getPathLength();
         setGui(time);
     }
 
@@ -65,7 +67,13 @@ public class Itinerary implements Drawable, TimeUpdate {
 
     private Double getTranslateValue (double distance) {
 
-        return (distance/pathDistance)*800;
+//        return vehicle.isOnRedWhenActivate() ? (distance/origPathDistance) * 800 : (distance/pathDistance)*800;
+        if(vehicle.isOnRedWhenActivate()) {
+            return (distance/origPathDistance) * 800;
+        } else {
+            return (distance/pathDistance) * 800;
+        }
+
     }
 
     public void setStopsGui () {
