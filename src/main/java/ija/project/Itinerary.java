@@ -49,7 +49,7 @@ public class Itinerary implements Drawable, TimeUpdate {
     public void setGui(LocalTime time) {
         this.gui = new ArrayList<Shape>();
         setStopsGui();
-        this.lineGui = new Line(50,30,850,30);
+        this.lineGui = new Line(50,30,1100,30);
         this.vehicleGui = new Circle(position.getX(),position.getY(), 6, vehicle.getLine().getLineColor());
 
         this.gui.add(vehicleGui);
@@ -69,9 +69,9 @@ public class Itinerary implements Drawable, TimeUpdate {
 
 //        return vehicle.isOnRedWhenActivate() ? (distance/origPathDistance) * 800 : (distance/pathDistance)*800;
         if(vehicle.isOnRedWhenActivate()) {
-            return (distance/origPathDistance) * 800;
+            return (distance/origPathDistance) * 1050;
         } else {
-            return (distance/pathDistance) * 800;
+            return (distance/pathDistance) * 1050;
         }
 
     }
