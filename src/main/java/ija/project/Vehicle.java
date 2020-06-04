@@ -54,7 +54,9 @@ public class Vehicle implements Drawable, TimeUpdate {
     private Line updatedLine;
     private Boolean updateReady = false;
     private Boolean canUpdate = false;
-
+    private int replacedStreetIndex = 0;
+    private int replacedStreetSize = 0;
+    private boolean isDeactivate;
 
     private Vehicle() {
     }
@@ -76,27 +78,27 @@ public class Vehicle implements Drawable, TimeUpdate {
 
  // ========================================
 
- public void updateLineAndPath(Line updatedLine){
-            this.line = updatedLine;
-            this.path = updatedLine.getPath();
-   
-    }
+// public void updateLineAndPath(Line updatedLine){
+//            this.line = updatedLine;
+//            this.path = updatedLine.getPath();
+//
+//    }
   
 
-    // private void updateLineAndPath(){
-    //     //System.out.println("============= UPDATe called  ========" + this.busId + canUpdate);
+     private void updateLineAndPath(){
+         //System.out.println("============= UPDATe called  ========" + this.busId + canUpdate);
         
-    //         //this.line = updatedLine;
-    //         //this.path = updatedLine.getPath();
-    //         System.out.println("============= UPDATED ========" + this.busId);
-    //         updateReady = false;
-    //         canUpdate = false;
+             this.line = updatedLine;
+             this.path = updatedLine.getPath();
+             System.out.println("============= UPDATED ========" + this.busId);
+             updateReady = false;
+             canUpdate = false;
     
         
-    // }
+     }
         
     public void setUpdatedLine(Line updatedline){
-        //this.updatedLine = updatedline;
+        this.updatedLine = updatedline;
         updateReady = true;
     }
 
@@ -226,12 +228,43 @@ public class Vehicle implements Drawable, TimeUpdate {
      **/
     @Override
     public void update(LocalTime time) {
-        //System.out.println("LINE " + line.getStreetsList() );
-        System.out.println(this.busId + " ready " + updateReady + " canUpdate " + canUpdate);
-        System.out.println(this.line.getStreetsList());
-        // if(updateReady && canUpdate){
-        //     //updateLineAndPath();
-        // }
+//        //System.out.println("LINE " + line.getStreetsList() );
+//        System.out.println(this.busId + " ready " + updateReady + " canUpdate " + canUpdate);
+//        System.out.println(this.line.getStreetsList());
+         if(updateReady && canUpdate){
+
+             Street currentStreet;
+             double oldPathLength = path.getPathLength();
+
+             try {
+                 currentStreet = line.getStreetByCoord(position);
+                 if(!isDeactivate) {
+                     updateLineAndPath();
+                 }
+                 int index = line.getStreetsList().indexOf(currentStreet);
+                 if(isDeactivate) {
+                     if(position.equals(startPosition)) {
+                         isDeactivate = false;
+                     }
+                     if(index >= replacedStreetIndex + replacedStreetSize &&
+                         index < line.getStreetsList().size() - replacedStreetSize) {
+                         updateLineAndPath();
+//                         isDeactivate = false;
+//                         double distanceDiff =  oldPathLength - path.getPathLength();
+//                         distance += distanceDiff;
+                     }
+                 } else if(index >= replacedStreetIndex) {
+                         double distanceDiff = path.getPathLength() - oldPathLength;
+                         distance += distanceDiff;
+                     }
+
+             } catch (Exception e) {
+                 System.out.println("SOM CHYBAA =======");
+                 //e.printStackTrace();
+             }
+
+
+         }
         timeCounter++;
         double speed;
         Street currentStreet = null;
@@ -490,7 +523,6 @@ public class Vehicle implements Drawable, TimeUpdate {
     /**
      * Resets vehicle circle to its starting position
      * 
-     * @param coordinate
      */
     private void resetGui() {
         for (Shape shape : gui) {
@@ -617,6 +649,18 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     public List<Integer> getDelaysList() {
         return delaysList;
+    }
+
+    public void setReplacedStreetIndex(int replacedStreetIndex) {
+        this.replacedStreetIndex = replacedStreetIndex;
+    }
+
+    public void setDeactivate(boolean deactivate) {
+        isDeactivate = deactivate;
+    }
+
+    public void setReplacedStreetSize(int replacedStreetSize) {
+        this.replacedStreetSize = replacedStreetSize;
     }
 
     /**

@@ -37,6 +37,8 @@ public class ByPass {
     private Coordinate baseEnd;
     private List<Coordinate> byPassPath = new ArrayList<>();
 
+    private int index;
+
     static final public int BYPASS_SPEED = 3;
 
     
@@ -73,9 +75,13 @@ public class ByPass {
     }
 
     public void deactivate(){
+
         for (int i = 0; i < affectedLines.size(); i++) {
             System.out.println(origPaths);
             System.out.println(origStreetLists);
+            for (Street street : replacmenetStreets) {
+                origStreetLists.get(i).add(street);
+            }
             affectedLines.get(i).updateLine(origPaths.get(i), origStreetLists.get(i));
         }
     }   
@@ -92,7 +98,7 @@ public class ByPass {
     private List<Street> newStreetList(Line line) {
         List<Street> streetsList = line.getStreetsList();
         origStreetLists.add(streetsList);
-        int index = streetsList.indexOf(replacedStreet);
+        index = streetsList.indexOf(replacedStreet);
         
         List<Street> newList = new ArrayList<>();
 
@@ -115,6 +121,8 @@ public class ByPass {
         }
         System.out.println("TOTO JE NOVY LIST "+ replacmenetStreets);
         System.out.println("TOTO JE NOVY LIST "+newList);
+        newList.add(replacedStreet);
+
         return newList;
     }
 
@@ -208,4 +216,11 @@ public class ByPass {
         return affectedLines;
     }
 
+    public List<Street> getReplacmenetStreets() {
+        return replacmenetStreets;
+    }
+
+    public int getIndex() {
+        return index;
+    }
 }

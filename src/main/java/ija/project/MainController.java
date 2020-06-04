@@ -110,6 +110,14 @@ public class MainController {
         
         System.out.println("NENI PRAXDNE SNAD "+ replacmenetStreets);
 
+        if(byPass != null) {
+            for (ija.project.Line line: byPass.getAffectedLines()) {
+                for(int i = 0; i < byPass.getReplacmenetStreets().size(); i++) {
+                    line.getStreetsList().remove(line.getStreetsList().size()-1);
+                }
+            }
+        }
+
         byPass = new ByPass(replacedStreet, replacmenetStreets, allLines);
         
 
@@ -120,7 +128,7 @@ public class MainController {
         }
 
 
-        updateVehiclesWithByPass();
+        updateVehiclesWithByPass(false);
 
         System.out.println("I GOT HERE +++++++++++++++++++++++++======");
 
@@ -131,17 +139,18 @@ public class MainController {
 
     @FXML
     private void onCancelByPass() {
-        byPass.deactivate();
+        if(alreadySetByPass) {
+            byPass.deactivate();
 
-        updateVehiclesWithByPass();
+            updateVehiclesWithByPass(true);
 
-        resetStreetTextHighlight();
-        alreadySetByPass = false;
-        
+            resetStreetTextHighlight();
+            alreadySetByPass = false;
+        }
     }
 
 
-    private void updateVehiclesWithByPass(){
+    private void updateVehiclesWithByPass(boolean deactivateValue){
         List<Vehicle> vList = new ArrayList<>();
         for (Drawable elem : elements) {
             if(elem instanceof Vehicle) {
@@ -151,11 +160,14 @@ public class MainController {
 
         for(ija.project.Line line : byPass.getAffectedLines()){
             for(Vehicle v : vList){
-                if(line.getId() == v.getLine().getId()){
-                    //checkIfCanUpdate(v);
-                    //v.setUpdatedLine(line);
+                if(line.getId().equals(v.getLine().getId())){
+                    checkIfCanUpdate(v);
+                    v.setDeactivate(deactivateValue);
+                    v.setUpdatedLine(line);
+                    v.setReplacedStreetIndex(byPass.getIndex());
+                    v.setReplacedStreetSize(byPass.getReplacmenetStreets().size());
 
-                    v.updateLineAndPath(line);
+//                    v.updateLineAndPath(line);
                 }
             }
         }
@@ -174,7 +186,7 @@ public class MainController {
                 }
                 else if (isOnGreen(currentStreet) && !v.getInBetweenRounds()){
                     System.out.println("============= JE NA ZELENOM ========");
-                    v.setCanUpdate(false);
+                    v.setCanUpdate(true);
                     return;
                 }
                 else{
