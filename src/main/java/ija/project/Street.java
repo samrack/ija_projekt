@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -30,6 +33,10 @@ public class Street implements Drawable {
 
     private int speed = DEFAULT_SPEED;
 
+    public EventHandler<MouseEvent> handler;
+
+    private List<Shape> gui;
+
     private Street() {
     }
 
@@ -38,6 +45,7 @@ public class Street implements Drawable {
         this.begin = begin;
         this.end = end;
         this.stops.addAll(stops);
+       // setGui();
 
     }
 
@@ -84,6 +92,12 @@ public class Street implements Drawable {
         this.speed = speed;
     }
 
+    public void setHandler(EventHandler<MouseEvent> handler){
+        this.handler = handler;
+        setGui();
+    }
+
+
     /**
      * Check if coordinate lies on the street
      *
@@ -116,23 +130,47 @@ public class Street implements Drawable {
         }
     }
 
-    /**
-     * @return List<Shape>
-     */
-    @JsonIgnore
-    @Override
-    public List<Shape> getGUI() {
+
+    private void setGui() {
 
         double minX = Math.min(begin.getX(), end.getX());
         double minY = Math.min(begin.getY(), end.getY());
         double maxX = Math.max(begin.getX(), end.getX());
         double maxY = Math.max(begin.getY(), end.getY());
-
-        return Arrays.asList(
-
-                new Text(minX + (Math.abs(minX - maxX)/2), minY + (Math.abs(minY - maxY)/2), streetName),
-                new Line(this.getBegin().getX(), this.getBegin().getY(), this.getEnd().getX(), this.getEnd().getY()));
+        
+        this.gui = new ArrayList<Shape>();
+        this.gui.add(new Text(minX + (Math.abs(minX - maxX)/2), minY + (Math.abs(minY - maxY)/2), streetName)) ;
+        this.gui.add(new Line(this.getBegin().getX(), this.getBegin().getY(), this.getEnd().getX(), this.getEnd().getY()));  
+        this.gui.get(0).setOnMouseClicked(this.handler);
     }
+
+     /**
+     * @return List<Shape>
+     */
+    @JsonIgnore
+    @Override
+    public List<Shape> getGUI() {
+        setGui();
+        return gui;
+    }
+
+    // /**
+    //  * @return List<Shape>
+    //  */
+    // @JsonIgnore
+    // @Override
+    // public List<Shape> getGUI() {
+
+    //     double minX = Math.min(begin.getX(), end.getX());
+    //     double minY = Math.min(begin.getY(), end.getY());
+    //     double maxX = Math.max(begin.getX(), end.getX());
+    //     double maxY = Math.max(begin.getY(), end.getY());
+
+    //     return Arrays.asList(
+
+    //             new Text(minX + (Math.abs(minX - maxX)/2), minY + (Math.abs(minY - maxY)/2), streetName),
+    //             new Line(this.getBegin().getX(), this.getBegin().getY(), this.getEnd().getX(), this.getEnd().getY()));
+    // }
 
     /**
      * @return String

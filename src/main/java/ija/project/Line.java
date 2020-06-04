@@ -96,11 +96,7 @@ public class Line {
      */
     public Street getStreetByCoord(Coordinate coord) throws Exception {
 
-        try {
-
-        } catch (Exception e) {
-            System.out.println();
-        }
+       
         for (Street street : streetsList) {
 
             if (street.isCoordOnStreet(coord)) {
@@ -108,6 +104,7 @@ public class Line {
                 return street;
             }
         }
+        System.out.println(coord);
         throw new Exception("Coord not on any street in Line !");
     }
 
@@ -126,5 +123,26 @@ public class Line {
         }
         return null;
     }
+
+// ==========================
+
+    public void updateLine(Path updatedPath, List<Street> updatedStreetList){
+        this.path = updatedPath;
+        this.streetsList = updatedStreetList;
+        System.out.println("UPDATE LINE WAS CALLED");
+        System.out.println("LINE NOW is " + updatedStreetList);
+    }
+
+        // Posuvaj po celom oboch zoznamoch a postavaj novy zoznam s obchadkov pre vsetky tri path streets a stops a updatni Line. 
+        // potom sa zavola update este na vehicle kde sa prenho vsetko updatne a nasrtavy sa tak nova trasa aj schdeule aj itinerar a vsetko. 
+        // Treba este nejak pozbierat ale ten novy zoznam , (mozme szbierat podla ulic, podla zastavok, co je asi lepsie. alebo podla suradnic rovno.)
+        // Treba urobit button ktory aktualizuje trasu s obchadzkou +  nejaky button ktory zapne zapinanie obchadzky, alebo mozno len natukame nove ulice 
+        // Moze byt nahrada ulice jednou alebo viac ulicami. ktore mozu byt zadane aj podla mena napriklad alebo naklikane postupne a ulozene. A ulica sa da pridat
+        // len ak navazaje na predchadzajucu v zozname 
+        // V tom pripade mozeme mat dve buttons, jednu na vytvaranie obchadzky kedze nevieme pauznut nas timer, a druhy button bude na uz realne uploadnutie obchadzky. 
+
+
+
+// ==========================
 
 }

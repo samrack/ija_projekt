@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.text.Text;
 
 
 import java.io.File;
@@ -58,6 +59,7 @@ public class Main extends Application {
                 Data data1 = mapper.readValue(new File("data/data1.yml"), Data.class);
 
                 List<Line> linesList = data1.getLines();
+                
 
                 // ----- set color to lines -----//
                 linesList.get(0).setLineColor(Color.BLUE);
@@ -71,16 +73,28 @@ public class Main extends Application {
                 LocalTime time = LocalTime.now();
                 List<Vehicle> vList = new ArrayList<>();
 
+               
+                Boolean redAlreadySet = false;
                 EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
 
                                 Vehicle clickedVehicle;
+                                Stop clickedStop;
+                                Text clickedText;
+
+                                Boolean alreadySelected = false;
+                                
+
+                                System.out.println("CLICKED");
+                               // System.out.println(event.getTarget());
+
                                 for (Drawable elem : elements) {
                                         if(elem instanceof Vehicle) {
                                                 if(elem.getGUI().get(0) == event.getTarget()) {
                                                         clickedVehicle = (Vehicle) elem;
                                                         System.out.println("clicked" + clickedVehicle.getBusId() );
+                                                        System.out.println("clicked object" + clickedVehicle);
 
                                                         controller.unsetHighligtedLine();
                                                         controller.activeVehicle = clickedVehicle;
@@ -88,6 +102,18 @@ public class Main extends Application {
                                                         controller.setHighlightedLine();
                                                 }
                                         }
+                                     
+                                        else if (event.getTarget() instanceof Text && !alreadySelected && controller.canSetByPass){
+                                                alreadySelected = true;
+                                                clickedText = (Text)event.getTarget();
+                                                controller.clickedStreetName = clickedText;
+                                                controller.setHighlightStreetName();
+                                                // System.out.println(clickedText.getText());
+                                                // System.out.println(clickedText.isUnderline());
+                                                // System.out.println(clickedText.getFill());
+                                
+                                        }
+
                                 }
                         }
                 };
@@ -117,8 +143,22 @@ public class Main extends Application {
 
                 elements.addAll(data1.getStops());
                 elements.addAll(data1.getStreets());
+                for (Drawable elem : elements) {
+                        //System.out.println(elem);
+                        //System.out.println(elem.getGUI().get(0));
+                        if(elem instanceof Stop){
+                                ((Stop) elem).setHandler(handler);
+                        }
+                        if(elem instanceof Street){
+                                ((Street) elem).setHandler(handler);
+                        }
+                }
+                
+
+                //System.out.println(elements);
 
                 controller.setStreetsList(data1.getStreets());
+                controller.setAllLines(data1.getLines());
 
                 controller.setElements(elements);
                 controller.startTimer(1);

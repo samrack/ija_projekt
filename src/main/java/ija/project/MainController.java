@@ -48,8 +48,7 @@ public class MainController {
     @FXML
     private Text timeField;
 
-    @FXML
-    private TextField bypassLabel;
+  
 
 
     private Timer timer;
@@ -59,19 +58,133 @@ public class MainController {
     private List<Drawable> elements = new ArrayList<>();
     private List<TimeUpdate> updates = new ArrayList<>();
     private List<Street> streetsList = new ArrayList<>();
+    private List<ija.project.Line> allLines = new ArrayList<>();
 
     private Itinerary itinerary;
     public Vehicle activeVehicle;
 
+    public Text clickedStreetName;
+    private Boolean redAlreadySet = false;
+
+    private Text redStreet;
+    private Set<Text> greenSet = new HashSet<>();
+
+    public Boolean canSetByPass = false;
+
+    public Boolean alreadySetByPass = false;
+
+
+    private ByPass byPass;
+
 
     @FXML
     private void onNewBypass() {
-        //TODO
+        if(!alreadySetByPass){
+            canSetByPass = true;
+            resetStreetTextHighlight();
+        }
+          
     }
+
     @FXML
     private void onConfirmBypass() {
-        //TODO
+        if (!redAlreadySet){
+            System.out.println("Error no red street");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "ByPass cannot be formed , no red street !");
+            alert.showAndWait();
+            return;
+        }
+        Street replacedStreet = getStreetByName(redStreet.getText());
+        List<Street> replacmenetStreets = new ArrayList<>();
+    
+
+        for (Text streetText : greenSet) {
+            Street tmp = getStreetByName(streetText.getText());
+            replacmenetStreets.add(tmp);
+        }
+
+        if(allLines.isEmpty()){
+            System.out.println("FUUUUUUUUUUUUUUUUUUUUUUUUUUUUCK");
+        }
+      
+        
+        System.out.println("NENI PRAXDNE SNAD "+ replacmenetStreets);
+
+        byPass = new ByPass(replacedStreet, replacmenetStreets, allLines);
+        
+        
+        List<Vehicle> vList = new ArrayList<>();
+        for (Drawable elem : elements) {
+            if(elem instanceof Vehicle) {
+                vList.add((Vehicle)elem);
+            }
+        }
+
+        System.out.println("VEHICLE LIST : " + vList);
+
+        if (!byPass.activate()){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "ByPass cannot be formed with selected streets !");
+            alert.showAndWait();
+            return;
+        }
+
+        for(ija.project.Line line : byPass.getAffectedLines()){
+            for(Vehicle v : vList){
+                if(line.getId() == v.getLine().getId()){
+                    v.updateLineAndPath(line);
+                }
+            }
+        }
+
+
+        System.out.println("I GOT HERE +++++++++++++++++++++++++======");
+
+        canSetByPass = false;
+        alreadySetByPass = true;
     }
+
+
+    @FXML
+    private void onCancelByPass() {
+        byPass.deactivate();
+
+        List<Vehicle> vList = new ArrayList<>();
+        for (Drawable elem : elements) {
+            if(elem instanceof Vehicle) {
+                vList.add((Vehicle)elem);
+            }
+        }
+
+        for(ija.project.Line line : byPass.getAffectedLines()){
+            for(Vehicle v : vList){
+                if(line.getId() == v.getLine().getId()){
+                    v.updateLineAndPath(line);
+                }
+            }
+        }
+
+        resetStreetTextHighlight();
+        alreadySetByPass = false;
+
+        
+    }
+
+    private void resetStreetTextHighlight() {
+        if (redStreet != null){
+            redStreet.setFill(Color.BLACK);
+            redStreet = null;
+        }
+        if (!greenSet.isEmpty()){
+            for (Text streetText : greenSet) {
+                streetText.setFill(Color.BLACK); 
+                //greenSet.remove(streetText);   
+            }
+            greenSet.clear();
+        }
+        redAlreadySet = false;  
+
+    }
+
 
     /*
      * Checks if input street exists on map and if it does, slows its speed to
@@ -164,6 +277,7 @@ public class MainController {
             timeline.getChildren().clear();
             unsetHighligtedLine();
             activeVehicle = null;
+            itinerary = null;
 
             for (TimeUpdate update : updates) {
                 if(update instanceof Vehicle) {
@@ -237,6 +351,52 @@ public class MainController {
         }
     }
 
+    // ================================= //
+     
+    public void setHighlightStreetName(){
+        if(clickedStreetName.getFill() == Color.BLACK && !redAlreadySet){
+            clickedStreetName.setFill(Color.RED);
+            redStreet = clickedStreetName;
+            redAlreadySet = true;
+
+        }
+        else if(clickedStreetName.getFill() == Color.BLACK && redAlreadySet){
+            clickedStreetName.setFill(Color.GREEN);
+            greenSet.add(clickedStreetName);
+        }
+        else if(clickedStreetName.getFill() == Color.RED){
+            clickedStreetName.setFill(Color.BLACK);
+            redStreet = null;
+            redAlreadySet = false;
+        }
+        else if(clickedStreetName.getFill() == Color.GREEN){
+            clickedStreetName.setFill(Color.BLACK);
+            greenSet.remove(clickedStreetName);
+        }
+        else{
+                
+        }
+        //System.out.println(redAlreadySet);
+        System.out.println(streetsList.size());
+        
+    }
+
+
+    // get street by street name from selected text 
+    private Street getStreetByName(String name){
+        for (Street street : streetsList) {
+            if (street.getStreetName().equals(name)){
+                System.out.println("FOUND STREET");
+                return street;
+            }
+        }
+        System.out.println("DIDNT FIND ANY STREET WITH NAME SO ERROR, THIS SHOULD NEVER HAPPEN ");
+        return null;
+    }
+
+
+    // ================================= //
+
 
     /**
      * Timer that runs TimerTask at fixed rate that can be changes by scale
@@ -282,6 +442,10 @@ public class MainController {
      */
     public void setStreetsList(List<Street> list) {
         this.streetsList = list;
+    }
+
+    public void setAllLines(List<ija.project.Line> list){
+        this.allLines = list;
     }
 
 }

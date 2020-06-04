@@ -69,6 +69,17 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     }
 
+ // ========================================
+
+    public void updateLineAndPath(Line line){
+        this.line = line;
+        this.path = line.getPath();
+        //TODO  myabe update schedule atd, konzulujem s mr spisakom :) 
+    }
+
+// ==========================================
+
+
     /**
      * @return LocalTime
      */
@@ -98,7 +109,7 @@ public class Vehicle implements Drawable, TimeUpdate {
             }
         }
 
-        moveGui(startPosition);
+        resetGui();;
         position = startPosition;
 
         moveGui(positionInTime);
@@ -162,6 +173,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                     }
                 }
             } catch (Exception e) {
+                //System.out.println("JA SOM CHYBAA =======");
                 System.out.println(e);
             }
         }
@@ -184,7 +196,7 @@ public class Vehicle implements Drawable, TimeUpdate {
      **/
     @Override
     public void update(LocalTime time) {
-
+        //System.out.println("LINE " + line.getStreetsList() );
         timeCounter++;
         double speed;
         Street currentStreet = null;
@@ -198,8 +210,10 @@ public class Vehicle implements Drawable, TimeUpdate {
         } else if (!inBetweenRounds) {
 
             try {
+                //System.out.println("Position of " + this + " is this : " + position);
                 currentStreet = line.getStreetByCoord(position);
             } catch (Exception e) {
+                System.out.println("JAAAAAAA SOM CHYBAA =======");
                 e.printStackTrace();
             }
             speed = currentStreet.getStreetSpeed();
@@ -237,10 +251,13 @@ public class Vehicle implements Drawable, TimeUpdate {
         // if vehicle is still late to start it will skip and go next hour, based on
         // real life
         else {
+            //updatePath();
             if (time.getMinute() == startingMinute) {
                 startRound(time);
+               System.out.println("ZACINAM CESTU");
             }
         }
+        
     }
 
     /**
@@ -261,7 +278,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         fillSchedule(time);
         distance = 0;
         position = startPosition;
-        resetGui(startPosition);
+        resetGui();
         inBetweenRounds = false;
 
     }
@@ -433,7 +450,7 @@ public class Vehicle implements Drawable, TimeUpdate {
      * 
      * @param coordinate
      */
-    private void resetGui(Coordinate coordinate) {
+    private void resetGui() {
         for (Shape shape : gui) {
             shape.setTranslateX(0);
             shape.setTranslateY(0);
@@ -599,6 +616,6 @@ public class Vehicle implements Drawable, TimeUpdate {
      */
     @Override
     public String toString() {
-        return "Vehicle{" + "line='" + line + '\'' + '}';
+        return "Vehicle{" + "line='" + line + '\'' + "handelr= " + handler +'}';
     }
 }
