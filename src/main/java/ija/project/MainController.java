@@ -112,15 +112,6 @@ public class MainController {
 
         byPass = new ByPass(replacedStreet, replacmenetStreets, allLines);
         
-        
-        List<Vehicle> vList = new ArrayList<>();
-        for (Drawable elem : elements) {
-            if(elem instanceof Vehicle) {
-                vList.add((Vehicle)elem);
-            }
-        }
-
-        System.out.println("VEHICLE LIST : " + vList);
 
         if (!byPass.activate()){
             Alert alert = new Alert(Alert.AlertType.ERROR, "ByPass cannot be formed with selected streets !");
@@ -128,14 +119,8 @@ public class MainController {
             return;
         }
 
-        for(ija.project.Line line : byPass.getAffectedLines()){
-            for(Vehicle v : vList){
-                if(line.getId() == v.getLine().getId()){
-                    v.updateLineAndPath(line);
-                }
-            }
-        }
 
+        updateVehiclesWithByPass();
 
         System.out.println("I GOT HERE +++++++++++++++++++++++++======");
 
@@ -148,6 +133,15 @@ public class MainController {
     private void onCancelByPass() {
         byPass.deactivate();
 
+        updateVehiclesWithByPass();
+
+        resetStreetTextHighlight();
+        alreadySetByPass = false;
+        
+    }
+
+
+    private void updateVehiclesWithByPass(){
         List<Vehicle> vList = new ArrayList<>();
         for (Drawable elem : elements) {
             if(elem instanceof Vehicle) {
@@ -158,15 +152,60 @@ public class MainController {
         for(ija.project.Line line : byPass.getAffectedLines()){
             for(Vehicle v : vList){
                 if(line.getId() == v.getLine().getId()){
+                    //checkIfCanUpdate(v);
+                    //v.setUpdatedLine(line);
+
                     v.updateLineAndPath(line);
                 }
             }
         }
+    }
 
-        resetStreetTextHighlight();
-        alreadySetByPass = false;
 
-        
+     private void checkIfCanUpdate(Vehicle v){
+        Street currentStreet = getStreetFromCoord(v.getPosition());
+                System.out.println(currentStreet);
+                System.out.println(currentStreet.getStreetName());
+                System.out.println(redStreet.getText());
+                if ((currentStreet.getStreetName() == redStreet.getText()) && !v.getInBetweenRounds()){
+                    System.out.println("============= JE NA REDSTREET ========");
+                    v.setCanUpdate(false);
+                    return;
+                }
+                else if (isOnGreen(currentStreet) && !v.getInBetweenRounds()){
+                    System.out.println("============= JE NA ZELENOM ========");
+                    v.setCanUpdate(false);
+                    return;
+                }
+                else{
+                    System.out.println("============= JE NA NEOVPLYVNENEJ STREET ========");
+                    v.setCanUpdate(true);
+                }
+    }
+    
+    private Street getStreetFromCoord(Coordinate coord){
+        for (Street street : streetsList) {
+
+            if (street.isCoordOnStreet(coord)) {
+
+                return street;
+            }
+        }
+        return null;
+    }
+
+    private Boolean isOnGreen(Street curStreet){
+        List<Street> replacmenetStreets = new ArrayList<>();
+        for (Text streetText : greenSet) {
+            Street tmp = getStreetByName(streetText.getText());
+            replacmenetStreets.add(tmp);
+        }
+        for(Street s : replacmenetStreets){
+            if (curStreet.getStreetName() == s.getStreetName()){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void resetStreetTextHighlight() {

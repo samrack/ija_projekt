@@ -28,7 +28,7 @@ import java.util.List;
 */
 public class Main extends Application {
 
-        static final byte VEHICLES_PER_LINE = 10;
+        static final byte VEHICLES_PER_LINE = 1;
 
         public static void main(String[] args) {
                 launch(args);
@@ -118,7 +118,7 @@ public class Main extends Application {
                         }
                 };
 
-                for (int i = 0; i < linesList.size(); i++) {
+                for (int i = 0; i < linesList.size()-2; i++) {
                         for (int j = 0; j < VEHICLES_PER_LINE; j++) {
                                 try {
 

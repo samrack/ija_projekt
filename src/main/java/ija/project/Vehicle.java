@@ -51,6 +51,11 @@ public class Vehicle implements Drawable, TimeUpdate {
     public EventHandler<MouseEvent> handler;
 
 
+    private Line updatedLine;
+    private Boolean updateReady = false;
+    private Boolean canUpdate = false;
+
+
     private Vehicle() {
     }
 
@@ -71,12 +76,37 @@ public class Vehicle implements Drawable, TimeUpdate {
 
  // ========================================
 
-    public void updateLineAndPath(Line line){
-        this.line = line;
-        this.path = line.getPath();
-        //TODO  myabe update schedule atd, konzulujem s mr spisakom :) 
+ public void updateLineAndPath(Line updatedLine){
+            this.line = updatedLine;
+            this.path = updatedLine.getPath();
+   
+    }
+  
+
+    // private void updateLineAndPath(){
+    //     //System.out.println("============= UPDATe called  ========" + this.busId + canUpdate);
+        
+    //         //this.line = updatedLine;
+    //         //this.path = updatedLine.getPath();
+    //         System.out.println("============= UPDATED ========" + this.busId);
+    //         updateReady = false;
+    //         canUpdate = false;
+    
+        
+    // }
+        
+    public void setUpdatedLine(Line updatedline){
+        //this.updatedLine = updatedline;
+        updateReady = true;
     }
 
+    public Line getUpdatedLine(){
+        return updatedLine;
+    }
+
+    public void setCanUpdate(Boolean value){
+        this.canUpdate = value;
+    }
 // ==========================================
 
 
@@ -197,6 +227,11 @@ public class Vehicle implements Drawable, TimeUpdate {
     @Override
     public void update(LocalTime time) {
         //System.out.println("LINE " + line.getStreetsList() );
+        System.out.println(this.busId + " ready " + updateReady + " canUpdate " + canUpdate);
+        System.out.println(this.line.getStreetsList());
+        // if(updateReady && canUpdate){
+        //     //updateLineAndPath();
+        // }
         timeCounter++;
         double speed;
         Street currentStreet = null;
@@ -212,9 +247,10 @@ public class Vehicle implements Drawable, TimeUpdate {
             try {
                 //System.out.println("Position of " + this + " is this : " + position);
                 currentStreet = line.getStreetByCoord(position);
+                //System.out.println("curStreet " + currentStreet.getStreetName());
             } catch (Exception e) {
                 System.out.println("JAAAAAAA SOM CHYBAA =======");
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             speed = currentStreet.getStreetSpeed();
 
@@ -251,12 +287,18 @@ public class Vehicle implements Drawable, TimeUpdate {
         // if vehicle is still late to start it will skip and go next hour, based on
         // real life
         else {
-            //updatePath();
+            // updates line
+            
+            
             if (time.getMinute() == startingMinute) {
+                if (updateReady){
+                    canUpdate = true;
+                }
                 startRound(time);
                System.out.println("ZACINAM CESTU");
             }
         }
+        
         
     }
 
