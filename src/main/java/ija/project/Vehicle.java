@@ -77,8 +77,10 @@ public class Vehicle implements Drawable, TimeUpdate {
  // ========================================
 
  public void updateLineAndPath(Line updatedLine){
+    System.out.println(this.busId + this.line.getStreetsList());
             this.line = updatedLine;
             this.path = updatedLine.getPath();
+            System.out.println(this.busId + this.line.getStreetsList());
    
     }
   
@@ -227,8 +229,8 @@ public class Vehicle implements Drawable, TimeUpdate {
     @Override
     public void update(LocalTime time) {
         //System.out.println("LINE " + line.getStreetsList() );
-        System.out.println(this.busId + " ready " + updateReady + " canUpdate " + canUpdate);
-        System.out.println(this.line.getStreetsList());
+        //System.out.println(this.busId + " ready " + updateReady + " canUpdate " + canUpdate);
+        //System.out.println(this.line.getStreetsList());
         // if(updateReady && canUpdate){
         //     //updateLineAndPath();
         // }
@@ -246,6 +248,7 @@ public class Vehicle implements Drawable, TimeUpdate {
 
             try {
                 //System.out.println("Position of " + this + " is this : " + position);
+                //System.out.println("streetslistof " + this.getLine().getStreetsList() + " is this : " + position);
                 currentStreet = line.getStreetByCoord(position);
                 //System.out.println("curStreet " + currentStreet.getStreetName());
             } catch (Exception e) {

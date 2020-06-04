@@ -59,16 +59,18 @@ public class ByPass {
     }
 
 
-	public Boolean activate(){
+	public List<Line> activate(){
         if(isByPassValid()){
+            List<Line> lines = new ArrayList<>();
             for (Line line : affectedLines) {
-                line.updateLine(newPath(line), newStreetList(line));
+                //line.updateLine(newPath(line), newStreetList(line));
+                lines.add(new Line(line.getId() + "_new", newPath(line), line.getStopsList(), newStreetList(line)));    
             }
-            return true;
+            return lines;
         }
         else{
             System.out.println("SOMETHING WRONG with bypass");
-            return false;
+            return null;
         }
     }
 
@@ -107,11 +109,11 @@ public class ByPass {
             newList.add(street);
         }
         
-        int appendIndex = streetsList.size() - ( streetsList.size() - index ) ;
+        int appendIndex = streetsList.size() - ( streetsList.size() - index )  ;
         int restOfList = streetsList.size() - index - 1;
         // append rest of streets
         for (int i= 0; i < restOfList; i++){
-            newList.add(streetsList.get(appendIndex + i + 1 ));
+            newList.add(streetsList.get(appendIndex + i  ));
         }
         System.out.println("TOTO JE NOVY LIST "+ replacmenetStreets);
         System.out.println("TOTO JE NOVY LIST "+newList);
@@ -137,20 +139,23 @@ public class ByPass {
             newList.add(coord);
         }
         
-        int appendIndex = oldList.size() - ( oldList.size() - index );
+        int appendIndex = oldList.size() - ( oldList.size() - index ) ;
+        ;
         int restOfList = oldList.size() - index - 1;
 
         // append rest of path
         for (int i= 0; i < restOfList; i++){
-            newList.add(oldList.get(appendIndex + i + 1));
+            newList.add(oldList.get(appendIndex + i ));
         }
         System.out.println("TUSOM ++++++++++++++++");
+        System.out.println(line.getPath());
+        System.out.println(line.getPath().getPath());
         return new Path(newList);
     }
 
 
 
-    private Boolean isByPassValid(){
+    public Boolean isByPassValid(){
         
         nextCoord = baseBegin;
         

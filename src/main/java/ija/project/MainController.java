@@ -76,6 +76,8 @@ public class MainController {
 
     private ByPass byPass;
 
+    List<ija.project.Line> lines = new ArrayList<>();
+
 
     @FXML
     private void onNewBypass() {
@@ -113,14 +115,15 @@ public class MainController {
         byPass = new ByPass(replacedStreet, replacmenetStreets, allLines);
         
 
-        if (!byPass.activate()){
+        if (!byPass.isByPassValid()){
             Alert alert = new Alert(Alert.AlertType.ERROR, "ByPass cannot be formed with selected streets !");
             alert.showAndWait();
             return;
         }
+        lines = byPass.activate();
 
 
-        updateVehiclesWithByPass();
+        updateVehiclesWithByPass(lines);
 
         System.out.println("I GOT HERE +++++++++++++++++++++++++======");
 
@@ -133,7 +136,7 @@ public class MainController {
     private void onCancelByPass() {
         byPass.deactivate();
 
-        updateVehiclesWithByPass();
+        updateVehiclesWithByPass(lines);
 
         resetStreetTextHighlight();
         alreadySetByPass = false;
@@ -141,7 +144,7 @@ public class MainController {
     }
 
 
-    private void updateVehiclesWithByPass(){
+    private void updateVehiclesWithByPass(List<ija.project.Line> lines){
         List<Vehicle> vList = new ArrayList<>();
         for (Drawable elem : elements) {
             if(elem instanceof Vehicle) {
@@ -149,14 +152,17 @@ public class MainController {
             }
         }
 
-        for(ija.project.Line line : byPass.getAffectedLines()){
+        for(ija.project.Line line : lines){
             for(Vehicle v : vList){
-                if(line.getId() == v.getLine().getId()){
+                System.out.println(line.getId());
+                System.out.println(v.getLine().getId()+"_new");
+                if(line.getId().equals(v.getLine().getId()+"_new")){
                     //checkIfCanUpdate(v);
                     //v.setUpdatedLine(line);
-
+                    System.out.println("IM UPDATING ");
                     v.updateLineAndPath(line);
                 }
+                System.out.println("SOMEHOW IM HERE");
             }
         }
     }

@@ -28,7 +28,7 @@ import java.util.List;
 */
 public class Main extends Application {
 
-        static final byte VEHICLES_PER_LINE = 1;
+        static final byte VEHICLES_PER_LINE = 10;
 
         public static void main(String[] args) {
                 launch(args);
