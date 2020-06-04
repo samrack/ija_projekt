@@ -98,7 +98,7 @@ public class Vehicle implements Drawable, TimeUpdate {
             }
         }
 
-        moveGui(startPosition);
+        resetGui();
         position = startPosition;
 
         moveGui(positionInTime);
@@ -261,7 +261,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         fillSchedule(time);
         distance = 0;
         position = startPosition;
-        resetGui(startPosition);
+        resetGui();
         inBetweenRounds = false;
 
     }
@@ -430,10 +430,9 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     /**
      * Resets vehicle circle to its starting position
-     * 
-     * @param coordinate
+     *
      */
-    private void resetGui(Coordinate coordinate) {
+    private void resetGui() {
         for (Shape shape : gui) {
             shape.setTranslateX(0);
             shape.setTranslateY(0);

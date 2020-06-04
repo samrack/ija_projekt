@@ -89,9 +89,7 @@ public class MainController {
                         setItinerary(activeVehicle);
                     }
                     return;
-                    //TODO checknut
-                    // ci pri novom time a naslednom setItinerary nie je
-                    // active vehicle null!
+
                 } else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Traffic on the street cannot get any slower!");
                     alert.showAndWait();
@@ -164,6 +162,7 @@ public class MainController {
             timeline.getChildren().clear();
             unsetHighligtedLine();
             activeVehicle = null;
+            itinerary = null;
 
             for (TimeUpdate update : updates) {
                 if(update instanceof Vehicle) {
