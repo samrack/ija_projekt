@@ -12,12 +12,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
 import javafx.scene.paint.Color;
-/** 
- * Represents Line, which defines stops and streets that vehicle goes through    
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+
+/**
+ * Represents Line, which defines stops and streets that vehicle goes through
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "yamlId", scope = Line.class)
 public class Line {
     private String yamlId;
@@ -96,7 +97,6 @@ public class Line {
      */
     public Street getStreetByCoord(Coordinate coord) throws Exception {
 
-       
         for (Street street : streetsList) {
 
             if (street.isCoordOnStreet(coord)) {
@@ -104,12 +104,11 @@ public class Line {
                 return street;
             }
         }
-        System.out.println(coord);
         throw new Exception("Coord not on any street in Line !");
     }
 
     /**
-     * Check if stop lies on the given coordinates 
+     * Check if stop lies on the given coordinates
      * 
      * @param coords
      * @return Stop if found, else null
@@ -124,25 +123,14 @@ public class Line {
         return null;
     }
 
-// ==========================
-
-    public void updateLine(Path updatedPath, List<Street> updatedStreetList){
+    /**
+     * @param updatedPath
+     * @param updatedStreetList
+     */
+    public void updateLine(Path updatedPath, List<Street> updatedStreetList) {
         this.path = updatedPath;
         this.streetsList = updatedStreetList;
-        System.out.println("UPDATE LINE WAS CALLED");
-        System.out.println("LINE NOW is " + updatedStreetList);
+
     }
-
-        // Posuvaj po celom oboch zoznamoch a postavaj novy zoznam s obchadkov pre vsetky tri path streets a stops a updatni Line. 
-        // potom sa zavola update este na vehicle kde sa prenho vsetko updatne a nasrtavy sa tak nova trasa aj schdeule aj itinerar a vsetko. 
-        // Treba este nejak pozbierat ale ten novy zoznam , (mozme szbierat podla ulic, podla zastavok, co je asi lepsie. alebo podla suradnic rovno.)
-        // Treba urobit button ktory aktualizuje trasu s obchadzkou +  nejaky button ktory zapne zapinanie obchadzky, alebo mozno len natukame nove ulice 
-        // Moze byt nahrada ulice jednou alebo viac ulicami. ktore mozu byt zadane aj podla mena napriklad alebo naklikane postupne a ulozene. A ulica sa da pridat
-        // len ak navazaje na predchadzajucu v zozname 
-        // V tom pripade mozeme mat dve buttons, jednu na vytvaranie obchadzky kedze nevieme pauznut nas timer, a druhy button bude na uz realne uploadnutie obchadzky. 
-
-
-
-// ==========================
 
 }

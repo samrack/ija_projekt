@@ -14,12 +14,12 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 
- * Represents a Stop on a line   
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Represents a Stop on a line
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "stopId", scope = Stop.class)
 @JsonDeserialize(converter = Stop.CallConstructor.class)
 public class Stop implements Drawable {
@@ -33,7 +33,7 @@ public class Stop implements Drawable {
     public Stop() {
     }
 
-    public Stop(Coordinate coordinate,EventHandler<MouseEvent> handler) {
+    public Stop(Coordinate coordinate, EventHandler<MouseEvent> handler) {
 
         this.coordinate = coordinate;
         this.handler = handler;
@@ -46,12 +46,13 @@ public class Stop implements Drawable {
         this.gui.get(0).setOnMouseClicked(this.handler);
     }
 
-
-    public void setHandler(EventHandler<MouseEvent> handler){
+    /**
+     * @param handler
+     */
+    public void setHandler(EventHandler<MouseEvent> handler) {
         this.handler = handler;
         setGui();
     }
-
 
     /**
      * @return List<Shape>
