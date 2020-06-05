@@ -3,13 +3,12 @@ package ija.project;
 import java.time.LocalTime;
 import java.util.List;
 
-
-/** 
- * Represents schedule for a one certain vehicle    
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Represents schedule for a one certain vehicle
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 
 public class Schedule {
     private Vehicle bus;
@@ -48,11 +47,11 @@ public class Schedule {
         this.timesList = timeList;
     }
 
+    /**
+     * @return String
+     */
     @Override
     public String toString() {
-        return "Schedule{" +
-                "bus=" + bus.getBusId() +
-                ", timesList=" + timesList +
-                '}';
+        return "Schedule{" + "bus=" + bus.getBusId() + ", timesList=" + timesList + '}';
     }
 }

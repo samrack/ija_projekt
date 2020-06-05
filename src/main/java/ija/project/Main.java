@@ -11,7 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.time.LocalTime;
@@ -19,21 +19,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** 
- * Main class, controls loading data, aplication start and end. 
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Main class, controls loading data, aplication start and end.
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 public class Main extends Application {
 
         static final byte VEHICLES_PER_LINE = 10;
 
+        /**
+         * @param args
+         */
         public static void main(String[] args) {
                 launch(args);
 
         }
 
+        /**
+         * @param primaryStage
+         * @throws Exception
+         */
         @Override
         public void start(Stage primaryStage) throws Exception {
                 final String dir = System.getProperty("user.dir");
@@ -71,16 +78,21 @@ public class Main extends Application {
                 LocalTime time = LocalTime.now();
                 List<Vehicle> vList = new ArrayList<>();
 
+                Boolean redAlreadySet = false;
                 EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
 
                                 Vehicle clickedVehicle;
+                                Stop clickedStop;
+                                Text clickedText;
+
+                                Boolean alreadySelected = false;
+
                                 for (Drawable elem : elements) {
-                                        if(elem instanceof Vehicle) {
-                                                if(elem.getGUI().get(0) == event.getTarget()) {
+                                        if (elem instanceof Vehicle) {
+                                                if (elem.getGUI().get(0) == event.getTarget()) {
                                                         clickedVehicle = (Vehicle) elem;
-                                                        System.out.println("clicked" + clickedVehicle.getBusId() );
 
                                                         controller.unsetHighligtedLine();
                                                         controller.activeVehicle = clickedVehicle;
@@ -88,6 +100,16 @@ public class Main extends Application {
                                                         controller.setHighlightedLine();
                                                 }
                                         }
+
+                                        else if (event.getTarget() instanceof Text && !alreadySelected
+                                                        && controller.canSetByPass) {
+                                                alreadySelected = true;
+                                                clickedText = (Text) event.getTarget();
+                                                controller.clickedStreetName = clickedText;
+                                                controller.setHighlightStreetName();
+
+                                        }
+
                                 }
                         }
                 };
@@ -102,23 +124,32 @@ public class Main extends Application {
                                         vList.add(v);
 
                                 } catch (Exception e) {
-                                        System.out.println(e + " CHYBA");
+                                        e.printStackTrace();
                                 }
 
                         }
                 }
 
-
                 try {
                         elements.addAll(vList);
                 } catch (Exception e) {
-                        System.out.println("chytil som chybu");
+                        e.printStackTrace();
                 }
 
                 elements.addAll(data1.getStops());
                 elements.addAll(data1.getStreets());
+                for (Drawable elem : elements) {
+
+                        if (elem instanceof Stop) {
+                                ((Stop) elem).setHandler(handler);
+                        }
+                        if (elem instanceof Street) {
+                                ((Street) elem).setHandler(handler);
+                        }
+                }
 
                 controller.setStreetsList(data1.getStreets());
+                controller.setAllLines(data1.getLines());
 
                 controller.setElements(elements);
                 controller.startTimer(1);
@@ -126,7 +157,6 @@ public class Main extends Application {
 
         @Override
         public void stop() {
-                System.out.println("Stage is closing");
                 System.exit(0);
         }
 

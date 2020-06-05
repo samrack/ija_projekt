@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
-/** 
- * Represents path that vehicle follows   
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Represents path that vehicle follows
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 public class Path {
 
     private List<Coordinate> path;
@@ -17,21 +17,21 @@ public class Path {
     private Path() {
     }
 
-    public Path(List<Coordinate> path) {
+    public Path(final List<Coordinate> path) {
         this.path = path;
     }
 
     /**
      * @return distance between two coordinates
      **/
-    private double getCoordinatesDistance(Coordinate c1, Coordinate c2) {
+    private double getCoordinatesDistance(final Coordinate c1, final Coordinate c2) {
         return Math.sqrt(Math.pow(c1.getX() - c2.getX(), 2) + Math.pow(c1.getY() - c2.getY(), 2));
     }
 
     /**
      * @return coordinate on new position based on distance driven
      **/
-    public Coordinate getNextPosition(double distance) {
+    public Coordinate getNextPosition(final double distance) {
         double currentLength = 0;
         double nextLength = 0;
 
@@ -51,11 +51,14 @@ public class Path {
         if (a == null || b == null)
             return null;
 
-        double completed = (distance - currentLength) / nextLength;
+        final double completed = (distance - currentLength) / nextLength;
         return Coordinate.create(a.getX() + (b.getX() - a.getX()) * completed,
                 a.getY() + (b.getY() - a.getY()) * completed);
     }
 
+    /**
+     * @return List<Coordinate>
+     */
     public List<Coordinate> getPath() {
         return path;
     }
@@ -73,11 +76,11 @@ public class Path {
         return length;
     }
 
-    /** 
-     * Returns last coordinate of path a.k.a last Stop 
+    /**
+     * Returns last coordinate of path a.k.a last Stop
      * 
      * @return last Coordinate of path
-    * */
+     */
     public Coordinate getlastCoordinateOfPath() {
         return path.get(path.size() - 1);
     }

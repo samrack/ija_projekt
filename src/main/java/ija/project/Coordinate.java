@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.Objects;
 
-/** 
- * Represents a Coordinate on the map     
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Represents a Coordinate on the map
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Coordinate {
 
@@ -27,8 +27,7 @@ public class Coordinate {
         this.y = y < 0 ? 0 : y;
     }
 
-    
-    /** 
+    /**
      * @param x
      * @param y
      * @return Coordinate
@@ -40,8 +39,7 @@ public class Coordinate {
         return new Coordinate(x, y);
     }
 
-    
-    /** 
+    /**
      * Calculate difference between coordinate on X axis
      * 
      * @param c
@@ -52,8 +50,7 @@ public class Coordinate {
         return this.x - c.getX();
     }
 
-    
-    /** 
+    /**
      * Calculate difference between coordinate on Y axis
      * 
      * @param c
@@ -64,8 +61,7 @@ public class Coordinate {
         return this.y - c.getY();
     }
 
-    
-    /** 
+    /**
      * @return double
      */
     public double getX() {
@@ -73,8 +69,7 @@ public class Coordinate {
         return x;
     }
 
-    
-    /** 
+    /**
      * @return double
      */
     public double getY() {
@@ -82,16 +77,14 @@ public class Coordinate {
         return y;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     public String getName() {
         return name;
     }
 
-    
-    /** 
+    /**
      * @param o
      * @return boolean
      */
@@ -105,8 +98,7 @@ public class Coordinate {
         return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
     }
 
-    
-    /** 
+    /**
      * @return int
      */
     @Override
@@ -114,8 +106,7 @@ public class Coordinate {
         return Objects.hash(x, y);
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     @Override

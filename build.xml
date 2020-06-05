@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <project name="nwmus" default="compile" basedir=".">
     <!-- Sets variables which can later be used. -->
     <!-- The value of a property is accessed via ${} -->
@@ -6,26 +6,27 @@
     <property name="build.dir" location="build" />
     <property name="libs.dir" location="lib" />
     <property name="dist.dir" location="dest" />
-    
-    
+    <property name="doc.dir" location="doc" />
+
+
     <target name="run_script">
         <exec dir="${libs.dir}" executable="/bin/bash">
-            <arg value="get-libs.sh"/>
+            <arg value="get-libs.sh" />
         </exec>
     </target>
 
     <!-- Deletes the existing build, docs and dist directory-->
     <target name="clean">
         <delete>
-            <fileset dir="${build.dir}/" includes="**/*"/>
+            <fileset dir="${build.dir}/" includes="**/*" />
         </delete>
 
         <delete>
-            <fileset dir="${dist.dir}/" includes="**/*"/>
+            <fileset dir="${dist.dir}/" includes="**/*" />
         </delete>
-    
+
     </target>
-    
+
     <path id="build-classpath">
         <fileset dir="${libs.dir}">
             <include name="*.jar" />
@@ -41,12 +42,10 @@
 
     <!-- Compiles the java code (including the usage of library for JUnit -->
     <target name="compile" depends="clean, run_script ">
-        <javac srcdir="${src.dir}" includeantruntime='true' destdir="${build.dir}">
+        <javac srcdir="${src.dir}" includeantruntime="true" destdir="${build.dir}">
             <classpath refid="build-classpath" />
         </javac>
     </target>
-
-  
 
 
     <!--Creates the deployable jar file  -->
@@ -61,14 +60,17 @@
             <manifest>
                 <attribute name="Created-By" value="${build-classpath-fxml}" />
             </manifest>
-            <!-- <fileset dir="${basedir}" includes="**/*.yml" />
-            <manifest>
-                <attribute name="Data_file" value="${build-classpath-yml}" />
-            </manifest> -->
+
         </jar>
     </target>
+
+    <!-- Generate javadocs for current project into ${doc.dir} -->
+    <target name="doc" description="generate documentation">
+        <javadoc additionalparam="-Xdoclint:none" sourcepath="${src.dir}/main/java/" destdir="${doc.dir}" />
+    </target>
+
     <target name="run" depends="jar">
         <description>Main target</description>
-        <java jar="${dist.dir}/ija-app.jar" fork="true"/>
+        <java jar="${dist.dir}/ija-app.jar" fork="true" />
     </target>
 </project>

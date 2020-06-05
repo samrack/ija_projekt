@@ -10,24 +10,23 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/** 
- * Represents a vehicle   
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Represents a vehicle
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 public class Vehicle implements Drawable, TimeUpdate {
     private String busId;
 
     private Line line;
     private Path path;
+    private Path originalPath;
     private Schedule schedule;
 
     private Coordinate position;
     private double distance = 0;
     private Coordinate startPosition;
-
 
     private LocalTime startTime;
     private int startingMinute;
@@ -50,6 +49,13 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     public EventHandler<MouseEvent> handler;
 
+    private Line updatedLine;
+    private Boolean updateReady = false;
+    private Boolean canUpdate = false;
+    private int replacedStreetIndex = 0;
+    private int replacedStreetSize = 0;
+    private boolean isDeactivate;
+    private boolean onRedWhenActivate;
 
     private Vehicle() {
     }
@@ -58,15 +64,47 @@ public class Vehicle implements Drawable, TimeUpdate {
         this.busId = busId;
         this.line = line;
         this.path = line.getPath();
+        this.originalPath = new Path(this.path.getPath());
         this.schedule = new Schedule(this);
         this.startPosition = path.getPath().get(0);
         this.position = startPosition;
         this.startingMinute = startingMinute;
         this.handler = handler;
         fillSchedule(composeStartingTime());
-        setStopDistances();
+        setStopDistances(this.path);
         setGui();
 
+    }
+
+    private void updateLineAndPath() {
+
+        this.line = updatedLine;
+        this.path = updatedLine.getPath();
+        updateReady = false;
+        canUpdate = false;
+
+    }
+
+    /**
+     * @param updatedline
+     */
+    public void setUpdatedLine(Line updatedline) {
+        this.updatedLine = updatedline;
+        updateReady = true;
+    }
+
+    /**
+     * @return Line
+     */
+    public Line getUpdatedLine() {
+        return updatedLine;
+    }
+
+    /**
+     * @param value
+     */
+    public void setCanUpdate(Boolean value) {
+        this.canUpdate = value;
     }
 
     /**
@@ -89,7 +127,7 @@ public class Vehicle implements Drawable, TimeUpdate {
 
         positionInTime = computePositionByTime(time);
 
-        if(!positionInTime.equals(startPosition)) {
+        if (!positionInTime.equals(startPosition)) {
             for (Stop stop : this.getLine().getStopsList()) {
                 if (stop.getCoordinate().equals(positionInTime)) {
                     isOnStop = true;
@@ -98,7 +136,8 @@ public class Vehicle implements Drawable, TimeUpdate {
             }
         }
 
-        moveGui(startPosition);
+        resetGui();
+        ;
         position = startPosition;
 
         moveGui(positionInTime);
@@ -107,13 +146,12 @@ public class Vehicle implements Drawable, TimeUpdate {
 
         inBetweenRounds = positionInTime.equals(startPosition) || distance >= path.getPathLength();
 
-
     }
 
     /**
-     * Calculate position of vehicle on the map at the set time 
+     * Calculate position of vehicle on the map at the set time
      * 
-     * @param time 
+     * @param time
      * @return Coordinate - position of vehicle
      */
     private Coordinate computePositionByTime(LocalTime time) {
@@ -125,7 +163,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         if ((startingMinute + ((int) oneRideLength / 60)) > (60 + time.getMinute())) {
 
             int untilHour = (60 - startingMinute);
-            secondsOnRoad = (untilHour +  time.getMinute()) * 60;
+            secondsOnRoad = (untilHour + time.getMinute()) * 60;
 
         }
         // vehicle hasnt started route yet so it is in its starting station
@@ -149,25 +187,26 @@ public class Vehicle implements Drawable, TimeUpdate {
                 Street currentStreet = line.getStreetByCoord(tmpPosition);
                 int curSpeed = currentStreet.getStreetSpeed();
 
-                for(int j= 1; j <= curSpeed; j++) {
+                for (int j = 1; j <= curSpeed; j++) {
 
                     tmpDistance++;
                     tmpPosition = path.getNextPosition(tmpDistance);
 
                     for (Stop stop : stoplist) {
-                        if(stop.getCoordinate().equals(tmpPosition)) {
+                        if (stop.getCoordinate().equals(tmpPosition)) {
                             stopEnteredSecond = i;
                             i += 40;
                         }
                     }
                 }
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
 
-        //set how many seconds are left to wait on stop in case vehicle's position is on stop at entered time
-        if(secondsOnRoad - stopEnteredSecond <= 40) {
+        // set how many seconds are left to wait on stop in case vehicle's position is
+        // on stop at entered time
+        if (secondsOnRoad - stopEnteredSecond <= 40) {
             stopTimer = secondsOnRoad - stopEnteredSecond;
         }
 
@@ -176,15 +215,44 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
     /**
-     * Updates time for vehicle:
-     * - sets new distance driven based on current vehicle speed 
-     * - this distance is used to update vehicle position
+     * Updates time for vehicle: - sets new distance driven based on current vehicle
+     * speed - this distance is used to update vehicle position
      * 
      * @param time recieved from Timer in MainController
      **/
     @Override
     public void update(LocalTime time) {
 
+        if (updateReady && canUpdate) {
+
+            Street currentStreet;
+            double oldPathLength = path.getPathLength();
+
+            try {
+                currentStreet = line.getStreetByCoord(position);
+                if (!isDeactivate) {
+                    updateLineAndPath();
+                }
+                int index = line.getStreetsList().indexOf(currentStreet);
+                if (isDeactivate) {
+                    if (position.equals(startPosition)) {
+                        isDeactivate = false;
+                    }
+                    if (index >= replacedStreetIndex + replacedStreetSize
+                            && index < line.getStreetsList().size() - replacedStreetSize) {
+                        updateLineAndPath();
+                        //
+                    }
+                } else if (index >= replacedStreetIndex) {
+                    double distanceDiff = path.getPathLength() - oldPathLength;
+                    distance += distanceDiff;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
         timeCounter++;
         double speed;
         Street currentStreet = null;
@@ -237,10 +305,16 @@ public class Vehicle implements Drawable, TimeUpdate {
         // if vehicle is still late to start it will skip and go next hour, based on
         // real life
         else {
+            // updates line
+
             if (time.getMinute() == startingMinute) {
+                if (updateReady) {
+                    canUpdate = true;
+                }
                 startRound(time);
             }
         }
+
     }
 
     /**
@@ -261,7 +335,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         fillSchedule(time);
         distance = 0;
         position = startPosition;
-        resetGui(startPosition);
+        resetGui();
         inBetweenRounds = false;
 
     }
@@ -272,7 +346,6 @@ public class Vehicle implements Drawable, TimeUpdate {
      * 
      * @param begTime start time for vehicle at first station
      */
-
 
     public void fillSchedule(LocalTime begTime) {
         hourStarted = begTime.getHour();
@@ -287,14 +360,14 @@ public class Vehicle implements Drawable, TimeUpdate {
 
         boolean completed = false;
 
-        while (distance <= path.getPathLength()) {
+        while (distance <= originalPath.getPathLength()) {
             try {
 
                 int speed = Street.DEFAULT_SPEED;
                 int tmpDistance = distance;
 
                 for (int i = 0; i < speed; i++) {
-                    tmpPosition = path.getNextPosition(tmpDistance + i);
+                    tmpPosition = originalPath.getNextPosition(tmpDistance + i);
                     Stop currentStop = line.getStopFromCoords(tmpPosition);
 
                     LocalTime time = startTime;
@@ -309,32 +382,33 @@ public class Vehicle implements Drawable, TimeUpdate {
                         stoplist.add(currentStop);
                         timeslist.add(time);
 
-                        if(distance >= path.getPathLength()) {
+                        if (distance >= originalPath.getPathLength()) {
                             completed = true;
                             break;
                         }
                     }
                 }
 
-                if(completed) {
+                if (completed) {
                     break;
                 }
                 distance += speed;
                 timeCount++;
 
             } catch (Exception e) {
-                System.out.println(e + " FILLSCHEDULE Error");
+                e.printStackTrace();
                 break;
             }
         }
-
 
         schedule.setStopList(stoplist);
         schedule.setTimesList(timeslist);
         oneRideLength = calculateOneRide(timeslist);
     }
 
-
+    /**
+     * @param currentTime
+     */
     public void fillDelaysList(LocalTime currentTime) {
 
         delaysList.clear();
@@ -346,7 +420,7 @@ public class Vehicle implements Drawable, TimeUpdate {
         int stopOrder = 0;
         boolean completed = false;
 
-        //zastavkam ktore uz vozidlo preslo nedavam meskanie
+        // zastavkam ktore uz vozidlo preslo nedavam meskanie
         for (double stopDistance : stopDistances) {
             if (stopDistance <= this.distance) {
                 delaysList.add(0);
@@ -364,7 +438,7 @@ public class Vehicle implements Drawable, TimeUpdate {
                     tmpPosition = path.getNextPosition(tmpDistance + i);
                     Stop currentStop = line.getStopFromCoords(tmpPosition);
 
-                    if(isOnStop) {
+                    if (isOnStop) {
                         time = currentTime.plusSeconds(40 - stopTimer);
                     } else {
                         time = currentTime;
@@ -394,7 +468,8 @@ public class Vehicle implements Drawable, TimeUpdate {
                 timeCount++;
 
             } catch (Exception e) {
-                System.out.println(e + "FILLSCHEDULE Error");
+
+                e.printStackTrace();
                 break;
             }
         }
@@ -407,14 +482,9 @@ public class Vehicle implements Drawable, TimeUpdate {
      */
     public void reloadSchedule(LocalTime time) {
 
-        System.out.println("Now is:" + time.toString());
-        System.out.println(this.getSchedule().toString());
-
         LocalTime begTime = LocalTime.of(time.getHour(), startingMinute, 0);
         fillSchedule(begTime);
 
-        System.out.println("Now is:" + begTime.toString());
-        System.out.println(this.getSchedule().toString());
     }
 
     /**
@@ -431,9 +501,8 @@ public class Vehicle implements Drawable, TimeUpdate {
     /**
      * Resets vehicle circle to its starting position
      * 
-     * @param coordinate
      */
-    private void resetGui(Coordinate coordinate) {
+    private void resetGui() {
         for (Shape shape : gui) {
             shape.setTranslateX(0);
             shape.setTranslateY(0);
@@ -461,10 +530,12 @@ public class Vehicle implements Drawable, TimeUpdate {
 
     }
 
+    /**
+     * @param path
+     */
+    public void setStopDistances(Path path) {
 
-    public void setStopDistances() {
-
-        for(int i = 0; i < schedule.getStopsList().size(); i++) {
+        for (int i = 0; i < schedule.getStopsList().size(); i++) {
             double stopDistance = 0;
             Coordinate stopCoordinate = startPosition;
 
@@ -533,10 +604,16 @@ public class Vehicle implements Drawable, TimeUpdate {
         return startTime;
     }
 
+    /**
+     * @return int
+     */
     public int getStartingMinute() {
         return startingMinute;
     }
 
+    /**
+     * @return int
+     */
     public int getHourStarted() {
         return hourStarted;
     }
@@ -548,16 +625,60 @@ public class Vehicle implements Drawable, TimeUpdate {
         return startPosition;
     }
 
+    /**
+     * @return List<Stop>
+     */
     public List<Stop> getStoplist() {
         return stoplist;
     }
 
+    /**
+     * @return List<LocalTime>
+     */
     public List<LocalTime> getTimeslist() {
         return timeslist;
     }
 
+    /**
+     * @return List<Integer>
+     */
     public List<Integer> getDelaysList() {
         return delaysList;
+    }
+
+    /**
+     * @param replacedStreetIndex
+     */
+    public void setReplacedStreetIndex(int replacedStreetIndex) {
+        this.replacedStreetIndex = replacedStreetIndex;
+    }
+
+    /**
+     * @param deactivate
+     */
+    public void setDeactivate(boolean deactivate) {
+        isDeactivate = deactivate;
+    }
+
+    /**
+     * @param replacedStreetSize
+     */
+    public void setReplacedStreetSize(int replacedStreetSize) {
+        this.replacedStreetSize = replacedStreetSize;
+    }
+
+    /**
+     * @param onRedWhenActivate
+     */
+    public void setOnRedWhenActivate(boolean onRedWhenActivate) {
+        this.onRedWhenActivate = onRedWhenActivate;
+    }
+
+    /**
+     * @return boolean
+     */
+    public boolean isOnRedWhenActivate() {
+        return onRedWhenActivate;
     }
 
     /**
@@ -568,6 +689,13 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
     /**
+     * @return Path
+     */
+    public Path getOriginalPath() {
+        return originalPath;
+    }
+
+    /**
      * @return int
      */
     public int getSecondsPassed() {
@@ -575,12 +703,15 @@ public class Vehicle implements Drawable, TimeUpdate {
     }
 
     /**
-     * @return long
+     * @return long length in seconds
      */
     public long getOneRideLength() {
         return oneRideLength;
-    } // in seconds
+    }
 
+    /**
+     * @return List<Double>
+     */
     public List<Double> getStopDistances() {
         return stopDistances;
     }
@@ -599,6 +730,6 @@ public class Vehicle implements Drawable, TimeUpdate {
      */
     @Override
     public String toString() {
-        return "Vehicle{" + "line='" + line + '\'' + '}';
+        return "Vehicle{" + "line='" + line + '\'' + "handelr= " + handler + '}';
     }
 }

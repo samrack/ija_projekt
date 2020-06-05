@@ -2,12 +2,12 @@ package ija.project;
 
 import java.util.List;
 
-/** 
- * Stores loaded data for map setup    
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+/**
+ * Stores loaded data for map setup
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 
 public class Data {
     private List<Coordinate> coordinates;
@@ -28,48 +28,42 @@ public class Data {
         this.lines = lines;
     }
 
-    
-    /** 
+    /**
      * @return List<Coordinate>
      */
     public List<Coordinate> getCoordinates() {
         return coordinates;
     }
 
-    
-    /** 
+    /**
      * @return List<Vehicle>
      */
     public List<Vehicle> getVehicles() {
         return vehicles;
     }
 
-    
-    /** 
+    /**
      * @return List<Street>
      */
     public List<Street> getStreets() {
         return streets;
     }
 
-    
-    /** 
+    /**
      * @return List<Stop>
      */
     public List<Stop> getStops() {
         return stops;
     }
 
-    
-    /** 
+    /**
      * @return List<Line>
      */
     public List<Line> getLines() {
         return lines;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     @Override

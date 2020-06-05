@@ -12,12 +12,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
 import javafx.scene.paint.Color;
-/** 
- * Represents Line, which defines stops and streets that vehicle goes through    
-* 
-* @author Samuel Stuchly xstuch06
-* @author Samuel Spisak xspisa02
-*/
+
+/**
+ * Represents Line, which defines stops and streets that vehicle goes through
+ * 
+ * @author Samuel Stuchly xstuch06
+ * @author Samuel Spisak xspisa02
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "yamlId", scope = Line.class)
 public class Line {
     private String yamlId;
@@ -96,11 +97,6 @@ public class Line {
      */
     public Street getStreetByCoord(Coordinate coord) throws Exception {
 
-        try {
-
-        } catch (Exception e) {
-            System.out.println();
-        }
         for (Street street : streetsList) {
 
             if (street.isCoordOnStreet(coord)) {
@@ -112,7 +108,7 @@ public class Line {
     }
 
     /**
-     * Check if stop lies on the given coordinates 
+     * Check if stop lies on the given coordinates
      * 
      * @param coords
      * @return Stop if found, else null
@@ -125,6 +121,16 @@ public class Line {
             }
         }
         return null;
+    }
+
+    /**
+     * @param updatedPath
+     * @param updatedStreetList
+     */
+    public void updateLine(Path updatedPath, List<Street> updatedStreetList) {
+        this.path = updatedPath;
+        this.streetsList = updatedStreetList;
+
     }
 
 }
